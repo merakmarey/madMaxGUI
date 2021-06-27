@@ -29,19 +29,17 @@ namespace madMaxGUI
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbPaths = new System.Windows.Forms.GroupBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.lbFinal1AvailSpace = new System.Windows.Forms.Label();
+            this.btnRemoveDrives = new System.Windows.Forms.Button();
+            this.gvFinalDrives = new System.Windows.Forms.DataGridView();
+            this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Space = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbTmp2AvailSpace = new System.Windows.Forms.Label();
             this.lbTmp1AvailSpace = new System.Windows.Forms.Label();
-            this.cbAlternateStorage = new System.Windows.Forms.CheckBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
             this.btnFinalDest1Pick = new System.Windows.Forms.Button();
-            this.lbFinalDest1_currentPath = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lbTmpPath2_currentPath = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -72,11 +70,15 @@ namespace madMaxGUI
             this.label13 = new System.Windows.Forms.Label();
             this.lbCores = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.lbLogicalCPUs = new System.Windows.Forms.Label();
+            this.lbThreads = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lbProcessor = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.cbValidatePlot = new System.Windows.Forms.CheckBox();
+            this.cbInternalCopy = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbSeparatedTaskCopy = new System.Windows.Forms.CheckBox();
             this.lbPlotCountSuggested = new System.Windows.Forms.Label();
             this.cbBuckets34 = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
@@ -86,7 +88,7 @@ namespace madMaxGUI
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.nudPlotCount = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.nudThreads = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -95,32 +97,27 @@ namespace madMaxGUI
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnStart = new System.Windows.Forms.Button();
+            this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // gbPaths
             // 
-            this.gbPaths.AutoSize = true;
             this.gbPaths.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbPaths.Controls.Add(this.label23);
-            this.gbPaths.Controls.Add(this.lbFinal1AvailSpace);
+            this.gbPaths.Controls.Add(this.btnClearTmp2);
+            this.gbPaths.Controls.Add(this.btnRemoveDrives);
+            this.gbPaths.Controls.Add(this.gvFinalDrives);
             this.gbPaths.Controls.Add(this.lbTmp2AvailSpace);
             this.gbPaths.Controls.Add(this.lbTmp1AvailSpace);
-            this.gbPaths.Controls.Add(this.cbAlternateStorage);
-            this.gbPaths.Controls.Add(this.label11);
-            this.gbPaths.Controls.Add(this.label10);
-            this.gbPaths.Controls.Add(this.button3);
-            this.gbPaths.Controls.Add(this.label9);
             this.gbPaths.Controls.Add(this.btnFinalDest1Pick);
-            this.gbPaths.Controls.Add(this.lbFinalDest1_currentPath);
-            this.gbPaths.Controls.Add(this.label5);
             this.gbPaths.Controls.Add(this.label4);
             this.gbPaths.Controls.Add(this.lbTmpPath2_currentPath);
             this.gbPaths.Controls.Add(this.checkBox1);
@@ -132,41 +129,84 @@ namespace madMaxGUI
             this.gbPaths.Controls.Add(this.btnTmpPath1Pick);
             this.gbPaths.Controls.Add(this.lbTmpPath1);
             this.gbPaths.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.gbPaths.Location = new System.Drawing.Point(10, 120);
+            this.gbPaths.Location = new System.Drawing.Point(10, 99);
             this.gbPaths.Margin = new System.Windows.Forms.Padding(0);
             this.gbPaths.MinimumSize = new System.Drawing.Size(640, 80);
             this.gbPaths.Name = "gbPaths";
             this.gbPaths.Padding = new System.Windows.Forms.Padding(10);
-            this.gbPaths.Size = new System.Drawing.Size(640, 236);
+            this.gbPaths.Size = new System.Drawing.Size(640, 262);
             this.gbPaths.TabIndex = 0;
             this.gbPaths.TabStop = false;
             this.gbPaths.Text = "2.- Paths";
             // 
-            // label23
+            // btnRemoveDrives
             // 
-            this.label23.AutoSize = true;
-            this.label23.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label23.Location = new System.Drawing.Point(419, 172);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(150, 15);
-            this.label23.TabIndex = 21;
-            this.label23.Text = "(Space Available 0GB/0GiB)";
+            this.btnRemoveDrives.Location = new System.Drawing.Point(303, 110);
+            this.btnRemoveDrives.Name = "btnRemoveDrives";
+            this.btnRemoveDrives.Size = new System.Drawing.Size(75, 23);
+            this.btnRemoveDrives.TabIndex = 21;
+            this.btnRemoveDrives.Text = "Remove";
+            this.btnRemoveDrives.UseVisualStyleBackColor = true;
+            this.btnRemoveDrives.Click += new System.EventHandler(this.btnRemoveDrives_Click);
             // 
-            // lbFinal1AvailSpace
+            // gvFinalDrives
             // 
-            this.lbFinal1AvailSpace.AutoSize = true;
-            this.lbFinal1AvailSpace.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lbFinal1AvailSpace.Location = new System.Drawing.Point(349, 122);
-            this.lbFinal1AvailSpace.Name = "lbFinal1AvailSpace";
-            this.lbFinal1AvailSpace.Size = new System.Drawing.Size(150, 15);
-            this.lbFinal1AvailSpace.TabIndex = 20;
-            this.lbFinal1AvailSpace.Text = "(Space Available 0GB/0GiB)";
+            this.gvFinalDrives.AllowUserToAddRows = false;
+            this.gvFinalDrives.AllowUserToResizeRows = false;
+            this.gvFinalDrives.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.gvFinalDrives.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.gvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Path,
+            this.Space});
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle5;
+            this.gvFinalDrives.Location = new System.Drawing.Point(10, 137);
+            this.gvFinalDrives.Name = "gvFinalDrives";
+            this.gvFinalDrives.ReadOnly = true;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.gvFinalDrives.RowTemplate.Height = 25;
+            this.gvFinalDrives.Size = new System.Drawing.Size(621, 112);
+            this.gvFinalDrives.TabIndex = 20;
+            // 
+            // Path
+            // 
+            this.Path.HeaderText = "Path";
+            this.Path.Name = "Path";
+            this.Path.ReadOnly = true;
+            // 
+            // Space
+            // 
+            this.Space.HeaderText = "Space Available";
+            this.Space.Name = "Space";
+            this.Space.ReadOnly = true;
             // 
             // lbTmp2AvailSpace
             // 
             this.lbTmp2AvailSpace.AutoSize = true;
             this.lbTmp2AvailSpace.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lbTmp2AvailSpace.Location = new System.Drawing.Point(328, 69);
+            this.lbTmp2AvailSpace.Location = new System.Drawing.Point(422, 69);
             this.lbTmp2AvailSpace.Name = "lbTmp2AvailSpace";
             this.lbTmp2AvailSpace.Size = new System.Drawing.Size(150, 15);
             this.lbTmp2AvailSpace.TabIndex = 19;
@@ -182,94 +222,24 @@ namespace madMaxGUI
             this.lbTmp1AvailSpace.TabIndex = 18;
             this.lbTmp1AvailSpace.Text = "(Space Available 0GB/0GiB)";
             // 
-            // cbAlternateStorage
-            // 
-            this.cbAlternateStorage.AutoSize = true;
-            this.cbAlternateStorage.Location = new System.Drawing.Point(349, 172);
-            this.cbAlternateStorage.Name = "cbAlternateStorage";
-            this.cbAlternateStorage.Size = new System.Drawing.Size(64, 19);
-            this.cbAlternateStorage.TabIndex = 17;
-            this.cbAlternateStorage.Text = "Disable";
-            this.cbAlternateStorage.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label11.Location = new System.Drawing.Point(96, 195);
-            this.label11.MaximumSize = new System.Drawing.Size(500, 0);
-            this.label11.MinimumSize = new System.Drawing.Size(500, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(500, 15);
-            this.label11.TabIndex = 16;
-            this.label11.Text = "(none)";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(14, 195);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(77, 15);
-            this.label10.TabIndex = 15;
-            this.label10.Text = "Current path:";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(267, 168);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "Select";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 172);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(253, 15);
-            this.label9.TabIndex = 13;
-            this.label9.Text = "Final Alternative destination (Slow Big Storage)";
-            // 
             // btnFinalDest1Pick
             // 
-            this.btnFinalDest1Pick.Location = new System.Drawing.Point(267, 118);
+            this.btnFinalDest1Pick.Location = new System.Drawing.Point(222, 111);
             this.btnFinalDest1Pick.Name = "btnFinalDest1Pick";
             this.btnFinalDest1Pick.Size = new System.Drawing.Size(75, 23);
             this.btnFinalDest1Pick.TabIndex = 12;
-            this.btnFinalDest1Pick.Text = "Select";
+            this.btnFinalDest1Pick.Text = "Add";
             this.btnFinalDest1Pick.UseVisualStyleBackColor = true;
             this.btnFinalDest1Pick.Click += new System.EventHandler(this.btnFinalDest1Pick_Click);
-            // 
-            // lbFinalDest1_currentPath
-            // 
-            this.lbFinalDest1_currentPath.AutoSize = true;
-            this.lbFinalDest1_currentPath.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbFinalDest1_currentPath.Location = new System.Drawing.Point(96, 146);
-            this.lbFinalDest1_currentPath.MaximumSize = new System.Drawing.Size(500, 0);
-            this.lbFinalDest1_currentPath.MinimumSize = new System.Drawing.Size(500, 0);
-            this.lbFinalDest1_currentPath.Name = "lbFinalDest1_currentPath";
-            this.lbFinalDest1_currentPath.Size = new System.Drawing.Size(500, 15);
-            this.lbFinalDest1_currentPath.TabIndex = 11;
-            this.lbFinalDest1_currentPath.Text = "(none)";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 146);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 15);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Current path:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 122);
+            this.label4.Location = new System.Drawing.Point(8, 114);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(193, 15);
+            this.label4.Size = new System.Drawing.Size(203, 15);
             this.label4.TabIndex = 9;
-            this.label4.Text = "Final destination (Slow Big Storage)";
+            this.label4.Text = "Final destination (Slower Big Storage)";
             // 
             // lbTmpPath2_currentPath
             // 
@@ -286,13 +256,11 @@ namespace madMaxGUI
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(258, 68);
+            this.checkBox1.Location = new System.Drawing.Point(352, 68);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(64, 19);
+            this.checkBox1.Size = new System.Drawing.Size(74, 19);
             this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Disable";
+            this.checkBox1.Text = "Alternate";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // label2
@@ -378,7 +346,7 @@ namespace madMaxGUI
             this.gbKeys.Controls.Add(this.lbFarmerKey);
             this.gbKeys.Location = new System.Drawing.Point(10, 14);
             this.gbKeys.Name = "gbKeys";
-            this.gbKeys.Size = new System.Drawing.Size(640, 103);
+            this.gbKeys.Size = new System.Drawing.Size(640, 82);
             this.gbKeys.TabIndex = 1;
             this.gbKeys.TabStop = false;
             this.gbKeys.Text = "1.- Keys";
@@ -398,7 +366,7 @@ namespace madMaxGUI
             // 
             this.lbPlKeyIndicator.AutoSize = true;
             this.lbPlKeyIndicator.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.lbPlKeyIndicator.Location = new System.Drawing.Point(531, 69);
+            this.lbPlKeyIndicator.Location = new System.Drawing.Point(531, 53);
             this.lbPlKeyIndicator.Name = "lbPlKeyIndicator";
             this.lbPlKeyIndicator.Size = new System.Drawing.Size(19, 15);
             this.lbPlKeyIndicator.TabIndex = 5;
@@ -416,7 +384,7 @@ namespace madMaxGUI
             // 
             // txPoolKey
             // 
-            this.txPoolKey.Location = new System.Drawing.Point(86, 66);
+            this.txPoolKey.Location = new System.Drawing.Point(86, 50);
             this.txPoolKey.Name = "txPoolKey";
             this.txPoolKey.Size = new System.Drawing.Size(439, 23);
             this.txPoolKey.TabIndex = 3;
@@ -425,7 +393,7 @@ namespace madMaxGUI
             // lbPoolKey
             // 
             this.lbPoolKey.AutoSize = true;
-            this.lbPoolKey.Location = new System.Drawing.Point(14, 69);
+            this.lbPoolKey.Location = new System.Drawing.Point(13, 53);
             this.lbPoolKey.Name = "lbPoolKey";
             this.lbPoolKey.Size = new System.Drawing.Size(53, 15);
             this.lbPoolKey.TabIndex = 2;
@@ -460,7 +428,7 @@ namespace madMaxGUI
             this.groupBox1.Controls.Add(this.label13);
             this.groupBox1.Controls.Add(this.lbCores);
             this.groupBox1.Controls.Add(this.label12);
-            this.groupBox1.Controls.Add(this.lbLogicalCPUs);
+            this.groupBox1.Controls.Add(this.lbThreads);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.lbProcessor);
             this.groupBox1.Controls.Add(this.label7);
@@ -567,24 +535,24 @@ namespace madMaxGUI
             this.label12.TabIndex = 4;
             this.label12.Text = "Cores";
             // 
-            // lbLogicalCPUs
+            // lbThreads
             // 
-            this.lbLogicalCPUs.AutoSize = true;
-            this.lbLogicalCPUs.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbLogicalCPUs.Location = new System.Drawing.Point(282, 34);
-            this.lbLogicalCPUs.Name = "lbLogicalCPUs";
-            this.lbLogicalCPUs.Size = new System.Drawing.Size(34, 15);
-            this.lbLogicalCPUs.TabIndex = 3;
-            this.lbLogicalCPUs.Text = "none";
+            this.lbThreads.AutoSize = true;
+            this.lbThreads.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lbThreads.Location = new System.Drawing.Point(312, 34);
+            this.lbThreads.Name = "lbThreads";
+            this.lbThreads.Size = new System.Drawing.Size(34, 15);
+            this.lbThreads.TabIndex = 3;
+            this.lbThreads.Text = "none";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(170, 34);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(106, 15);
+            this.label8.Size = new System.Drawing.Size(136, 15);
             this.label8.TabIndex = 2;
-            this.label8.Text = "Maximum Threads";
+            this.label8.Text = "Maximum Threads/Core";
             // 
             // lbProcessor
             // 
@@ -607,6 +575,10 @@ namespace madMaxGUI
             // 
             // gbOptions
             // 
+            this.gbOptions.Controls.Add(this.cbValidatePlot);
+            this.gbOptions.Controls.Add(this.cbInternalCopy);
+            this.gbOptions.Controls.Add(this.label3);
+            this.gbOptions.Controls.Add(this.cbSeparatedTaskCopy);
             this.gbOptions.Controls.Add(this.lbPlotCountSuggested);
             this.gbOptions.Controls.Add(this.cbBuckets34);
             this.gbOptions.Controls.Add(this.label19);
@@ -616,14 +588,56 @@ namespace madMaxGUI
             this.gbOptions.Controls.Add(this.checkBox2);
             this.gbOptions.Controls.Add(this.nudPlotCount);
             this.gbOptions.Controls.Add(this.label15);
-            this.gbOptions.Controls.Add(this.numericUpDown1);
+            this.gbOptions.Controls.Add(this.nudThreads);
             this.gbOptions.Controls.Add(this.label14);
             this.gbOptions.Location = new System.Drawing.Point(656, 124);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 187);
+            this.gbOptions.Size = new System.Drawing.Size(387, 212);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
+            // 
+            // cbValidatePlot
+            // 
+            this.cbValidatePlot.AutoSize = true;
+            this.cbValidatePlot.Location = new System.Drawing.Point(6, 187);
+            this.cbValidatePlot.Name = "cbValidatePlot";
+            this.cbValidatePlot.Size = new System.Drawing.Size(147, 19);
+            this.cbValidatePlot.TabIndex = 14;
+            this.cbValidatePlot.Text = "Validate plot after copy";
+            this.cbValidatePlot.UseVisualStyleBackColor = true;
+            // 
+            // cbInternalCopy
+            // 
+            this.cbInternalCopy.AutoSize = true;
+            this.cbInternalCopy.Location = new System.Drawing.Point(7, 165);
+            this.cbInternalCopy.Name = "cbInternalCopy";
+            this.cbInternalCopy.Size = new System.Drawing.Size(167, 19);
+            this.cbInternalCopy.TabIndex = 13;
+            this.cbInternalCopy.Text = "Use internal Copy function";
+            this.cbInternalCopy.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label3.Location = new System.Drawing.Point(7, 135);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(352, 26);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "(If Continuos mode on, task will restart without waiting for copy to\r\n becomplete" +
+    "d)";
+            // 
+            // cbSeparatedTaskCopy
+            // 
+            this.cbSeparatedTaskCopy.AutoSize = true;
+            this.cbSeparatedTaskCopy.Location = new System.Drawing.Point(7, 118);
+            this.cbSeparatedTaskCopy.Name = "cbSeparatedTaskCopy";
+            this.cbSeparatedTaskCopy.Size = new System.Drawing.Size(234, 19);
+            this.cbSeparatedTaskCopy.TabIndex = 11;
+            this.cbSeparatedTaskCopy.Text = "Copy to destination on a separated task";
+            this.cbSeparatedTaskCopy.UseVisualStyleBackColor = true;
             // 
             // lbPlotCountSuggested
             // 
@@ -642,20 +656,21 @@ namespace madMaxGUI
             this.cbBuckets34.DisplayMember = "1";
             this.cbBuckets34.FormattingEnabled = true;
             this.cbBuckets34.Items.AddRange(new object[] {
+            "default (=buckets)",
             "64",
             "128",
             "256",
             "512"});
-            this.cbBuckets34.Location = new System.Drawing.Point(112, 118);
+            this.cbBuckets34.Location = new System.Drawing.Point(260, 89);
             this.cbBuckets34.Name = "cbBuckets34";
-            this.cbBuckets34.Size = new System.Drawing.Size(59, 23);
+            this.cbBuckets34.Size = new System.Drawing.Size(115, 23);
             this.cbBuckets34.TabIndex = 9;
-            this.cbBuckets34.Text = "256";
+            this.cbBuckets34.Text = "default (=buckets)";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(6, 121);
+            this.label19.Location = new System.Drawing.Point(155, 93);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(99, 15);
             this.label19.TabIndex = 8;
@@ -668,20 +683,21 @@ namespace madMaxGUI
             this.cbBuckets.DisplayMember = "1";
             this.cbBuckets.FormattingEnabled = true;
             this.cbBuckets.Items.AddRange(new object[] {
+            "default (256)",
             "64",
             "128",
             "256",
             "512"});
-            this.cbBuckets.Location = new System.Drawing.Point(112, 89);
+            this.cbBuckets.Location = new System.Drawing.Point(58, 89);
             this.cbBuckets.Name = "cbBuckets";
-            this.cbBuckets.Size = new System.Drawing.Size(59, 23);
+            this.cbBuckets.Size = new System.Drawing.Size(86, 23);
             this.cbBuckets.TabIndex = 7;
-            this.cbBuckets.Text = "256";
+            this.cbBuckets.Text = "default (256)";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 96);
+            this.label18.Location = new System.Drawing.Point(7, 93);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(48, 15);
             this.label18.TabIndex = 6;
@@ -723,6 +739,7 @@ namespace madMaxGUI
             0,
             0,
             0});
+            this.nudPlotCount.ValueChanged += new System.EventHandler(this.nudPlotCount_Changed);
             // 
             // label15
             // 
@@ -733,18 +750,18 @@ namespace madMaxGUI
             this.label15.TabIndex = 2;
             this.label15.Text = "Plot Count";
             // 
-            // numericUpDown1
+            // nudThreads
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(78, 52);
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.nudThreads.Location = new System.Drawing.Point(78, 52);
+            this.nudThreads.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(59, 23);
-            this.numericUpDown1.TabIndex = 1;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.nudThreads.Name = "nudThreads";
+            this.nudThreads.Size = new System.Drawing.Size(59, 23);
+            this.nudThreads.TabIndex = 1;
+            this.nudThreads.Value = new decimal(new int[] {
             4,
             0,
             0,
@@ -761,16 +778,21 @@ namespace madMaxGUI
             // 
             // groupBox2
             // 
+            this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.dataGridView1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 364);
+            this.groupBox2.Location = new System.Drawing.Point(10, 364);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1030, 149);
+            this.groupBox2.Size = new System.Drawing.Size(1030, 208);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Plotting tasks";
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlLight;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -778,10 +800,11 @@ namespace madMaxGUI
             this.Phase,
             this.TimeElapsed,
             this.Status});
+            this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.Location = new System.Drawing.Point(10, 22);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(1014, 121);
+            this.dataGridView1.Size = new System.Drawing.Size(1014, 180);
             this.dataGridView1.TabIndex = 0;
             // 
             // Task
@@ -810,18 +833,29 @@ namespace madMaxGUI
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(897, 317);
+            this.btnStart.Location = new System.Drawing.Point(895, 342);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(140, 41);
+            this.btnStart.Size = new System.Drawing.Size(140, 26);
             this.btnStart.TabIndex = 5;
             this.btnStart.Text = "Start Tasks";
             this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
+            // btnClearTmp2
+            // 
+            this.btnClearTmp2.Location = new System.Drawing.Point(246, 63);
+            this.btnClearTmp2.Name = "btnClearTmp2";
+            this.btnClearTmp2.Size = new System.Drawing.Size(75, 23);
+            this.btnClearTmp2.TabIndex = 22;
+            this.btnClearTmp2.Text = "Clear";
+            this.btnClearTmp2.UseVisualStyleBackColor = true;
+            this.btnClearTmp2.Click += new System.EventHandler(this.btnClearTmp2_Click);
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 519);
+            this.ClientSize = new System.Drawing.Size(1048, 576);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbOptions);
@@ -834,6 +868,7 @@ namespace madMaxGUI
             this.Load += new System.EventHandler(this.mainGUI_Load);
             this.gbPaths.ResumeLayout(false);
             this.gbPaths.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).EndInit();
             this.gbKeys.ResumeLayout(false);
             this.gbKeys.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -841,11 +876,10 @@ namespace madMaxGUI
             this.gbOptions.ResumeLayout(false);
             this.gbOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -863,8 +897,6 @@ namespace madMaxGUI
         private System.Windows.Forms.Button btnTmpPath2Pick;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnFinalDest1Pick;
-        private System.Windows.Forms.Label lbFinalDest1_currentPath;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox gbKeys;
         private System.Windows.Forms.Label lbFmKIndicator;
@@ -872,25 +904,20 @@ namespace madMaxGUI
         private System.Windows.Forms.Label lbPoolKey;
         private System.Windows.Forms.TextBox txFarmerKey;
         private System.Windows.Forms.Label lbFarmerKey;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lbPlKeyIndicator;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button btnAutoGetKeys;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lbProcessor;
-        private System.Windows.Forms.Label lbLogicalCPUs;
+        private System.Windows.Forms.Label lbThreads;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lbCores;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox cbAlternateStorage;
         private System.Windows.Forms.GroupBox gbOptions;
         private System.Windows.Forms.Label lbRAM;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown nudThreads;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label lbCPUCount;
@@ -912,11 +939,18 @@ namespace madMaxGUI
         private System.Windows.Forms.DataGridViewTextBoxColumn Phase;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label lbFinal1AvailSpace;
         private System.Windows.Forms.Label lbTmp2AvailSpace;
         private System.Windows.Forms.Label lbTmp1AvailSpace;
         private System.Windows.Forms.Label lbPlotCountSuggested;
+        private System.Windows.Forms.DataGridView gvFinalDrives;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Path;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Space;
+        private System.Windows.Forms.Button btnRemoveDrives;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbSeparatedTaskCopy;
+        private System.Windows.Forms.CheckBox cbInternalCopy;
+        private System.Windows.Forms.CheckBox cbValidatePlot;
+        private System.Windows.Forms.Button btnClearTmp2;
     }
 }
 

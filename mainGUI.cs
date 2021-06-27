@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.IO;
+using System.Collections.Generic;
 
 namespace madMaxGUI
 {
@@ -69,7 +70,6 @@ namespace madMaxGUI
             }
         }
 
-
         public int getCPUusage()
         {
             System.Diagnostics.PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time","_Total");
@@ -123,10 +123,10 @@ namespace madMaxGUI
 
             chiaVersion = getRegistryValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\chia-blockchain\", "DisplayVersion");
 
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select Capacity from Win32_PhysicalMemory").Get())
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select TotalPhysicalMemory from Win32_ComputerSystem").Get())
             {
-                if (Int64.TryParse(item["Capacity"].ToString(), out memKb))
-                    lbRAM.Text = (memKb / 1024 / 1024).ToString() + " GB";
+                if (Int64.TryParse(item["TotalPhysicalMemory"].ToString(), out memKb))
+                    lbRAM.Text = (memKb / 1024 / 1024/ 1024).ToString() + " GB";
             }
 
             userProfile = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
@@ -149,8 +149,10 @@ namespace madMaxGUI
 
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_ComputerSystem").Get())
             {
-                lbLogicalCPUs.Text =  item["NumberOfLogicalProcessors"].ToString();
+                lbThreads.Text =  item["NumberOfLogicalProcessors"].ToString();
             }
+
+            lbThreadsSuggested.Text = String.Format("(Suggested:{0})" , (lbCores.Text.ToInt() * lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value).ToString());
         }
 
 
@@ -168,6 +170,8 @@ namespace madMaxGUI
             }
            
         }
+
+
 
         private void btnTmpPath2Pick_Click(object sender, EventArgs e)
         {
@@ -191,8 +195,15 @@ namespace madMaxGUI
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     finalPath_1 = fbd.SelectedPath;
-                    lbFinalDest1_currentPath.Text = finalPath_1;
-                    setDriveInfo(lbFinalDest1_currentPath, lbFinal1AvailSpace);
+                    var index = gvFinalDrives.Rows.Add();
+                    gvFinalDrives.Rows[index].Cells["Path"].Value = finalPath_1;
+                    var driveInfo = getDriveInfo(finalPath_1);
+
+                    if (driveInfo != null)
+                    {
+                        var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
+                        gvFinalDrives.Rows[index].Cells["Space"].Value = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
+                    }
                 }
             }
         }
@@ -258,19 +269,22 @@ namespace madMaxGUI
                 label.ForeColor = Color.DarkGray;
         }
 
-        private void setWarningLabels(Label targetLabel, string drivePath, float minimumPerFile, int multiplier=1)
+        private void setWarningLabels(Label targetLabel, string drivePath, float minimumPerFile, int suggested=1)
         {
-            var driveInfo = getDriveInfo(drivePath);
-            var gib = (driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024) * GiBfactor;
-            if (gib / (minimumPerFile*multiplier) < 1)
+            if ((drivePath != "(none)") && (!String.IsNullOrEmpty(drivePath)))
             {
-                targetLabel.Text = "Not enough space";
-                targetLabel.ForeColor = Color.DarkRed;
-            }
-            else
-            {
-                targetLabel.Text = String.Format("(Suggested:{0:0})", Math.Truncate((gib / (minimumPerFile * multiplier))));
-                targetLabel.ForeColor = Color.DarkGray;
+                var driveInfo = getDriveInfo(drivePath);
+                var gib = (driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024) * GiBfactor;
+                if ((gib / minimumPerFile < 1) || (Math.Truncate(gib / minimumPerFile)< suggested))
+                {
+                    targetLabel.Text = "Not enough space";
+                    targetLabel.ForeColor = Color.DarkRed;
+                }
+                else
+                {
+                    targetLabel.Text = String.Format("(Suggested:{0:0})", Math.Truncate(gib /minimumPerFile));
+                    targetLabel.ForeColor = Color.DarkSlateGray;
+                }
             }
         }
 
@@ -284,6 +298,64 @@ namespace madMaxGUI
             setIndicatorColor(this.txPoolKey,this.lbPlKeyIndicator);
         }
 
-       
+        private void nudPlotCount_Changed(object sender, EventArgs e) 
+        {
+            setWarningLabels(lbPlotCountSuggested, tmpPath_1, 220, (int)nudPlotCount.Value);
+            var suggestedThreads = (lbCores.Text.ToInt() * lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value);
+            suggestedThreads = (suggestedThreads < 1 ? 1 : suggestedThreads);
+            lbThreadsSuggested.Text = String.Format("(Suggested:{0})", suggestedThreads.ToString());
+        }
+
+        private void btnRemoveDrives_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow item in gvFinalDrives.SelectedRows)
+            {
+                gvFinalDrives.Rows.RemoveAt(item.Index);
+            }
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            List<PlotTask> plotTasks = new List<PlotTask>();
+
+            int finalDirIndex = 0;
+
+            for (int i = 0; i < nudPlotCount.Value; i++)
+            {
+                var currentFinalDir = gvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
+                
+                if (finalDirIndex < gvFinalDrives.Rows.Count-1)
+                    finalDirIndex++;
+                else
+                    finalDirIndex = 0;
+
+                plotTasks.Add(new PlotTask() {
+                    guid = Guid.NewGuid(),
+                    
+                    threads = nudThreads.Value.ToString(),
+                    buckets = (cbBuckets.Text.ToLowerInvariant().StartsWith("default")?"": cbBuckets.Text.ToLowerInvariant()),
+                    buckets34 = (cbBuckets34.Text.ToLowerInvariant().StartsWith("default") ? "" : cbBuckets34.Text.ToLowerInvariant()),
+
+                    copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
+                    useInternalCopy = cbInternalCopy.Checked,
+                    validateAfterCopy = cbValidatePlot.Checked,
+
+                    farmerKey = txFarmerKey.Text,
+                    poolKey = txPoolKey.Text,
+
+                    // dirs
+                    tmpDir1 = lbTmpPath1_currentPath.Text,
+                    tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(")?"": lbTmpPath2_currentPath.Text.ToLowerInvariant()),
+                    finalDir = currentFinalDir,
+                    status = TaskStatus.NotStarted
+                });
+
+            }
+        }
+
+        private void btnClearTmp2_Click(object sender, EventArgs e)
+        {
+            lbTmpPath2_currentPath.Text = "(none)";
+        }
     }
 }
