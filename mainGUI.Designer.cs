@@ -29,10 +29,11 @@ namespace madMaxGUI
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbPaths = new System.Windows.Forms.GroupBox();
+            this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.btnRemoveDrives = new System.Windows.Forms.Button();
             this.gvFinalDrives = new System.Windows.Forms.DataGridView();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,7 +43,7 @@ namespace madMaxGUI
             this.btnFinalDest1Pick = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.lbTmpPath2_currentPath = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cbAlternate = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnTmpPath2Pick = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -75,6 +76,7 @@ namespace madMaxGUI
             this.lbProcessor = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.cbValidatePlot = new System.Windows.Forms.CheckBox();
             this.cbInternalCopy = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -97,7 +99,6 @@ namespace madMaxGUI
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnStart = new System.Windows.Forms.Button();
-            this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -120,7 +121,7 @@ namespace madMaxGUI
             this.gbPaths.Controls.Add(this.btnFinalDest1Pick);
             this.gbPaths.Controls.Add(this.label4);
             this.gbPaths.Controls.Add(this.lbTmpPath2_currentPath);
-            this.gbPaths.Controls.Add(this.checkBox1);
+            this.gbPaths.Controls.Add(this.cbAlternate);
             this.gbPaths.Controls.Add(this.label2);
             this.gbPaths.Controls.Add(this.btnTmpPath2Pick);
             this.gbPaths.Controls.Add(this.label1);
@@ -129,7 +130,7 @@ namespace madMaxGUI
             this.gbPaths.Controls.Add(this.btnTmpPath1Pick);
             this.gbPaths.Controls.Add(this.lbTmpPath1);
             this.gbPaths.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.gbPaths.Location = new System.Drawing.Point(10, 99);
+            this.gbPaths.Location = new System.Drawing.Point(10, 90);
             this.gbPaths.Margin = new System.Windows.Forms.Padding(0);
             this.gbPaths.MinimumSize = new System.Drawing.Size(640, 80);
             this.gbPaths.Name = "gbPaths";
@@ -138,6 +139,16 @@ namespace madMaxGUI
             this.gbPaths.TabIndex = 0;
             this.gbPaths.TabStop = false;
             this.gbPaths.Text = "2.- Paths";
+            // 
+            // btnClearTmp2
+            // 
+            this.btnClearTmp2.Location = new System.Drawing.Point(246, 63);
+            this.btnClearTmp2.Name = "btnClearTmp2";
+            this.btnClearTmp2.Size = new System.Drawing.Size(75, 23);
+            this.btnClearTmp2.TabIndex = 22;
+            this.btnClearTmp2.Text = "Clear";
+            this.btnClearTmp2.UseVisualStyleBackColor = true;
+            this.btnClearTmp2.Click += new System.EventHandler(this.btnClearTmp2_Click);
             // 
             // btnRemoveDrives
             // 
@@ -155,37 +166,37 @@ namespace madMaxGUI
             this.gvFinalDrives.AllowUserToResizeRows = false;
             this.gvFinalDrives.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gvFinalDrives.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Space});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle2;
             this.gvFinalDrives.Location = new System.Drawing.Point(10, 137);
             this.gvFinalDrives.Name = "gvFinalDrives";
             this.gvFinalDrives.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gvFinalDrives.RowTemplate.Height = 25;
             this.gvFinalDrives.Size = new System.Drawing.Size(621, 112);
             this.gvFinalDrives.TabIndex = 20;
@@ -253,15 +264,15 @@ namespace madMaxGUI
             this.lbTmpPath2_currentPath.TabIndex = 8;
             this.lbTmpPath2_currentPath.Text = "(none)";
             // 
-            // checkBox1
+            // cbAlternate
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(352, 68);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(74, 19);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Alternate";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cbAlternate.AutoSize = true;
+            this.cbAlternate.Location = new System.Drawing.Point(352, 68);
+            this.cbAlternate.Name = "cbAlternate";
+            this.cbAlternate.Size = new System.Drawing.Size(74, 19);
+            this.cbAlternate.TabIndex = 7;
+            this.cbAlternate.Text = "Alternate";
+            this.cbAlternate.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -344,7 +355,7 @@ namespace madMaxGUI
             this.gbKeys.Controls.Add(this.lbPoolKey);
             this.gbKeys.Controls.Add(this.txFarmerKey);
             this.gbKeys.Controls.Add(this.lbFarmerKey);
-            this.gbKeys.Location = new System.Drawing.Point(10, 14);
+            this.gbKeys.Location = new System.Drawing.Point(10, 5);
             this.gbKeys.Name = "gbKeys";
             this.gbKeys.Size = new System.Drawing.Size(640, 82);
             this.gbKeys.TabIndex = 1;
@@ -432,7 +443,7 @@ namespace madMaxGUI
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.lbProcessor);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Location = new System.Drawing.Point(656, 14);
+            this.groupBox1.Location = new System.Drawing.Point(656, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(387, 103);
             this.groupBox1.TabIndex = 2;
@@ -575,6 +586,7 @@ namespace madMaxGUI
             // 
             // gbOptions
             // 
+            this.gbOptions.Controls.Add(this.label5);
             this.gbOptions.Controls.Add(this.cbValidatePlot);
             this.gbOptions.Controls.Add(this.cbInternalCopy);
             this.gbOptions.Controls.Add(this.label3);
@@ -590,17 +602,28 @@ namespace madMaxGUI
             this.gbOptions.Controls.Add(this.label15);
             this.gbOptions.Controls.Add(this.nudThreads);
             this.gbOptions.Controls.Add(this.label14);
-            this.gbOptions.Location = new System.Drawing.Point(656, 124);
+            this.gbOptions.Location = new System.Drawing.Point(656, 115);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 212);
+            this.gbOptions.Size = new System.Drawing.Size(387, 224);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label5.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label5.Location = new System.Drawing.Point(20, 184);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(196, 12);
+            this.label5.TabIndex = 15;
+            this.label5.Text = "(Only if Copy on separated Task is checked)";
+            // 
             // cbValidatePlot
             // 
             this.cbValidatePlot.AutoSize = true;
-            this.cbValidatePlot.Location = new System.Drawing.Point(6, 187);
+            this.cbValidatePlot.Location = new System.Drawing.Point(7, 199);
             this.cbValidatePlot.Name = "cbValidatePlot";
             this.cbValidatePlot.Size = new System.Drawing.Size(147, 19);
             this.cbValidatePlot.TabIndex = 14;
@@ -610,24 +633,24 @@ namespace madMaxGUI
             // cbInternalCopy
             // 
             this.cbInternalCopy.AutoSize = true;
-            this.cbInternalCopy.Location = new System.Drawing.Point(7, 165);
+            this.cbInternalCopy.Location = new System.Drawing.Point(6, 167);
             this.cbInternalCopy.Name = "cbInternalCopy";
-            this.cbInternalCopy.Size = new System.Drawing.Size(167, 19);
+            this.cbInternalCopy.Size = new System.Drawing.Size(219, 19);
             this.cbInternalCopy.TabIndex = 13;
-            this.cbInternalCopy.Text = "Use internal Copy function";
+            this.cbInternalCopy.Text = "Use internal Ultra Fast Copy function";
             this.cbInternalCopy.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label3.Location = new System.Drawing.Point(7, 135);
+            this.label3.Location = new System.Drawing.Point(20, 135);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(352, 26);
+            this.label3.Size = new System.Drawing.Size(346, 24);
             this.label3.TabIndex = 12;
-            this.label3.Text = "(If Continuos mode on, task will restart without waiting for copy to\r\n becomplete" +
-    "d)";
+            this.label3.Text = "(Beware If Continuos mode on, task will restart without waiting for copy to be \r\n" +
+    "completed but plot file will remain on TmpDir1 until moved)";
             // 
             // cbSeparatedTaskCopy
             // 
@@ -661,16 +684,16 @@ namespace madMaxGUI
             "128",
             "256",
             "512"});
-            this.cbBuckets34.Location = new System.Drawing.Point(260, 89);
+            this.cbBuckets34.Location = new System.Drawing.Point(254, 89);
             this.cbBuckets34.Name = "cbBuckets34";
-            this.cbBuckets34.Size = new System.Drawing.Size(115, 23);
+            this.cbBuckets34.Size = new System.Drawing.Size(121, 23);
             this.cbBuckets34.TabIndex = 9;
             this.cbBuckets34.Text = "default (=buckets)";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(155, 93);
+            this.label19.Location = new System.Drawing.Point(155, 92);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(99, 15);
             this.label19.TabIndex = 8;
@@ -690,7 +713,7 @@ namespace madMaxGUI
             "512"});
             this.cbBuckets.Location = new System.Drawing.Point(58, 89);
             this.cbBuckets.Name = "cbBuckets";
-            this.cbBuckets.Size = new System.Drawing.Size(86, 23);
+            this.cbBuckets.Size = new System.Drawing.Size(91, 23);
             this.cbBuckets.TabIndex = 7;
             this.cbBuckets.Text = "default (256)";
             // 
@@ -782,7 +805,7 @@ namespace madMaxGUI
             this.groupBox2.Controls.Add(this.dataGridView1);
             this.groupBox2.Location = new System.Drawing.Point(10, 364);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1030, 208);
+            this.groupBox2.Size = new System.Drawing.Size(1033, 208);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Plotting tasks";
@@ -833,23 +856,13 @@ namespace madMaxGUI
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(895, 342);
+            this.btnStart.Location = new System.Drawing.Point(903, 345);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(140, 26);
+            this.btnStart.Size = new System.Drawing.Size(140, 25);
             this.btnStart.TabIndex = 5;
             this.btnStart.Text = "Start Tasks";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
-            // btnClearTmp2
-            // 
-            this.btnClearTmp2.Location = new System.Drawing.Point(246, 63);
-            this.btnClearTmp2.Name = "btnClearTmp2";
-            this.btnClearTmp2.Size = new System.Drawing.Size(75, 23);
-            this.btnClearTmp2.TabIndex = 22;
-            this.btnClearTmp2.Text = "Clear";
-            this.btnClearTmp2.UseVisualStyleBackColor = true;
-            this.btnClearTmp2.Click += new System.EventHandler(this.btnClearTmp2_Click);
             // 
             // mainGUI
             // 
@@ -892,7 +905,7 @@ namespace madMaxGUI
         private System.Windows.Forms.Label lbTmpPath1_currentPath;
         private System.Windows.Forms.Label lbtmpPath1CurrentPath;
         private System.Windows.Forms.Label lbTmpPath2_currentPath;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox cbAlternate;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnTmpPath2Pick;
         private System.Windows.Forms.Label label1;
@@ -951,6 +964,7 @@ namespace madMaxGUI
         private System.Windows.Forms.CheckBox cbInternalCopy;
         private System.Windows.Forms.CheckBox cbValidatePlot;
         private System.Windows.Forms.Button btnClearTmp2;
+        private System.Windows.Forms.Label label5;
     }
 }
 

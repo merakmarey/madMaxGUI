@@ -28,6 +28,11 @@ namespace madMaxGUI
         public bool useInternalCopy;
         public bool validateAfterCopy;
         public TaskStatus status;
-        
+
+        public string cmdString;
+        public string output;
+        public string error;
+
+        public string plot_filename;
     }
 }

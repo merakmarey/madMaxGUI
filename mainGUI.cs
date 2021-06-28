@@ -314,6 +314,21 @@ namespace madMaxGUI
             }
         }
 
+
+        private string createCommand(PlotTask pTask)
+        {
+            string cmd;
+
+            cmd = " -n 1" + (!String.IsNullOrEmpty(pTask.threads) ? " -r " + pTask.threads : String.Empty) +
+                (!String.IsNullOrEmpty(pTask.buckets) ? " -u " + pTask.buckets : String.Empty) +
+                (!String.IsNullOrEmpty(pTask.buckets34) ? " -v " + pTask.buckets34 : String.Empty) +
+                " -t \"" + pTask.tmpDir1 + "\"" +
+                (String.IsNullOrEmpty(pTask.tmpDir2)?String.Empty:" -2 \"" + pTask.tmpDir2+"\"") + 
+                " -p " + pTask.poolKey + " -f " + pTask.farmerKey +
+                (!pTask.copyOnSeparatedTask?" -d "+pTask.finalDir:String.Empty);
+            return cmd;
+        }
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             List<PlotTask> plotTasks = new List<PlotTask>();
@@ -322,19 +337,27 @@ namespace madMaxGUI
 
             for (int i = 0; i < nudPlotCount.Value; i++)
             {
-                var currentFinalDir = gvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
-                
-                if (finalDirIndex < gvFinalDrives.Rows.Count-1)
-                    finalDirIndex++;
-                else
-                    finalDirIndex = 0;
+                string currentFinalDir;
 
-                plotTasks.Add(new PlotTask() {
+                if (gvFinalDrives.Rows.Count > 0)
+                {
+                    currentFinalDir = gvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
+
+                    if (finalDirIndex < gvFinalDrives.Rows.Count - 1)
+                        finalDirIndex++;
+                    else
+                        finalDirIndex = 0;
+                } else
+                {
+                    currentFinalDir = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                }
+
+                var newTask = new PlotTask() {
                     guid = Guid.NewGuid(),
                     
                     threads = nudThreads.Value.ToString(),
-                    buckets = (cbBuckets.Text.ToLowerInvariant().StartsWith("default")?"": cbBuckets.Text.ToLowerInvariant()),
-                    buckets34 = (cbBuckets34.Text.ToLowerInvariant().StartsWith("default") ? "" : cbBuckets34.Text.ToLowerInvariant()),
+                    buckets = (cbBuckets.Text.ToLowerInvariant().StartsWith("default")? String.Empty : cbBuckets.Text.ToLowerInvariant()),
+                    buckets34 = (cbBuckets34.Text.ToLowerInvariant().StartsWith("default") ? String.Empty : cbBuckets34.Text.ToLowerInvariant()),
 
                     copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
                     useInternalCopy = cbInternalCopy.Checked,
@@ -343,13 +366,35 @@ namespace madMaxGUI
                     farmerKey = txFarmerKey.Text,
                     poolKey = txPoolKey.Text,
 
-                    // dirs
-                    tmpDir1 = lbTmpPath1_currentPath.Text,
-                    tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(")?"": lbTmpPath2_currentPath.Text.ToLowerInvariant()),
                     finalDir = currentFinalDir,
                     status = TaskStatus.NotStarted
-                });
+                };
 
+                // dirs
+                if (cbAlternate.Checked && !String.IsNullOrEmpty(lbTmpPath2_currentPath.Text))
+                {
+                    if (i % 2==0)
+                    {
+                        newTask.tmpDir1 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir2 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
+                    } else
+                    {
+                        newTask.tmpDir1 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir2 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                    }
+                }
+                else
+                {
+                    newTask.tmpDir1 = lbTmpPath1_currentPath.Text;
+                    if (cbAlternate.Checked)
+                        newTask.tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(") ? String.Empty : lbTmpPath2_currentPath.Text.ToLowerInvariant());
+                    else
+                        newTask.tmpDir2 = String.Empty;
+                }
+
+
+                newTask.cmdString = createCommand(newTask);
+                plotTasks.Add(newTask);
             }
         }
 
@@ -357,5 +402,7 @@ namespace madMaxGUI
         {
             lbTmpPath2_currentPath.Text = "(none)";
         }
+
+       
     }
 }
