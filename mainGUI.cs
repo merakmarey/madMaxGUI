@@ -7,6 +7,8 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace madMaxGUI
 {
@@ -29,8 +31,10 @@ namespace madMaxGUI
         string finalPath_1;
 
 
-        private Timer TimerRAM;
-        private Timer TimerCPU;
+        private System.Windows.Forms.Timer TimerRAM;
+        private System.Windows.Forms.Timer TimerCPU;
+
+        List<Task> plottingTasks = new List<Task>(); 
 
         public mainGUI()
         {
@@ -95,17 +99,16 @@ namespace madMaxGUI
             var cpuUsed = getCPUusage();
             lbCPUusage.Text = cpuUsed + " %";
         }
-
         private void InitRAMTimer()
         {
-            TimerRAM = new Timer();
+            TimerRAM = new System.Windows.Forms.Timer();
             TimerRAM.Tick += new EventHandler(TimerRAM_Tick);
             TimerRAM.Interval = 1000;
             TimerRAM.Start();
         }
         private void InitCPUTimer()
         {
-            TimerCPU = new Timer();
+            TimerCPU = new System.Windows.Forms.Timer();
             TimerCPU.Tick += new EventHandler(TimerCPU_Tick);
             TimerCPU.Interval = 1000;
             TimerCPU.Start();
@@ -170,8 +173,6 @@ namespace madMaxGUI
             }
            
         }
-
-
 
         private void btnTmpPath2Pick_Click(object sender, EventArgs e)
         {
@@ -314,6 +315,60 @@ namespace madMaxGUI
             }
         }
 
+        private void outputProcessor()
+        {
+
+        }
+
+        private void StartPlottingTasks(List<PlotTask> tasks)
+        {
+            foreach (var item in tasks)
+            {
+                var task = System.Threading.Tasks.Task.Factory.StartNew(() => {
+
+
+                    var pStartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory+@"\madMax",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true,
+                    };
+                    
+                    using (item.process = new Process() )
+                    {
+                        item.process.StartInfo = pStartInfo;
+
+                        item.process.Start();
+                        item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
+                        item.process.StandardInput.AutoFlush = true;
+
+                        item.process.OutputDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.outputProcessor(outline.Data, ref dgvPloTasks); };
+
+                        item.process.ErrorDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.error += outline.Data; };
+
+                        /*
+                          
+                        item.process.StandardInput.Close();
+
+                        output = item.process.StandardOutput.ReadToEnd();
+                        error = item.process.StandardError.ReadToEnd();
+
+                        */
+
+                        item.process.WaitForExit();
+                    }
+                });
+            }
+        }
+
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         private string createCommand(PlotTask pTask)
         {
@@ -396,6 +451,8 @@ namespace madMaxGUI
                 newTask.cmdString = createCommand(newTask);
                 plotTasks.Add(newTask);
             }
+
+            StartPlottingTasks(plotTasks);
         }
 
         private void btnClearTmp2_Click(object sender, EventArgs e)

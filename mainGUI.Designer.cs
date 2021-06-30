@@ -29,9 +29,9 @@ namespace madMaxGUI
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbPaths = new System.Windows.Forms.GroupBox();
             this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.btnRemoveDrives = new System.Windows.Forms.Button();
@@ -93,12 +93,12 @@ namespace madMaxGUI
             this.nudThreads = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Task = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Phase = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvPloTasks = new System.Windows.Forms.DataGridView();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnStart = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -107,7 +107,7 @@ namespace madMaxGUI
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPloTasks)).BeginInit();
             this.SuspendLayout();
             // 
             // gbPaths
@@ -142,7 +142,7 @@ namespace madMaxGUI
             // 
             // btnClearTmp2
             // 
-            this.btnClearTmp2.Location = new System.Drawing.Point(246, 63);
+            this.btnClearTmp2.Location = new System.Drawing.Point(245, 65);
             this.btnClearTmp2.Name = "btnClearTmp2";
             this.btnClearTmp2.Size = new System.Drawing.Size(75, 23);
             this.btnClearTmp2.TabIndex = 22;
@@ -166,37 +166,37 @@ namespace madMaxGUI
             this.gvFinalDrives.AllowUserToResizeRows = false;
             this.gvFinalDrives.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gvFinalDrives.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.gvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Space});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle5;
             this.gvFinalDrives.Location = new System.Drawing.Point(10, 137);
             this.gvFinalDrives.Name = "gvFinalDrives";
             this.gvFinalDrives.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.gvFinalDrives.RowTemplate.Height = 25;
             this.gvFinalDrives.Size = new System.Drawing.Size(621, 112);
             this.gvFinalDrives.TabIndex = 20;
@@ -802,7 +802,7 @@ namespace madMaxGUI
             // groupBox2
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox2.Controls.Add(this.dataGridView1);
+            this.groupBox2.Controls.Add(this.dgvPloTasks);
             this.groupBox2.Location = new System.Drawing.Point(10, 364);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 208);
@@ -810,37 +810,47 @@ namespace madMaxGUI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Plotting tasks";
             // 
-            // dataGridView1
+            // dgvPloTasks
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeColumns = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Task,
-            this.Phase,
+            this.dgvPloTasks.AllowUserToAddRows = false;
+            this.dgvPloTasks.AllowUserToDeleteRows = false;
+            this.dgvPloTasks.AllowUserToResizeColumns = false;
+            this.dgvPloTasks.AllowUserToResizeRows = false;
+            this.dgvPloTasks.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.dgvPloTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPloTasks.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Plot,
+            this.LastMessage,
             this.TimeElapsed,
             this.Status});
-            this.dataGridView1.EnableHeadersVisualStyles = false;
-            this.dataGridView1.Location = new System.Drawing.Point(10, 22);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(1014, 180);
-            this.dataGridView1.TabIndex = 0;
+            this.dgvPloTasks.EnableHeadersVisualStyles = false;
+            this.dgvPloTasks.Location = new System.Drawing.Point(10, 22);
+            this.dgvPloTasks.Name = "dgvPloTasks";
+            this.dgvPloTasks.RowTemplate.Height = 25;
+            this.dgvPloTasks.Size = new System.Drawing.Size(1014, 180);
+            this.dgvPloTasks.TabIndex = 0;
             // 
-            // Task
+            // btnStart
             // 
-            this.Task.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Task.HeaderText = "Task";
-            this.Task.Name = "Task";
+            this.btnStart.Location = new System.Drawing.Point(903, 343);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(140, 25);
+            this.btnStart.TabIndex = 5;
+            this.btnStart.Text = "Start Tasks";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // Phase
+            // Plot
             // 
-            this.Phase.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Phase.HeaderText = "Phase";
-            this.Phase.Name = "Phase";
+            this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Plot.HeaderText = "Plot";
+            this.Plot.Name = "Plot";
+            // 
+            // LastMessage
+            // 
+            this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LastMessage.HeaderText = "Last Message";
+            this.LastMessage.Name = "LastMessage";
             // 
             // TimeElapsed
             // 
@@ -853,16 +863,6 @@ namespace madMaxGUI
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
-            // 
-            // btnStart
-            // 
-            this.btnStart.Location = new System.Drawing.Point(903, 345);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(140, 25);
-            this.btnStart.TabIndex = 5;
-            this.btnStart.Text = "Start Tasks";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // mainGUI
             // 
@@ -891,7 +891,7 @@ namespace madMaxGUI
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).EndInit();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPloTasks)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -947,11 +947,7 @@ namespace madMaxGUI
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lbCPUusage;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Task;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Phase;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridView dgvPloTasks;
         private System.Windows.Forms.Label lbTmp2AvailSpace;
         private System.Windows.Forms.Label lbTmp1AvailSpace;
         private System.Windows.Forms.Label lbPlotCountSuggested;
@@ -965,6 +961,10 @@ namespace madMaxGUI
         private System.Windows.Forms.CheckBox cbValidatePlot;
         private System.Windows.Forms.Button btnClearTmp2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plot;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LastMessage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
     }
 }
 

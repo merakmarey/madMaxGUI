@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace madMaxGUI
 {
@@ -34,5 +37,26 @@ namespace madMaxGUI
         public string error;
 
         public string plot_filename;
+
+        public Process process;
+
+        public void outputProcessor(string outputLine, ref System.Windows.Forms.DataGridView dgv)
+        {
+            output += outputLine;
+            if (outputLine.StartsWith("Plot name:"))
+            {
+                var tmp_plot_filename = outputLine.Substring(11);
+                DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(tmp_plot_filename)).FirstOrDefault();
+
+                if (row==null)
+                {
+                    plot_filename = tmp_plot_filename;
+                }
+
+            } else
+            {
+                DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
+            }
+        }
     }
 }
