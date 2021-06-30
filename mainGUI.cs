@@ -21,7 +21,7 @@ namespace madMaxGUI
         const int maxKeyLength = 96;
         private const double GiBfactor = 0.931323;
         
-
+        
         string userProfile;
         string chiaVersion;
         int physicalCores;
@@ -34,7 +34,8 @@ namespace madMaxGUI
         private System.Windows.Forms.Timer TimerRAM;
         private System.Windows.Forms.Timer TimerCPU;
 
-        List<Task> plottingTasks = new List<Task>(); 
+        List<Task> plottingTasks = new List<Task>();
+        List<PlotTask> plotTasks = new List<PlotTask>();
 
         public mainGUI()
         {
@@ -114,6 +115,15 @@ namespace madMaxGUI
             TimerCPU.Start();
         }
 
+
+        private void KillChildProcesses(Process process)
+        {
+            foreach (Process childProcess in process.GetChildProcesses())
+            {
+                KillChildProcesses(childProcess);
+                childProcess.Kill(true);
+            }
+        }
         private void mainGUI_Load(object sender, EventArgs e)
         {
 
@@ -155,9 +165,17 @@ namespace madMaxGUI
                 lbThreads.Text =  item["NumberOfLogicalProcessors"].ToString();
             }
 
-            lbThreadsSuggested.Text = String.Format("(Suggested:{0})" , (lbCores.Text.ToInt() * lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value).ToString());
+            lbThreadsSuggested.Text = String.Format("(Suggested:{0})" , ((lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt()) / (int)nudPlotCount.Value).ToString());
         }
 
+        private void mainGUI_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            foreach (var item in plotTasks)
+            {
+                KillChildProcesses(item.process);
+                item.process.Kill(true);
+            }
+        }
 
         private void btnTmpPath1Pick_Click(object sender, EventArgs e)
         {
@@ -315,11 +333,6 @@ namespace madMaxGUI
             }
         }
 
-        private void outputProcessor()
-        {
-
-        }
-
         private void StartPlottingTasks(List<PlotTask> tasks)
         {
             foreach (var item in tasks)
@@ -330,7 +343,7 @@ namespace madMaxGUI
                     var pStartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory+@"\madMax",
+                        WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory+@"madMax\",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardInput = true,
@@ -346,7 +359,12 @@ namespace madMaxGUI
                         item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
                         item.process.StandardInput.AutoFlush = true;
 
-                        item.process.OutputDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.outputProcessor(outline.Data, ref dgvPloTasks); };
+                        item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e)=> 
+                        {
+                            item.outputProcessor(e.Data, dgvPlotTasks);
+                        });
+
+                        //item.process.OutputDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => {  };
 
                         item.process.ErrorDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.error += outline.Data; };
 
@@ -358,8 +376,10 @@ namespace madMaxGUI
                         error = item.process.StandardError.ReadToEnd();
 
                         */
+                        item.process.BeginOutputReadLine();
 
                         item.process.WaitForExit();
+                        var t = item.output;
                     }
                 });
             }
@@ -370,6 +390,15 @@ namespace madMaxGUI
             throw new NotImplementedException();
         }
 
+        private string formatPath(string path)
+        {
+            string tmpString = "\"" + path;
+            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
+            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
+            tmpString += "\"";
+            return tmpString;
+        }
+
         private string createCommand(PlotTask pTask)
         {
             string cmd;
@@ -377,16 +406,15 @@ namespace madMaxGUI
             cmd = " -n 1" + (!String.IsNullOrEmpty(pTask.threads) ? " -r " + pTask.threads : String.Empty) +
                 (!String.IsNullOrEmpty(pTask.buckets) ? " -u " + pTask.buckets : String.Empty) +
                 (!String.IsNullOrEmpty(pTask.buckets34) ? " -v " + pTask.buckets34 : String.Empty) +
-                " -t \"" + pTask.tmpDir1 + "\"" +
-                (String.IsNullOrEmpty(pTask.tmpDir2)?String.Empty:" -2 \"" + pTask.tmpDir2+"\"") + 
+                " -t " + formatPath(pTask.tmpDir1) +
+                (String.IsNullOrEmpty(pTask.tmpDir2)?String.Empty:" -2 " + formatPath(pTask.tmpDir2)) + 
                 " -p " + pTask.poolKey + " -f " + pTask.farmerKey +
-                (!pTask.copyOnSeparatedTask?" -d "+pTask.finalDir:String.Empty);
+                (!pTask.copyOnSeparatedTask?" -d "+formatPath(pTask.finalDir):String.Empty);
             return cmd;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            List<PlotTask> plotTasks = new List<PlotTask>();
 
             int finalDirIndex = 0;
 

@@ -1,5 +1,4 @@
-﻿
-namespace madMaxGUI
+﻿namespace madMaxGUI
 {
     partial class mainGUI
     {
@@ -93,12 +92,12 @@ namespace madMaxGUI
             this.nudThreads = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dgvPloTasks = new System.Windows.Forms.DataGridView();
-            this.btnStart = new System.Windows.Forms.Button();
+            this.dgvPlotTasks = new System.Windows.Forms.DataGridView();
             this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnStart = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -107,7 +106,7 @@ namespace madMaxGUI
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).BeginInit();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPloTasks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlotTasks)).BeginInit();
             this.SuspendLayout();
             // 
             // gbPaths
@@ -802,7 +801,7 @@ namespace madMaxGUI
             // groupBox2
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox2.Controls.Add(this.dgvPloTasks);
+            this.groupBox2.Controls.Add(this.dgvPlotTasks);
             this.groupBox2.Location = new System.Drawing.Point(10, 364);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 208);
@@ -810,35 +809,25 @@ namespace madMaxGUI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Plotting tasks";
             // 
-            // dgvPloTasks
+            // dgvPlotTasks
             // 
-            this.dgvPloTasks.AllowUserToAddRows = false;
-            this.dgvPloTasks.AllowUserToDeleteRows = false;
-            this.dgvPloTasks.AllowUserToResizeColumns = false;
-            this.dgvPloTasks.AllowUserToResizeRows = false;
-            this.dgvPloTasks.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            this.dgvPloTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvPloTasks.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvPlotTasks.AllowUserToAddRows = false;
+            this.dgvPlotTasks.AllowUserToDeleteRows = false;
+            this.dgvPlotTasks.AllowUserToResizeColumns = false;
+            this.dgvPlotTasks.AllowUserToResizeRows = false;
+            this.dgvPlotTasks.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.dgvPlotTasks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvPlotTasks.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Plot,
             this.LastMessage,
             this.TimeElapsed,
             this.Status});
-            this.dgvPloTasks.EnableHeadersVisualStyles = false;
-            this.dgvPloTasks.Location = new System.Drawing.Point(10, 22);
-            this.dgvPloTasks.Name = "dgvPloTasks";
-            this.dgvPloTasks.RowTemplate.Height = 25;
-            this.dgvPloTasks.Size = new System.Drawing.Size(1014, 180);
-            this.dgvPloTasks.TabIndex = 0;
-            // 
-            // btnStart
-            // 
-            this.btnStart.Location = new System.Drawing.Point(903, 343);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(140, 25);
-            this.btnStart.TabIndex = 5;
-            this.btnStart.Text = "Start Tasks";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.dgvPlotTasks.EnableHeadersVisualStyles = false;
+            this.dgvPlotTasks.Location = new System.Drawing.Point(10, 22);
+            this.dgvPlotTasks.Name = "dgvPlotTasks";
+            this.dgvPlotTasks.RowTemplate.Height = 25;
+            this.dgvPlotTasks.Size = new System.Drawing.Size(1014, 180);
+            this.dgvPlotTasks.TabIndex = 0;
             // 
             // Plot
             // 
@@ -864,6 +853,16 @@ namespace madMaxGUI
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             // 
+            // btnStart
+            // 
+            this.btnStart.Location = new System.Drawing.Point(903, 343);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(140, 25);
+            this.btnStart.TabIndex = 5;
+            this.btnStart.Text = "Start Tasks";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -879,6 +878,7 @@ namespace madMaxGUI
             this.Padding = new System.Windows.Forms.Padding(10);
             this.Text = "mainGUI";
             this.Load += new System.EventHandler(this.mainGUI_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainGUI_FormClosing);
             this.gbPaths.ResumeLayout(false);
             this.gbPaths.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).EndInit();
@@ -891,7 +891,7 @@ namespace madMaxGUI
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).EndInit();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvPloTasks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvPlotTasks)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -947,7 +947,7 @@ namespace madMaxGUI
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lbCPUusage;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.DataGridView dgvPloTasks;
+        private System.Windows.Forms.DataGridView dgvPlotTasks;
         private System.Windows.Forms.Label lbTmp2AvailSpace;
         private System.Windows.Forms.Label lbTmp1AvailSpace;
         private System.Windows.Forms.Label lbPlotCountSuggested;

@@ -40,22 +40,30 @@ namespace madMaxGUI
 
         public Process process;
 
-        public void outputProcessor(string outputLine, ref System.Windows.Forms.DataGridView dgv)
+        public void outputProcessor(string outputLine, System.Windows.Forms.DataGridView dgv)
         {
             output += outputLine;
-            if (outputLine.StartsWith("Plot name:"))
+            if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
             {
                 var tmp_plot_filename = outputLine.Substring(11);
                 DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(tmp_plot_filename)).FirstOrDefault();
 
                 if (row==null)
                 {
+                    if (dgv.InvokeRequired)
+                    {
+                        dgv.Invoke(new Action(()=> { dgv.Rows.Add(tmp_plot_filename, "", "", ""); }));
+                    }
                     plot_filename = tmp_plot_filename;
                 }
 
             } else
             {
-                DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
+                if (!String.IsNullOrEmpty(plot_filename))
+                {
+                    DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
+                    row.Cells["LastMessage"].Value = outputLine;
+                }
             }
         }
     }
