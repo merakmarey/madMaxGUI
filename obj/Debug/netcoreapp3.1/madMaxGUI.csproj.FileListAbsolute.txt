@@ -24,3 +24,4 @@ C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.dll
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.pdb
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.genruntimeconfig.cache
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.csproj.AssemblyReference.cache
+C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.OutputForm.resources

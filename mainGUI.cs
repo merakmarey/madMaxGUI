@@ -33,6 +33,7 @@ namespace madMaxGUI
 
         private System.Windows.Forms.Timer TimerRAM;
         private System.Windows.Forms.Timer TimerCPU;
+        private System.Windows.Forms.Timer TimerTask;
 
         List<Task> plottingTasks = new List<Task>();
         List<PlotTask> plotTasks = new List<PlotTask>();
@@ -100,6 +101,16 @@ namespace madMaxGUI
             var cpuUsed = getCPUusage();
             lbCPUusage.Text = cpuUsed + " %";
         }
+        private void TimerTask_Tick(object sender, EventArgs e)
+        {
+            if (dgvPlotTasks.Rows.Count>0)
+            foreach (var item in plotTasks)
+            {
+                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).First();
+                var chia_process = item.process.GetChildProcesses().Where(p => p.ProcessName == "chia_plot").First();
+                row.Cells["TimeElapsed"].Value = (chia_process.StartTime- DateTime.Now).ToString(@"hh\:mm\:ss");
+            }
+        }
         private void InitRAMTimer()
         {
             TimerRAM = new System.Windows.Forms.Timer();
@@ -113,6 +124,13 @@ namespace madMaxGUI
             TimerCPU.Tick += new EventHandler(TimerCPU_Tick);
             TimerCPU.Interval = 1000;
             TimerCPU.Start();
+        }
+        private void InitPlotTasksTimer()
+        {
+            TimerTask = new System.Windows.Forms.Timer();
+            TimerTask.Tick += new EventHandler(TimerTask_Tick);
+            TimerTask.Interval = 1000;
+            TimerTask.Start();
         }
 
 
@@ -233,6 +251,10 @@ namespace madMaxGUI
             {
                 string output;
                 string error;
+                lbAutoWorking.Text = "Working!";
+                lbAutoWorking.ForeColor = System.Drawing.Color.Red;
+                btnAutoGetKeys.Enabled = false;
+                lbAutoWorking.Refresh();
 
                 var pStartInfo = new ProcessStartInfo
                 {
@@ -248,7 +270,7 @@ namespace madMaxGUI
                 using (Process process = new Process())
                 {
                     process.StartInfo = pStartInfo;
-
+                    
                     process.Start();
                     process.StandardInput.WriteLine(userProfile + @"\AppData\Local\chia-blockchain\app-"+chiaVersion+@"\resources\app.asar.unpacked\daemon\chia.exe keys show");
                     process.StandardInput.AutoFlush = true;
@@ -274,7 +296,14 @@ namespace madMaxGUI
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                MessageBox.Show(ex.Message, "Auto Keys Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnAutoGetKeys.Enabled = true;
+                lbAutoWorking.Text = "Ready";
+                lbAutoWorking.ForeColor = System.Drawing.Color.Green;
+                lbAutoWorking.Refresh();
             }
         }
 
@@ -333,12 +362,23 @@ namespace madMaxGUI
             }
         }
 
+        private void dgvPlotTasks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dgvPlotTasks.Columns["Output"].Index && e.RowIndex>=0)
+            {
+                var plotName = dgvPlotTasks.Rows[e.RowIndex].Cells["Plot"].Value.ToString();
+                var outputText = plotTasks.Where(p => p.plot_filename == plotName).First().output;
+                var outputForm = new OutputForm();
+                outputForm.txOutput.Text = outputText;
+                outputForm.Show();
+            }
+        }
+
         private void StartPlottingTasks(List<PlotTask> tasks)
         {
             foreach (var item in tasks)
             {
                 var task = System.Threading.Tasks.Task.Factory.StartNew(() => {
-
 
                     var pStartInfo = new ProcessStartInfo
                     {
@@ -354,10 +394,11 @@ namespace madMaxGUI
                     using (item.process = new Process() )
                     {
                         item.process.StartInfo = pStartInfo;
-
+                        
                         item.process.Start();
                         item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
                         item.process.StandardInput.AutoFlush = true;
+                       
 
                         item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e)=> 
                         {
@@ -378,16 +419,26 @@ namespace madMaxGUI
                         */
                         item.process.BeginOutputReadLine();
 
-                        item.process.WaitForExit();
-                        var t = item.output;
-                    }
-                });
-            }
-        }
+                        bool waitforchia_plotter_process = true;
+                        while (waitforchia_plotter_process)
+                        {
+                            var childprocs = item.process.GetChildProcesses();
+                            if (childprocs.Where(p => p.ProcessName == "chia_plot").Count() > 0)
+                                waitforchia_plotter_process = false;
+                        }
 
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
+                        foreach (Process childProcess in item.process.GetChildProcesses())
+                        {
+                            if (childProcess.ProcessName=="chia_plot")
+                            childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                        }
+                        item.process.WaitForExit();
+                        
+                    }
+                    
+                }, TaskCreationOptions.None );
+            }
+            InitPlotTasksTimer();
         }
 
         private string formatPath(string path)
@@ -415,7 +466,17 @@ namespace madMaxGUI
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(tmpPath_1))
+            {
+                MessageBox.Show( "Tmp path # 1 cannot be empty","Tmp path # 1",MessageBoxButtons.OK, MessageBoxIcon.Error); 
+                return;
+            }
 
+            if (String.IsNullOrEmpty(txPoolKey.Text) || String.IsNullOrEmpty(txFarmerKey.Text) || (txFarmerKey.Text.Length+txPoolKey.Text.Length!= maxKeyLength*2) )
+            {
+                MessageBox.Show( "Pool/Farmer keys cannot be empty/invalid", "Keys",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             int finalDirIndex = 0;
 
             for (int i = 0; i < nudPlotCount.Value; i++)

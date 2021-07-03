@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbPaths = new System.Windows.Forms.GroupBox();
             this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.btnRemoveDrives = new System.Windows.Forms.Button();
@@ -52,6 +52,7 @@
             this.lbTmpPath1 = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.gbKeys = new System.Windows.Forms.GroupBox();
+            this.lbAutoWorking = new System.Windows.Forms.Label();
             this.btnAutoGetKeys = new System.Windows.Forms.Button();
             this.lbPlKeyIndicator = new System.Windows.Forms.Label();
             this.lbFmKIndicator = new System.Windows.Forms.Label();
@@ -97,6 +98,7 @@
             this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
             this.btnStart = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).BeginInit();
@@ -165,37 +167,37 @@
             this.gvFinalDrives.AllowUserToResizeRows = false;
             this.gvFinalDrives.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gvFinalDrives.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Space});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle2;
             this.gvFinalDrives.Location = new System.Drawing.Point(10, 137);
             this.gvFinalDrives.Name = "gvFinalDrives";
             this.gvFinalDrives.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gvFinalDrives.RowTemplate.Height = 25;
             this.gvFinalDrives.Size = new System.Drawing.Size(621, 112);
             this.gvFinalDrives.TabIndex = 20;
@@ -347,6 +349,7 @@
             // 
             // gbKeys
             // 
+            this.gbKeys.Controls.Add(this.lbAutoWorking);
             this.gbKeys.Controls.Add(this.btnAutoGetKeys);
             this.gbKeys.Controls.Add(this.lbPlKeyIndicator);
             this.gbKeys.Controls.Add(this.lbFmKIndicator);
@@ -360,6 +363,16 @@
             this.gbKeys.TabIndex = 1;
             this.gbKeys.TabStop = false;
             this.gbKeys.Text = "1.- Keys";
+            // 
+            // lbAutoWorking
+            // 
+            this.lbAutoWorking.AutoSize = true;
+            this.lbAutoWorking.ForeColor = System.Drawing.Color.Green;
+            this.lbAutoWorking.Location = new System.Drawing.Point(574, 53);
+            this.lbAutoWorking.Name = "lbAutoWorking";
+            this.lbAutoWorking.Size = new System.Drawing.Size(39, 15);
+            this.lbAutoWorking.TabIndex = 7;
+            this.lbAutoWorking.Text = "Ready";
             // 
             // btnAutoGetKeys
             // 
@@ -821,13 +834,15 @@
             this.Plot,
             this.LastMessage,
             this.TimeElapsed,
-            this.Status});
+            this.Status,
+            this.Output});
             this.dgvPlotTasks.EnableHeadersVisualStyles = false;
             this.dgvPlotTasks.Location = new System.Drawing.Point(10, 22);
             this.dgvPlotTasks.Name = "dgvPlotTasks";
             this.dgvPlotTasks.RowTemplate.Height = 25;
             this.dgvPlotTasks.Size = new System.Drawing.Size(1014, 180);
             this.dgvPlotTasks.TabIndex = 0;
+            this.dgvPlotTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlotTasks_CellContentClick);
             // 
             // Plot
             // 
@@ -853,6 +868,16 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             // 
+            // Output
+            // 
+            this.Output.HeaderText = "Output";
+            this.Output.Name = "Output";
+            this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Output.Text = "Open";
+            this.Output.ToolTipText = "Open full output transcript on separated window";
+            this.Output.UseColumnTextForButtonValue = true;
+            // 
             // btnStart
             // 
             this.btnStart.Location = new System.Drawing.Point(903, 343);
@@ -877,8 +902,8 @@
             this.Name = "mainGUI";
             this.Padding = new System.Windows.Forms.Padding(10);
             this.Text = "mainGUI";
-            this.Load += new System.EventHandler(this.mainGUI_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainGUI_FormClosing);
+            this.Load += new System.EventHandler(this.mainGUI_Load);
             this.gbPaths.ResumeLayout(false);
             this.gbPaths.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvFinalDrives)).EndInit();
@@ -965,6 +990,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn LastMessage;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewButtonColumn Output;
+        private System.Windows.Forms.Label lbAutoWorking;
     }
 }
 

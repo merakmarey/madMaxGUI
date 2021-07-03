@@ -39,10 +39,9 @@ namespace madMaxGUI
         public string plot_filename;
 
         public Process process;
-
         public void outputProcessor(string outputLine, System.Windows.Forms.DataGridView dgv)
         {
-            output += outputLine;
+            output += outputLine + Environment.NewLine;
             if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
             {
                 var tmp_plot_filename = outputLine.Substring(11);
@@ -52,7 +51,8 @@ namespace madMaxGUI
                 {
                     if (dgv.InvokeRequired)
                     {
-                        dgv.Invoke(new Action(()=> { dgv.Rows.Add(tmp_plot_filename, "", "", ""); }));
+                        
+                        dgv.Invoke(new Action(()=> { dgv.Rows.Add(tmp_plot_filename, "(none yet)", "--:--:--", "Running"); }));
                     }
                     plot_filename = tmp_plot_filename;
                 }
