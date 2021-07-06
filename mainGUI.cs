@@ -8,7 +8,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace madMaxGUI
 {
@@ -43,17 +43,16 @@ namespace madMaxGUI
             InitializeComponent();
         }
 
+        #region general tool functions 
         public string getRegistryValue(string regPath, string keyName)
         {
             return Registry.GetValue(regPath, keyName, String.Empty).ToString();
         }
-
         public float getAvailableMemory()
         {
             System.Diagnostics.PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available Bytes");
             return ramCounter.NextValue();
         }
-
         public DriveInfo getDriveInfo(string drivePath)
         {
             DriveInfo[] driveInfos = DriveInfo.GetDrives();
@@ -75,7 +74,6 @@ namespace madMaxGUI
                 }
             }
         }
-
         public int getCPUusage()
         {
             System.Diagnostics.PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time","_Total");
@@ -90,7 +88,18 @@ namespace madMaxGUI
 
             return percentage;
         }
+        private string formatPath(string path)
+        {
+            string tmpString = "\"" + path;
+            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
+            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
+            tmpString += "\"";
+            return tmpString;
+        }
+        #endregion
 
+
+        #region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e) 
         {
             var ramAvail = getAvailableMemory();
@@ -106,9 +115,14 @@ namespace madMaxGUI
             if (dgvPlotTasks.Rows.Count>0)
             foreach (var item in plotTasks)
             {
-                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).First();
-                var chia_process = item.process.GetChildProcesses().Where(p => p.ProcessName == "chia_plot").First();
-                row.Cells["TimeElapsed"].Value = (chia_process.StartTime- DateTime.Now).ToString(@"hh\:mm\:ss");
+                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
+                var child_process = item.process.GetChildProcesses();
+                if (child_process.Count() > 0)
+                {
+                    var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
+                    if (chia_process!=null)
+                    row.Cells["TimeElapsed"].Value = (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss");
+                }
             }
         }
         private void InitRAMTimer()
@@ -132,8 +146,10 @@ namespace madMaxGUI
             TimerTask.Interval = 1000;
             TimerTask.Start();
         }
+        #endregion
 
 
+        #region processes manipulation
         private void KillChildProcesses(Process process)
         {
             foreach (Process childProcess in process.GetChildProcesses())
@@ -142,6 +158,23 @@ namespace madMaxGUI
                 childProcess.Kill(true);
             }
         }
+
+        [DllImport("ntdll.dll", SetLastError = true)]
+        private static extern int NtSetInformationProcess(IntPtr hProcess, int processInformationClass, ref int processInformation, int processInformationLength);
+
+        private void SetHighIOPriority(Process process)
+        {
+            int priority = -5;
+            int PROCESS_INFORMATION_CLASS_ProcessIoPriority = 33;
+
+            var result = NtSetInformationProcess(process.Handle, PROCESS_INFORMATION_CLASS_ProcessIoPriority, ref priority, sizeof(int));
+        }
+
+
+        #endregion
+
+
+        #region click events
         private void mainGUI_Load(object sender, EventArgs e)
         {
 
@@ -191,7 +224,11 @@ namespace madMaxGUI
             foreach (var item in plotTasks)
             {
                 KillChildProcesses(item.process);
-                item.process.Kill(true);
+                try
+                {
+                    item.process.Kill(true);
+                }
+                catch (Exception ex) { };
             }
         }
 
@@ -307,6 +344,115 @@ namespace madMaxGUI
             }
         }
 
+        private void btnRemoveDrives_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow item in gvFinalDrives.SelectedRows)
+            {
+                gvFinalDrives.Rows.RemoveAt(item.Index);
+            }
+        }
+
+        private void dgvPlotTasks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dgvPlotTasks.Columns["Output"].Index && e.RowIndex >= 0)
+            {
+                var plotName = dgvPlotTasks.Rows[e.RowIndex].Cells["Plot"].Value.ToString();
+                var outputText = plotTasks.Where(p => p.plot_filename == plotName).First().output;
+                var outputForm = new OutputForm();
+                outputForm.txOutput.Text = outputText;
+                outputForm.Show();
+            }
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(tmpPath_1))
+            {
+                MessageBox.Show("Tmp path # 1 cannot be empty", "Tmp path # 1", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txPoolKey.Text) || String.IsNullOrEmpty(txFarmerKey.Text) || (txFarmerKey.Text.Length + txPoolKey.Text.Length != maxKeyLength * 2))
+            {
+                MessageBox.Show("Pool/Farmer keys cannot be empty/invalid", "Keys", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int finalDirIndex = 0;
+
+            for (int i = 0; i < nudPlotCount.Value; i++)
+            {
+                string currentFinalDir;
+
+                if (gvFinalDrives.Rows.Count > 0)
+                {
+                    currentFinalDir = gvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
+
+                    if (finalDirIndex < gvFinalDrives.Rows.Count - 1)
+                        finalDirIndex++;
+                    else
+                        finalDirIndex = 0;
+                }
+                else
+                {
+                    currentFinalDir = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                }
+
+                var newTask = new PlotTask()
+                {
+                    threads = nudThreads.Value.ToString(),
+                    buckets = (cbBuckets.Text.ToLowerInvariant().StartsWith("default") ? String.Empty : cbBuckets.Text.ToLowerInvariant()),
+                    buckets34 = (cbBuckets34.Text.ToLowerInvariant().StartsWith("default") ? String.Empty : cbBuckets34.Text.ToLowerInvariant()),
+
+                    copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
+                    useInternalCopy = cbInternalCopy.Checked,
+                    validateAfterCopy = cbValidatePlot.Checked,
+
+                    farmerKey = txFarmerKey.Text,
+                    poolKey = txPoolKey.Text,
+
+                    finalDir = currentFinalDir,
+                    status = TaskStatus.NotStarted
+                };
+
+                // dirs
+                if (cbAlternate.Checked && !String.IsNullOrEmpty(lbTmpPath2_currentPath.Text))
+                {
+                    if (i % 2 == 0)
+                    {
+                        newTask.tmpDir1 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir2 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
+                    }
+                    else
+                    {
+                        newTask.tmpDir1 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir2 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                    }
+                }
+                else
+                {
+                    newTask.tmpDir1 = lbTmpPath1_currentPath.Text;
+                    if (cbAlternate.Checked)
+                        newTask.tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(") ? String.Empty : lbTmpPath2_currentPath.Text.ToLowerInvariant());
+                    else
+                        newTask.tmpDir2 = String.Empty;
+                }
+
+
+                newTask.cmdString = createCommand(newTask);
+                plotTasks.Add(newTask);
+            }
+
+            StartPlottingAllTasks(plotTasks);
+        }
+
+        private void btnClearTmp2_Click(object sender, EventArgs e)
+        {
+            lbTmpPath2_currentPath.Text = "(none)";
+        }
+        #endregion
+
+
+        #region UI manipulation
         private void setIndicatorColor(TextBox textBox, Label label)
         {
             if (textBox.Text.Length == maxKeyLength)
@@ -353,101 +499,133 @@ namespace madMaxGUI
             suggestedThreads = (suggestedThreads < 1 ? 1 : suggestedThreads);
             lbThreadsSuggested.Text = String.Format("(Suggested:{0})", suggestedThreads.ToString());
         }
+        #endregion
 
-        private void btnRemoveDrives_Click(object sender, EventArgs e)
+        private void RestartPlottingTask(PlotTask item)
         {
-            foreach (DataGridViewRow item in gvFinalDrives.SelectedRows)
+            if (item.copyOnSeparatedTask)
             {
-                gvFinalDrives.Rows.RemoveAt(item.Index);
+
+            }
+            if ((item.status==TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
+            {
+                
+                
+                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
+                if (row != null)
+                {
+                    if (dgvPlotTasks.InvokeRequired) { 
+                        dgvPlotTasks.Invoke(new Action(() => {
+                            dgvPlotTasks.Rows.Remove(row);
+                            dgvPlotTasks.Refresh();
+                            dgvPlotTasks.Refresh(); 
+                        })); 
+                    }
+                }
+                item.error = String.Empty;
+                item.output = String.Empty;
+                item.plot_filename = String.Empty;
+                StartPlottingTask(item);
+
+                if (dgvPlotTasks.InvokeRequired) {  dgvPlotTasks.Invoke(new Action(() => { dgvPlotTasks.Refresh(); }));  }
             }
         }
 
-        private void dgvPlotTasks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void StartPlottingTask(PlotTask item)
         {
-            if (e.ColumnIndex == dgvPlotTasks.Columns["Output"].Index && e.RowIndex>=0)
-            {
-                var plotName = dgvPlotTasks.Rows[e.RowIndex].Cells["Plot"].Value.ToString();
-                var outputText = plotTasks.Where(p => p.plot_filename == plotName).First().output;
-                var outputForm = new OutputForm();
-                outputForm.txOutput.Text = outputText;
-                outputForm.Show();
-            }
+            var task = System.Threading.Tasks.Task.Factory.StartNew(() => {
+
+                var pStartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory + @"madMax\",
+                    Arguments = "/C " + "chia_plot.exe " + item.cmdString,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    //RedirectStandardInput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true,
+                };
+
+                using (item.process = new Process())
+                {
+                    item.process.StartInfo = pStartInfo;
+
+                    item.process.EnableRaisingEvents = true;
+
+                    //item.process.Exited += new EventHandler((sender, e)=> { RestartPlottingTask(item); });
+
+                    item.process.Start();
+                    /*item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
+                    item.process.StandardInput.AutoFlush = true;*/
+
+
+                    item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => { item.outputProcessor(e.Data, dgvPlotTasks); });
+                    
+                    item.process.ErrorDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.errorProcessor(outline.Data); };
+                    
+                    item.process.BeginOutputReadLine();
+                    item.process.BeginErrorReadLine();
+
+                    bool waitforchia_plotter_process = true;
+                    var initialTme = DateTime.Now;
+
+                    while (waitforchia_plotter_process)
+                    {
+                        var currentTime = DateTime.Now;
+                        TimeSpan elapsed = currentTime - initialTme;
+                        if (elapsed.Seconds>10)
+                        {
+                            waitforchia_plotter_process = false;
+                            // process failed to start under 10 seconds
+                        }
+                        var childprocs = item.process.GetChildProcesses();
+                        try
+                        {
+                            if ((childprocs.Count() > 0) && (childprocs.Where(p => p.ProcessName == "chia_plot").Count() > 0))
+                                waitforchia_plotter_process = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            waitforchia_plotter_process = false;
+                        }
+                    }
+
+                    foreach (Process childProcess in item.process.GetChildProcesses())
+                    {
+                        if (childProcess.ProcessName == "chia_plot")
+                        {
+                            childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                            SetHighIOPriority(childProcess);
+                        }
+                    }
+                    item.process.WaitForExit();
+
+                }
+
+            }, TaskCreationOptions.None).ContinueWith( antecedent => {
+                if (antecedent.Status==System.Threading.Tasks.TaskStatus.RanToCompletion)
+                {
+                    if (cbContinuosMode.Checked)
+                    {
+                        item.status = TaskStatus.AwaitingRestart;
+                        RestartPlottingTask(item);
+                    }
+                    else
+                    {
+                        item.status = TaskStatus.Completed;
+                    }
+                }
+            });
         }
 
-        private void StartPlottingTasks(List<PlotTask> tasks)
+        private void StartPlottingAllTasks(List<PlotTask> tasks)
         {
             foreach (var item in tasks)
             {
-                var task = System.Threading.Tasks.Task.Factory.StartNew(() => {
-
-                    var pStartInfo = new ProcessStartInfo
-                    {
-                        FileName = "cmd.exe",
-                        WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory+@"madMax\",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true,
-                    };
-                    
-                    using (item.process = new Process() )
-                    {
-                        item.process.StartInfo = pStartInfo;
-                        
-                        item.process.Start();
-                        item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
-                        item.process.StandardInput.AutoFlush = true;
-                       
-
-                        item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e)=> 
-                        {
-                            item.outputProcessor(e.Data, dgvPlotTasks);
-                        });
-
-                        //item.process.OutputDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => {  };
-
-                        item.process.ErrorDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.error += outline.Data; };
-
-                        /*
-                          
-                        item.process.StandardInput.Close();
-
-                        output = item.process.StandardOutput.ReadToEnd();
-                        error = item.process.StandardError.ReadToEnd();
-
-                        */
-                        item.process.BeginOutputReadLine();
-
-                        bool waitforchia_plotter_process = true;
-                        while (waitforchia_plotter_process)
-                        {
-                            var childprocs = item.process.GetChildProcesses();
-                            if (childprocs.Where(p => p.ProcessName == "chia_plot").Count() > 0)
-                                waitforchia_plotter_process = false;
-                        }
-
-                        foreach (Process childProcess in item.process.GetChildProcesses())
-                        {
-                            if (childProcess.ProcessName=="chia_plot")
-                            childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
-                        }
-                        item.process.WaitForExit();
-                        
-                    }
-                    
-                }, TaskCreationOptions.None );
+                StartPlottingTask(item);
             }
             InitPlotTasksTimer();
-        }
-
-        private string formatPath(string path)
-        {
-            string tmpString = "\"" + path;
-            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
-            tmpString += (!tmpString.EndsWith(@"\\") ? @"\" : String.Empty);
-            tmpString += "\"";
-            return tmpString;
         }
 
         private string createCommand(PlotTask pTask)
@@ -463,92 +641,6 @@ namespace madMaxGUI
                 (!pTask.copyOnSeparatedTask?" -d "+formatPath(pTask.finalDir):String.Empty);
             return cmd;
         }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            if (String.IsNullOrEmpty(tmpPath_1))
-            {
-                MessageBox.Show( "Tmp path # 1 cannot be empty","Tmp path # 1",MessageBoxButtons.OK, MessageBoxIcon.Error); 
-                return;
-            }
-
-            if (String.IsNullOrEmpty(txPoolKey.Text) || String.IsNullOrEmpty(txFarmerKey.Text) || (txFarmerKey.Text.Length+txPoolKey.Text.Length!= maxKeyLength*2) )
-            {
-                MessageBox.Show( "Pool/Farmer keys cannot be empty/invalid", "Keys",MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            int finalDirIndex = 0;
-
-            for (int i = 0; i < nudPlotCount.Value; i++)
-            {
-                string currentFinalDir;
-
-                if (gvFinalDrives.Rows.Count > 0)
-                {
-                    currentFinalDir = gvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
-
-                    if (finalDirIndex < gvFinalDrives.Rows.Count - 1)
-                        finalDirIndex++;
-                    else
-                        finalDirIndex = 0;
-                } else
-                {
-                    currentFinalDir = lbTmpPath1_currentPath.Text.ToLowerInvariant();
-                }
-
-                var newTask = new PlotTask() {
-                    guid = Guid.NewGuid(),
-                    
-                    threads = nudThreads.Value.ToString(),
-                    buckets = (cbBuckets.Text.ToLowerInvariant().StartsWith("default")? String.Empty : cbBuckets.Text.ToLowerInvariant()),
-                    buckets34 = (cbBuckets34.Text.ToLowerInvariant().StartsWith("default") ? String.Empty : cbBuckets34.Text.ToLowerInvariant()),
-
-                    copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
-                    useInternalCopy = cbInternalCopy.Checked,
-                    validateAfterCopy = cbValidatePlot.Checked,
-
-                    farmerKey = txFarmerKey.Text,
-                    poolKey = txPoolKey.Text,
-
-                    finalDir = currentFinalDir,
-                    status = TaskStatus.NotStarted
-                };
-
-                // dirs
-                if (cbAlternate.Checked && !String.IsNullOrEmpty(lbTmpPath2_currentPath.Text))
-                {
-                    if (i % 2==0)
-                    {
-                        newTask.tmpDir1 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
-                        newTask.tmpDir2 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
-                    } else
-                    {
-                        newTask.tmpDir1 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
-                        newTask.tmpDir2 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
-                    }
-                }
-                else
-                {
-                    newTask.tmpDir1 = lbTmpPath1_currentPath.Text;
-                    if (cbAlternate.Checked)
-                        newTask.tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(") ? String.Empty : lbTmpPath2_currentPath.Text.ToLowerInvariant());
-                    else
-                        newTask.tmpDir2 = String.Empty;
-                }
-
-
-                newTask.cmdString = createCommand(newTask);
-                plotTasks.Add(newTask);
-            }
-
-            StartPlottingTasks(plotTasks);
-        }
-
-        private void btnClearTmp2_Click(object sender, EventArgs e)
-        {
-            lbTmpPath2_currentPath.Text = "(none)";
-        }
-
        
     }
 }

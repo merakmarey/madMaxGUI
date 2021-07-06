@@ -16,7 +16,6 @@ namespace madMaxGUI
     }
     class PlotTask
     {
-        public Guid guid;
         public string tmpDir1;
         public string tmpDir2;
         public string finalDir;
@@ -41,29 +40,42 @@ namespace madMaxGUI
         public Process process;
         public void outputProcessor(string outputLine, System.Windows.Forms.DataGridView dgv)
         {
-            output += outputLine + Environment.NewLine;
-            if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
+            if (!String.IsNullOrEmpty(outputLine))
             {
-                var tmp_plot_filename = outputLine.Substring(11);
-                DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(tmp_plot_filename)).FirstOrDefault();
-
-                if (row==null)
+                output += outputLine + Environment.NewLine;
+                if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
                 {
-                    if (dgv.InvokeRequired)
+                    var tmp_plot_filename = outputLine.Substring(11);
+                    DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(tmp_plot_filename)).FirstOrDefault();
+
+                    if (row == null)
                     {
-                        
-                        dgv.Invoke(new Action(()=> { dgv.Rows.Add(tmp_plot_filename, "(none yet)", "--:--:--", "Running"); }));
-                    }
-                    plot_filename = tmp_plot_filename;
-                }
+                        if (dgv.InvokeRequired)
+                        {
 
-            } else
-            {
-                if (!String.IsNullOrEmpty(plot_filename))
-                {
-                    DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
-                    row.Cells["LastMessage"].Value = outputLine;
+                            dgv.Invoke(new Action(() => { dgv.Rows.Add(tmp_plot_filename, "(none yet)", "--:--:--", "Running"); }));
+                        }
+                        plot_filename = tmp_plot_filename;
+                    }
+
                 }
+                else
+                {
+                    if (!String.IsNullOrEmpty(plot_filename))
+                    {
+                        DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
+                        row.Cells["LastMessage"].Value = outputLine;
+                    }
+                }
+            }
+        }
+
+        public void errorProcessor(string outputLine)
+        {
+            if (!String.IsNullOrEmpty(outputLine))
+            {
+                output += outputLine + Environment.NewLine;
+                error += outputLine + Environment.NewLine;
             }
         }
     }
