@@ -25,3 +25,4 @@ C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madMaxGUI.csproj.
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madMaxGUI.dll
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madMaxGUI.pdb
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madMaxGUI.genruntimeconfig.cache
+C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madMaxGUI.GenTest.resources

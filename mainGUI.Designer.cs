@@ -815,7 +815,7 @@
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
-            this.groupBox2.Location = new System.Drawing.Point(10, 364);
+            this.groupBox2.Location = new System.Drawing.Point(10, 390);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 208);
             this.groupBox2.TabIndex = 4;
@@ -880,9 +880,9 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(903, 343);
+            this.btnStart.Location = new System.Drawing.Point(894, 348);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(140, 25);
+            this.btnStart.Size = new System.Drawing.Size(149, 43);
             this.btnStart.TabIndex = 5;
             this.btnStart.Text = "Start Tasks";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -892,7 +892,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 576);
+            this.ClientSize = new System.Drawing.Size(1048, 602);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbOptions);

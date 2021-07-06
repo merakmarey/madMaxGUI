@@ -9,6 +9,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
+using System.Media;
 
 namespace madMaxGUI
 {
@@ -20,8 +22,8 @@ namespace madMaxGUI
 
         const int maxKeyLength = 96;
         private const double GiBfactor = 0.931323;
-        
-        
+
+
         string userProfile;
         string chiaVersion;
         int physicalCores;
@@ -60,30 +62,30 @@ namespace madMaxGUI
         }
         public void setDriveInfo(Label sourceLabel, Label targetLabel)
         {
-            
+
             DriveInfo[] driveInfos = DriveInfo.GetDrives();
 
-            if (sourceLabel.Text!="(none)")
+            if (sourceLabel.Text != "(none)")
             {
                 var driveInfo = getDriveInfo(sourceLabel.Text);
-                
-                if (driveInfo!=null)
+
+                if (driveInfo != null)
                 {
                     var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
-                    targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb* GiBfactor);
+                    targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
                 }
             }
         }
         public int getCPUusage()
         {
-            System.Diagnostics.PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time","_Total");
+            System.Diagnostics.PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
             int percentage = 0;
 
             foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_PerfFormattedData_PerfOS_Processor").Get())
             {
-                if ((string)item["Name"]=="_Total")
-                Int32.TryParse(item["PercentProcessorTime"].ToString(), out percentage);
+                if ((string)item["Name"] == "_Total")
+                    Int32.TryParse(item["PercentProcessorTime"].ToString(), out percentage);
             }
 
             return percentage;
@@ -100,10 +102,10 @@ namespace madMaxGUI
 
 
         #region timer controls
-        private void TimerRAM_Tick(object sender, EventArgs e) 
+        private void TimerRAM_Tick(object sender, EventArgs e)
         {
             var ramAvail = getAvailableMemory();
-            lbFreeRAM.Text = (ramAvail / 1024 / 1024 /1024).ToString() + " GB";
+            lbFreeRAM.Text = (ramAvail / 1024 / 1024 / 1024).ToString() + " GB";
         }
         private void TimerCPU_Tick(object sender, EventArgs e)
         {
@@ -112,18 +114,19 @@ namespace madMaxGUI
         }
         private void TimerTask_Tick(object sender, EventArgs e)
         {
-            if (dgvPlotTasks.Rows.Count>0)
-            foreach (var item in plotTasks)
-            {
-                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
-                var child_process = item.process.GetChildProcesses();
-                if (child_process.Count() > 0)
+            if (dgvPlotTasks.Rows.Count > 0)
+                foreach (var item in plotTasks)
                 {
-                    var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
-                    if (chia_process!=null)
-                    row.Cells["TimeElapsed"].Value = (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss");
+                    var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
+
+                    var child_process = item.process.GetChildProcesses();
+                    if (child_process.Count() > 0)
+                    {
+                        var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
+                        if (chia_process != null)
+                            row.Cells["TimeElapsed"].Value = (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss");
+                    }
                 }
-            }
         }
         private void InitRAMTimer()
         {
@@ -190,11 +193,11 @@ namespace madMaxGUI
             foreach (var item in new System.Management.ManagementObjectSearcher("Select TotalPhysicalMemory from Win32_ComputerSystem").Get())
             {
                 if (Int64.TryParse(item["TotalPhysicalMemory"].ToString(), out memKb))
-                    lbRAM.Text = (memKb / 1024 / 1024/ 1024).ToString() + " GB";
+                    lbRAM.Text = (memKb / 1024 / 1024 / 1024).ToString() + " GB";
             }
 
             userProfile = System.Environment.GetEnvironmentVariable("USERPROFILE").ToString();
-            
+
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
             {
                 Int32.TryParse(item["NumberOfCores"].ToString(), out physicalCores);
@@ -213,10 +216,10 @@ namespace madMaxGUI
 
             foreach (var item in new System.Management.ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_ComputerSystem").Get())
             {
-                lbThreads.Text =  item["NumberOfLogicalProcessors"].ToString();
+                lbThreads.Text = item["NumberOfLogicalProcessors"].ToString();
             }
 
-            lbThreadsSuggested.Text = String.Format("(Suggested:{0})" , ((lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt()) / (int)nudPlotCount.Value).ToString());
+            lbThreadsSuggested.Text = String.Format("(Suggested:{0})", ((lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt()) / (int)nudPlotCount.Value).ToString());
         }
 
         private void mainGUI_FormClosing(object sender, FormClosingEventArgs e)
@@ -237,14 +240,15 @@ namespace madMaxGUI
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath)) {
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
                     tmpPath_1 = fbd.SelectedPath;
                     lbTmpPath1_currentPath.Text = tmpPath_1;
                     setDriveInfo(lbTmpPath1_currentPath, lbTmp1AvailSpace);
                     setWarningLabels(lbPlotCountSuggested, tmpPath_1, 220, (int)nudPlotCount.Value);
                 }
             }
-           
+
         }
 
         private void btnTmpPath2Pick_Click(object sender, EventArgs e)
@@ -297,7 +301,7 @@ namespace madMaxGUI
                 {
                     FileName = "cmd.exe",
                     //FileName = @"Z:\Administrator\AppData\Local\chia-blockchain\app-1.1.7\resources\app.asar.unpacked\daemon\chia.exe",
-                    WorkingDirectory = userProfile + @"\AppData\Local\chia-blockchain\app-"+chiaVersion+@"\resources\app.asar.unpacked\daemon\",
+                    WorkingDirectory = userProfile + @"\AppData\Local\chia-blockchain\app-" + chiaVersion + @"\resources\app.asar.unpacked\daemon\",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardInput = true,
@@ -307,9 +311,9 @@ namespace madMaxGUI
                 using (Process process = new Process())
                 {
                     process.StartInfo = pStartInfo;
-                    
+
                     process.Start();
-                    process.StandardInput.WriteLine(userProfile + @"\AppData\Local\chia-blockchain\app-"+chiaVersion+@"\resources\app.asar.unpacked\daemon\chia.exe keys show");
+                    process.StandardInput.WriteLine(userProfile + @"\AppData\Local\chia-blockchain\app-" + chiaVersion + @"\resources\app.asar.unpacked\daemon\chia.exe keys show");
                     process.StandardInput.AutoFlush = true;
                     process.StandardInput.Close();
 
@@ -322,7 +326,7 @@ namespace madMaxGUI
 
                 if (output.ToLowerInvariant().Contains("farmer public key"))
                 {
-                    var farmerKey = outputLines.Where(s => s.StartsWith("farmer public key")).Select(k=>k.ToString().Substring(k.ToString().Length- maxKeyLength)).FirstOrDefault();
+                    var farmerKey = outputLines.Where(s => s.StartsWith("farmer public key")).Select(k => k.ToString().Substring(k.ToString().Length - maxKeyLength)).FirstOrDefault();
                     txFarmerKey.Text = farmerKey;
                 }
                 if (output.ToLowerInvariant().Contains("pool public key"))
@@ -366,6 +370,8 @@ namespace madMaxGUI
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            this.Enabled = false;
+
             if (String.IsNullOrEmpty(tmpPath_1))
             {
                 MessageBox.Show("Tmp path # 1 cannot be empty", "Tmp path # 1", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -463,20 +469,20 @@ namespace madMaxGUI
                 label.ForeColor = Color.DarkGray;
         }
 
-        private void setWarningLabels(Label targetLabel, string drivePath, float minimumPerFile, int suggested=1)
+        private void setWarningLabels(Label targetLabel, string drivePath, float minimumPerFile, int suggested = 1)
         {
             if ((drivePath != "(none)") && (!String.IsNullOrEmpty(drivePath)))
             {
                 var driveInfo = getDriveInfo(drivePath);
                 var gib = (driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024) * GiBfactor;
-                if ((gib / minimumPerFile < 1) || (Math.Truncate(gib / minimumPerFile)< suggested))
+                if ((gib / minimumPerFile < 1) || (Math.Truncate(gib / minimumPerFile) < suggested))
                 {
                     targetLabel.Text = "Not enough space";
                     targetLabel.ForeColor = Color.DarkRed;
                 }
                 else
                 {
-                    targetLabel.Text = String.Format("(Suggested:{0:0})", Math.Truncate(gib /minimumPerFile));
+                    targetLabel.Text = String.Format("(Suggested:{0:0})", Math.Truncate(gib / minimumPerFile));
                     targetLabel.ForeColor = Color.DarkSlateGray;
                 }
             }
@@ -489,15 +495,34 @@ namespace madMaxGUI
 
         private void lbPlKIndicator_Changed(object sender, EventArgs e)
         {
-            setIndicatorColor(this.txPoolKey,this.lbPlKeyIndicator);
+            setIndicatorColor(this.txPoolKey, this.lbPlKeyIndicator);
         }
 
-        private void nudPlotCount_Changed(object sender, EventArgs e) 
+        private void nudPlotCount_Changed(object sender, EventArgs e)
         {
             setWarningLabels(lbPlotCountSuggested, tmpPath_1, 220, (int)nudPlotCount.Value);
             var suggestedThreads = (lbCores.Text.ToInt() * lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value);
             suggestedThreads = (suggestedThreads < 1 ? 1 : suggestedThreads);
             lbThreadsSuggested.Text = String.Format("(Suggested:{0})", suggestedThreads.ToString());
+        }
+
+        private void updateCopyProgress(string plot_filename, double ProgressPercentage, DataGridView dgv)
+        {
+
+            //DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
+            var row = dgv.GetRowByColumnValue("Plot", plot_filename);
+
+            if (row != null)
+            {
+                dgv.SetRowCellByColumnValue(row, "LastMessage", String.Format("Copying: {0}% completed", Math.Round(ProgressPercentage, 2)));
+            }
+        }
+
+        private void updateCopyTimer(PlotTask item)
+        {
+            var row = dgvPlotTasks.GetRowByColumnValue("Plot", item.plot_filename);
+            if (row != null)
+                dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (item.copyStarted - DateTime.Now).ToString(@"hh\:mm\:ss"));
         }
         #endregion
 
@@ -505,35 +530,55 @@ namespace madMaxGUI
         {
             if (item.copyOnSeparatedTask)
             {
-
-            }
-            if ((item.status==TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
-            {
+                dgvPlotTasks.DisableButtonByColumnValue("Plot", item.plot_filename, "Output");
                 
-                
-                var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
-                if (row != null)
+                var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    if (dgvPlotTasks.InvokeRequired) { 
-                        dgvPlotTasks.Invoke(new Action(() => {
-                            dgvPlotTasks.Rows.Remove(row);
-                            dgvPlotTasks.Refresh();
-                            dgvPlotTasks.Refresh(); 
-                        })); 
+                    item.InitCopyTimer((o, s) => { updateCopyTimer(item); });
+
+                    if ((String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
+                    {
+                        if (!item.useInternalCopy)
+                        {
+                            var copyHandler = new XCopy();
+                            copyHandler.RegularCopy(item.tmpDir1 + @"\" + item.plot_filename, item.finalDir + @"\" + item.plot_filename, 1024 * 1024 * 10, 
+                                new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); }));
+                        }
+                        else
+                        {
+                            XCopy.Copy(item.tmpDir1 + @"\" + item.plot_filename, item.finalDir + @"\" + item.plot_filename, true, true,
+                                 new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); })
+                                );
+                        }
                     }
+                }).ContinueWith(antecedent => 
+                {
+                    item.StopCopyTimer();
+                    dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
+                });
+                if ((item.status == TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
+                {
+                    item.error = String.Empty;
+                    item.output = String.Empty;
+                    item.plot_filename = String.Empty;
+                    StartPlottingTask(item);
                 }
+            }
+            if ((item.status == TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
+            {
+                dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
+
                 item.error = String.Empty;
                 item.output = String.Empty;
                 item.plot_filename = String.Empty;
                 StartPlottingTask(item);
-
-                if (dgvPlotTasks.InvokeRequired) {  dgvPlotTasks.Invoke(new Action(() => { dgvPlotTasks.Refresh(); }));  }
             }
         }
 
         private void StartPlottingTask(PlotTask item)
         {
-            var task = System.Threading.Tasks.Task.Factory.StartNew(() => {
+            var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
 
                 var pStartInfo = new ProcessStartInfo
                 {
@@ -561,9 +606,9 @@ namespace madMaxGUI
 
 
                     item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => { item.outputProcessor(e.Data, dgvPlotTasks); });
-                    
+
                     item.process.ErrorDataReceived += (object sendingProcess, DataReceivedEventArgs outline) => { item.errorProcessor(outline.Data); };
-                    
+
                     item.process.BeginOutputReadLine();
                     item.process.BeginErrorReadLine();
 
@@ -574,7 +619,7 @@ namespace madMaxGUI
                     {
                         var currentTime = DateTime.Now;
                         TimeSpan elapsed = currentTime - initialTme;
-                        if (elapsed.Seconds>10)
+                        if (elapsed.Seconds > 10)
                         {
                             waitforchia_plotter_process = false;
                             // process failed to start under 10 seconds
@@ -603,8 +648,9 @@ namespace madMaxGUI
 
                 }
 
-            }, TaskCreationOptions.None).ContinueWith( antecedent => {
-                if (antecedent.Status==System.Threading.Tasks.TaskStatus.RanToCompletion)
+            }, TaskCreationOptions.None).ContinueWith(antecedent =>
+            {
+                if (antecedent.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
                 {
                     if (cbContinuosMode.Checked)
                     {
@@ -636,11 +682,16 @@ namespace madMaxGUI
                 (!String.IsNullOrEmpty(pTask.buckets) ? " -u " + pTask.buckets : String.Empty) +
                 (!String.IsNullOrEmpty(pTask.buckets34) ? " -v " + pTask.buckets34 : String.Empty) +
                 " -t " + formatPath(pTask.tmpDir1) +
-                (String.IsNullOrEmpty(pTask.tmpDir2)?String.Empty:" -2 " + formatPath(pTask.tmpDir2)) + 
+                (String.IsNullOrEmpty(pTask.tmpDir2) ? String.Empty : " -2 " + formatPath(pTask.tmpDir2)) +
                 " -p " + pTask.poolKey + " -f " + pTask.farmerKey +
-                (!pTask.copyOnSeparatedTask?" -d "+formatPath(pTask.finalDir):String.Empty);
+                (!pTask.copyOnSeparatedTask ? " -d " + formatPath(pTask.finalDir) : String.Empty);
             return cmd;
         }
-       
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var t = new GenTest();
+            t.Show();
+        }
     }
 }

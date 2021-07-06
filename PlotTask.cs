@@ -38,6 +38,26 @@ namespace madMaxGUI
         public string plot_filename;
 
         public Process process;
+
+        public DateTime copyStarted = DateTime.Now;
+        public Timer updateCopyTime;
+
+        #region METHODS
+        public void InitCopyTimer(System.EventHandler updateEvent)
+        {
+            copyStarted = DateTime.Now;
+            updateCopyTime = new System.Windows.Forms.Timer();
+            updateCopyTime.Tick += updateEvent;
+            updateCopyTime.Interval = 1000;
+            updateCopyTime.Enabled = true;
+            updateCopyTime.Start();
+        }
+        public void StopCopyTimer()
+        {
+            updateCopyTime.Enabled = false;
+            updateCopyTime.Stop();
+            updateCopyTime.Dispose();
+        }
         public void outputProcessor(string outputLine, System.Windows.Forms.DataGridView dgv)
         {
             if (!String.IsNullOrEmpty(outputLine))
@@ -69,7 +89,6 @@ namespace madMaxGUI
                 }
             }
         }
-
         public void errorProcessor(string outputLine)
         {
             if (!String.IsNullOrEmpty(outputLine))
@@ -78,5 +97,6 @@ namespace madMaxGUI
                 error += outputLine + Environment.NewLine;
             }
         }
+        #endregion
     }
 }

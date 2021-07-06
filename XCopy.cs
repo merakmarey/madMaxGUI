@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace madMaxGUI
 {
@@ -12,11 +11,39 @@ namespace madMaxGUI
     /// </summary>
     public class XCopy
     {
+        public void RegularCopy(string source, string destination, int bytesPerChunk, EventHandler<ProgressChangedEventArgs> handler)
+        {
+            int bytesRead = 0;
+            
+            if (handler != null)
+                ProgressChanged += handler;
+
+            using (FileStream fs = new FileStream(source, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader br = new BinaryReader(fs))
+                {
+                    using (FileStream fsDest = new FileStream(destination, FileMode.Create))
+                    {
+                        BinaryWriter bw = new BinaryWriter(fsDest);
+                        byte[] buffer;
+
+                        for (int i = 0; i < fs.Length; i += bytesPerChunk)
+                        {
+                            buffer = br.ReadBytes(bytesPerChunk);
+                            bw.Write(buffer);
+                            bytesRead += bytesPerChunk;
+                            var percentageCopied = (bytesRead*fs.Length/100);
+                            OnProgressChanged(percentageCopied);  //report the progress
+                        }
+                    }
+                }
+            }
+        }
+
         public static void Copy(string source, string destination, bool overwrite, bool nobuffering)
         {
             new XCopy().CopyInternal(source, destination, overwrite, nobuffering, null);
         }
-
         public static void Copy(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> handler)
         {
             new XCopy().CopyInternal(source, destination, overwrite, nobuffering, handler);
@@ -30,7 +57,7 @@ namespace madMaxGUI
         private string Source;
         private string Destination;
 
-        private XCopy()
+        public XCopy()
         {
             IsCancelled = 0;
         }
@@ -39,7 +66,7 @@ namespace madMaxGUI
         {
             try
             {
-                CopyFileFlags copyFileFlags = CopyFileFlags.COPY_FILE_RESTARTABLE;
+                CopyFileFlags copyFileFlags = 0;
                 if (!overwrite)
                     copyFileFlags |= CopyFileFlags.COPY_FILE_FAIL_IF_EXISTS;
 

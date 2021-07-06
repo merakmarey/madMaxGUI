@@ -4,6 +4,9 @@
     <_LastSelectedProfileId>C:\Users\Root\Source\Repos\madMaxGUI\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="GenTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
