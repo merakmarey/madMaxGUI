@@ -370,7 +370,7 @@ namespace madMaxGUI
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            this.Enabled = false;
+            btnStart.Enabled = false;
 
             if (String.IsNullOrEmpty(tmpPath_1))
             {
