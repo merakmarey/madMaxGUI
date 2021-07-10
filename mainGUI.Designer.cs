@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainGUI));
             this.gbPaths = new System.Windows.Forms.GroupBox();
             this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.btnRemoveDrives = new System.Windows.Forms.Button();
@@ -52,6 +53,10 @@
             this.lbTmpPath1 = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.gbKeys = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txContractAddress = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblContractAddressIndicator = new System.Windows.Forms.Label();
             this.lbAutoWorking = new System.Windows.Forms.Label();
             this.btnAutoGetKeys = new System.Windows.Forms.Button();
             this.lbPlKeyIndicator = new System.Windows.Forms.Label();
@@ -77,7 +82,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbValidatePlot = new System.Windows.Forms.CheckBox();
             this.cbInternalCopy = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cbSeparatedTaskCopy = new System.Windows.Forms.CheckBox();
@@ -131,7 +135,7 @@
             this.gbPaths.Controls.Add(this.btnTmpPath1Pick);
             this.gbPaths.Controls.Add(this.lbTmpPath1);
             this.gbPaths.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.gbPaths.Location = new System.Drawing.Point(10, 90);
+            this.gbPaths.Location = new System.Drawing.Point(10, 161);
             this.gbPaths.Margin = new System.Windows.Forms.Padding(0);
             this.gbPaths.MinimumSize = new System.Drawing.Size(640, 80);
             this.gbPaths.Name = "gbPaths";
@@ -167,37 +171,37 @@
             this.gvFinalDrives.AllowUserToResizeRows = false;
             this.gvFinalDrives.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gvFinalDrives.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Space});
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gvFinalDrives.DefaultCellStyle = dataGridViewCellStyle2;
             this.gvFinalDrives.Location = new System.Drawing.Point(10, 137);
             this.gvFinalDrives.Name = "gvFinalDrives";
             this.gvFinalDrives.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvFinalDrives.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.gvFinalDrives.RowTemplate.Height = 25;
             this.gvFinalDrives.Size = new System.Drawing.Size(621, 112);
             this.gvFinalDrives.TabIndex = 20;
@@ -349,6 +353,10 @@
             // 
             // gbKeys
             // 
+            this.gbKeys.Controls.Add(this.label10);
+            this.gbKeys.Controls.Add(this.txContractAddress);
+            this.gbKeys.Controls.Add(this.label9);
+            this.gbKeys.Controls.Add(this.lblContractAddressIndicator);
             this.gbKeys.Controls.Add(this.lbAutoWorking);
             this.gbKeys.Controls.Add(this.btnAutoGetKeys);
             this.gbKeys.Controls.Add(this.lbPlKeyIndicator);
@@ -359,16 +367,54 @@
             this.gbKeys.Controls.Add(this.lbFarmerKey);
             this.gbKeys.Location = new System.Drawing.Point(10, 5);
             this.gbKeys.Name = "gbKeys";
-            this.gbKeys.Size = new System.Drawing.Size(640, 82);
+            this.gbKeys.Size = new System.Drawing.Size(640, 150);
             this.gbKeys.TabIndex = 1;
             this.gbKeys.TabStop = false;
             this.gbKeys.Text = "1.- Keys";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label10.Location = new System.Drawing.Point(281, 123);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(191, 12);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "(Only works  if Chia blockchain is installed)";
+            // 
+            // txContractAddress
+            // 
+            this.txContractAddress.Location = new System.Drawing.Point(120, 88);
+            this.txContractAddress.Name = "txContractAddress";
+            this.txContractAddress.Size = new System.Drawing.Size(489, 23);
+            this.txContractAddress.TabIndex = 10;
+            this.txContractAddress.TextChanged += new System.EventHandler(this.lblContractAddressIndicator_Changed);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(13, 91);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(98, 15);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "Contract Address";
+            // 
+            // lblContractAddressIndicator
+            // 
+            this.lblContractAddressIndicator.AutoSize = true;
+            this.lblContractAddressIndicator.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.lblContractAddressIndicator.Location = new System.Drawing.Point(615, 91);
+            this.lblContractAddressIndicator.Name = "lblContractAddressIndicator";
+            this.lblContractAddressIndicator.Size = new System.Drawing.Size(19, 15);
+            this.lblContractAddressIndicator.TabIndex = 8;
+            this.lblContractAddressIndicator.Text = "☻";
             // 
             // lbAutoWorking
             // 
             this.lbAutoWorking.AutoSize = true;
             this.lbAutoWorking.ForeColor = System.Drawing.Color.Green;
-            this.lbAutoWorking.Location = new System.Drawing.Point(574, 53);
+            this.lbAutoWorking.Location = new System.Drawing.Point(478, 121);
             this.lbAutoWorking.Name = "lbAutoWorking";
             this.lbAutoWorking.Size = new System.Drawing.Size(39, 15);
             this.lbAutoWorking.TabIndex = 7;
@@ -376,7 +422,7 @@
             // 
             // btnAutoGetKeys
             // 
-            this.btnAutoGetKeys.Location = new System.Drawing.Point(556, 22);
+            this.btnAutoGetKeys.Location = new System.Drawing.Point(534, 117);
             this.btnAutoGetKeys.Name = "btnAutoGetKeys";
             this.btnAutoGetKeys.Size = new System.Drawing.Size(75, 23);
             this.btnAutoGetKeys.TabIndex = 6;
@@ -389,7 +435,7 @@
             // 
             this.lbPlKeyIndicator.AutoSize = true;
             this.lbPlKeyIndicator.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.lbPlKeyIndicator.Location = new System.Drawing.Point(531, 53);
+            this.lbPlKeyIndicator.Location = new System.Drawing.Point(615, 53);
             this.lbPlKeyIndicator.Name = "lbPlKeyIndicator";
             this.lbPlKeyIndicator.Size = new System.Drawing.Size(19, 15);
             this.lbPlKeyIndicator.TabIndex = 5;
@@ -399,7 +445,7 @@
             // 
             this.lbFmKIndicator.AutoSize = true;
             this.lbFmKIndicator.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.lbFmKIndicator.Location = new System.Drawing.Point(531, 26);
+            this.lbFmKIndicator.Location = new System.Drawing.Point(615, 26);
             this.lbFmKIndicator.Name = "lbFmKIndicator";
             this.lbFmKIndicator.Size = new System.Drawing.Size(19, 15);
             this.lbFmKIndicator.TabIndex = 4;
@@ -407,9 +453,9 @@
             // 
             // txPoolKey
             // 
-            this.txPoolKey.Location = new System.Drawing.Point(86, 50);
+            this.txPoolKey.Location = new System.Drawing.Point(120, 50);
             this.txPoolKey.Name = "txPoolKey";
-            this.txPoolKey.Size = new System.Drawing.Size(439, 23);
+            this.txPoolKey.Size = new System.Drawing.Size(489, 23);
             this.txPoolKey.TabIndex = 3;
             this.txPoolKey.TextChanged += new System.EventHandler(this.lbPlKIndicator_Changed);
             // 
@@ -424,16 +470,16 @@
             // 
             // txFarmerKey
             // 
-            this.txFarmerKey.Location = new System.Drawing.Point(86, 23);
+            this.txFarmerKey.Location = new System.Drawing.Point(120, 23);
             this.txFarmerKey.Name = "txFarmerKey";
-            this.txFarmerKey.Size = new System.Drawing.Size(439, 23);
+            this.txFarmerKey.Size = new System.Drawing.Size(489, 23);
             this.txFarmerKey.TabIndex = 1;
             this.txFarmerKey.TextChanged += new System.EventHandler(this.lbFmKIndicator_Changed);
             // 
             // lbFarmerKey
             // 
             this.lbFarmerKey.AutoSize = true;
-            this.lbFarmerKey.Location = new System.Drawing.Point(14, 26);
+            this.lbFarmerKey.Location = new System.Drawing.Point(13, 26);
             this.lbFarmerKey.Name = "lbFarmerKey";
             this.lbFarmerKey.Size = new System.Drawing.Size(66, 15);
             this.lbFarmerKey.TabIndex = 0;
@@ -599,7 +645,6 @@
             // gbOptions
             // 
             this.gbOptions.Controls.Add(this.label5);
-            this.gbOptions.Controls.Add(this.cbValidatePlot);
             this.gbOptions.Controls.Add(this.cbInternalCopy);
             this.gbOptions.Controls.Add(this.label3);
             this.gbOptions.Controls.Add(this.cbSeparatedTaskCopy);
@@ -616,7 +661,7 @@
             this.gbOptions.Controls.Add(this.label14);
             this.gbOptions.Location = new System.Drawing.Point(656, 115);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 224);
+            this.gbOptions.Size = new System.Drawing.Size(387, 203);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
@@ -631,16 +676,6 @@
             this.label5.Size = new System.Drawing.Size(196, 12);
             this.label5.TabIndex = 15;
             this.label5.Text = "(Only if Copy on separated Task is checked)";
-            // 
-            // cbValidatePlot
-            // 
-            this.cbValidatePlot.AutoSize = true;
-            this.cbValidatePlot.Location = new System.Drawing.Point(7, 199);
-            this.cbValidatePlot.Name = "cbValidatePlot";
-            this.cbValidatePlot.Size = new System.Drawing.Size(147, 19);
-            this.cbValidatePlot.TabIndex = 14;
-            this.cbValidatePlot.Text = "Validate plot after copy";
-            this.cbValidatePlot.UseVisualStyleBackColor = true;
             // 
             // cbInternalCopy
             // 
@@ -815,9 +850,9 @@
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
-            this.groupBox2.Location = new System.Drawing.Point(10, 390);
+            this.groupBox2.Location = new System.Drawing.Point(10, 426);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1033, 208);
+            this.groupBox2.Size = new System.Drawing.Size(1033, 268);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Plotting tasks";
@@ -836,11 +871,14 @@
             this.TimeElapsed,
             this.Status,
             this.Output});
+            this.dgvPlotTasks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgvPlotTasks.EnableHeadersVisualStyles = false;
-            this.dgvPlotTasks.Location = new System.Drawing.Point(10, 22);
+            this.dgvPlotTasks.Location = new System.Drawing.Point(8, 15);
             this.dgvPlotTasks.Name = "dgvPlotTasks";
+            this.dgvPlotTasks.ReadOnly = true;
             this.dgvPlotTasks.RowTemplate.Height = 25;
-            this.dgvPlotTasks.Size = new System.Drawing.Size(1014, 180);
+            this.dgvPlotTasks.ShowEditingIcon = false;
+            this.dgvPlotTasks.Size = new System.Drawing.Size(1019, 245);
             this.dgvPlotTasks.TabIndex = 0;
             this.dgvPlotTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlotTasks_CellContentClick);
             // 
@@ -849,29 +887,34 @@
             this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Plot.HeaderText = "Plot";
             this.Plot.Name = "Plot";
+            this.Plot.ReadOnly = true;
             // 
             // LastMessage
             // 
             this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.LastMessage.HeaderText = "Last Message";
             this.LastMessage.Name = "LastMessage";
+            this.LastMessage.ReadOnly = true;
             // 
             // TimeElapsed
             // 
             this.TimeElapsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.TimeElapsed.HeaderText = "Time Elapsed";
             this.TimeElapsed.Name = "TimeElapsed";
+            this.TimeElapsed.ReadOnly = true;
             // 
             // Status
             // 
             this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
             // 
             // Output
             // 
             this.Output.HeaderText = "Output";
             this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
             this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Output.Text = "Open";
@@ -880,9 +923,9 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(894, 348);
+            this.btnStart.Location = new System.Drawing.Point(894, 324);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(149, 43);
+            this.btnStart.Size = new System.Drawing.Size(149, 32);
             this.btnStart.TabIndex = 5;
             this.btnStart.Text = "Start Tasks";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -892,16 +935,18 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 602);
+            this.ClientSize = new System.Drawing.Size(1048, 697);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbOptions);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbKeys);
             this.Controls.Add(this.gbPaths);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mainGUI";
             this.Padding = new System.Windows.Forms.Padding(10);
-            this.Text = "mainGUI";
+            this.Text = "madFurry (v0.1) - GUI for MadMax Plotter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainGUI_FormClosing);
             this.Load += new System.EventHandler(this.mainGUI_Load);
             this.gbPaths.ResumeLayout(false);
@@ -983,7 +1028,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox cbSeparatedTaskCopy;
         private System.Windows.Forms.CheckBox cbInternalCopy;
-        private System.Windows.Forms.CheckBox cbValidatePlot;
         private System.Windows.Forms.Button btnClearTmp2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Plot;
@@ -992,6 +1036,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewButtonColumn Output;
         private System.Windows.Forms.Label lbAutoWorking;
+        private System.Windows.Forms.TextBox txContractAddress;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblContractAddressIndicator;
+        private System.Windows.Forms.Label label10;
     }
 }
 

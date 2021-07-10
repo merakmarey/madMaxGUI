@@ -1,0 +1,15 @@
+Z:\Administrator\Desktop\madfury\madMaxGUI.exe
+Z:\Administrator\Desktop\madfury\madMaxGUI.dll
+Z:\Administrator\Desktop\madfury\madMaxGUI.deps.json
+Z:\Administrator\Desktop\madfury\madMaxGUI.runtimeconfig.json
+Z:\Administrator\Desktop\madfury\madMaxGUI.pdb
+Z:\Administrator\Desktop\madfury\Microsoft.Win32.Registry.dll
+Z:\Administrator\Desktop\madfury\System.CodeDom.dll
+Z:\Administrator\Desktop\madfury\System.Management.dll
+Z:\Administrator\Desktop\madfury\System.Security.AccessControl.dll
+Z:\Administrator\Desktop\madfury\System.Security.Principal.Windows.dll
+Z:\Administrator\Desktop\madfury\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
+Z:\Administrator\Desktop\madfury\runtimes\win\lib\netcoreapp2.0\System.Management.dll
+Z:\Administrator\Desktop\madfury\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
+Z:\Administrator\Desktop\madfury\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+Z:\Administrator\Desktop\madfury\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll

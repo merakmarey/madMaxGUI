@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -42,27 +43,34 @@ namespace madMaxGUI
 
         public static void Copy(string source, string destination, bool overwrite, bool nobuffering)
         {
-            new XCopy().CopyInternal(source, destination, overwrite, nobuffering, null);
+            new XCopy().CopyInternal(source, destination, overwrite, nobuffering, null, null);
         }
-        public static void Copy(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> handler)
+        public static void Copy(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> progressHandler)
         {
-            new XCopy().CopyInternal(source, destination, overwrite, nobuffering, handler);
+            new XCopy().CopyInternal(source, destination, overwrite, nobuffering, progressHandler, null);
+        }
+
+        public static void Copy(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> progressHandler, EventHandler completedHandler)
+        {
+            new XCopy().CopyInternal(source, destination, overwrite, nobuffering, progressHandler, completedHandler);
         }
 
         private event EventHandler Completed;
         private event EventHandler<ProgressChangedEventArgs> ProgressChanged;
 
+        public bool IsCompleted = false;
         private int IsCancelled;
         private int FilePercentCompleted;
         private string Source;
         private string Destination;
+        public string error;
 
         public XCopy()
         {
             IsCancelled = 0;
         }
 
-        private void CopyInternal(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> handler)
+        private void CopyInternal(string source, string destination, bool overwrite, bool nobuffering, EventHandler<ProgressChangedEventArgs> progressHandler, EventHandler completedHandler )
         {
             try
             {
@@ -76,18 +84,23 @@ namespace madMaxGUI
                 Source = source;
                 Destination = destination;
 
-                if (handler != null)
-                    ProgressChanged += handler;
+                if (progressHandler != null)
+                    ProgressChanged += progressHandler;
+                if (completedHandler != null)
+                    Completed += completedHandler;
 
                 bool result = CopyFileEx(Source, Destination, new CopyProgressRoutine(CopyProgressHandler), IntPtr.Zero, ref IsCancelled, copyFileFlags);
                 if (!result)
                     throw new Win32Exception(Marshal.GetLastWin32Error());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                if (handler != null)
-                    ProgressChanged -= handler;
-
+                if (progressHandler != null)
+                    ProgressChanged -= progressHandler;
+                if (completedHandler != null)
+                    ProgressChanged -= progressHandler;
+                error = ex.Message + ex.StackTrace + ex.InnerException.Message;
+                File.AppendAllLines(Source+"_log", new List<string>() { error });
                 throw;
             }
         }
@@ -107,6 +120,7 @@ namespace madMaxGUI
 
         private void OnCompleted()
         {
+            IsCompleted = true;
             var handler = Completed;
             if (handler != null)
                 handler(this, EventArgs.Empty);

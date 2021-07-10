@@ -24,6 +24,10 @@ namespace madMaxGUI
                         dgv.Rows[row.Index].Cells[ColumnName].Value = ColumnValue;
                         dgv.Refresh();
                     }));
+                } else
+                {
+                    dgv.Rows[row.Index].Cells[ColumnName].Value = ColumnValue;
+                    dgv.Refresh();
                 }
             }
         }
@@ -39,6 +43,10 @@ namespace madMaxGUI
                         dgv.Rows.Remove(row);
                         dgv.Refresh();
                     }));
+                } else
+                {
+                    dgv.Rows.Remove(row);
+                    dgv.Refresh();
                 }
             }
         }
@@ -46,8 +54,24 @@ namespace madMaxGUI
         public static void DisableButtonByColumnValue(this DataGridView dgv, string ColumnName, string ColumnValue, string buttonColumnName )
         {
             var row = GetRowByColumnValue(dgv, ColumnName, ColumnValue);
-            if (row!=null)
-            row.Cells["buttonColumnName"].Style = new DataGridViewCellStyle() { Padding = new Padding(0, 0, 0, 0) }; 
+            if (row != null)
+            {
+                if (dgv.InvokeRequired)
+                {
+                    dgv.Invoke(new Action(() =>
+                    {
+                        var t = new DataGridViewTextBoxCell() { Value = String.Empty };
+                        row.Cells[buttonColumnName] = t;
+                        dgv.Refresh();
+                    }));
+                } else
+                {
+                    var t = new DataGridViewTextBoxCell() { Value = String.Empty };
+                    row.Cells[buttonColumnName] = t;
+                    dgv.Refresh();
+                }
+                
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VmAIKD6BXvpGneQED3o2D1wm5G8JxVUj4ioXLd1PK4gJ/MtsZQklVNw5TiFM/1nBc+4jxP0LFay0w0DtwpYEnA==",
+  "dgSpecHash": "7LWzSrZN6QoXCIBDKC61O4q7LeNTXfbTKA2FlRkwtbmaAIDSf4k15EEOdAvtUnJu3m8XlcTXtNkG5hMFeYHqWA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madMaxGUI.csproj",
+  "projectFilePath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madFurry.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Root\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

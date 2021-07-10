@@ -46,6 +46,7 @@ namespace madMaxGUI
             this.txOutput.Multiline = true;
             this.txOutput.Name = "txOutput";
             this.txOutput.ReadOnly = true;
+            this.txOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txOutput.Size = new System.Drawing.Size(794, 447);
             this.txOutput.TabIndex = 0;
             // 

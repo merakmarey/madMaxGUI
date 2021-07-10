@@ -19,8 +19,10 @@ namespace madMaxGUI
         public string tmpDir1;
         public string tmpDir2;
         public string finalDir;
+
         public string poolKey;
         public string farmerKey;
+        public string contractAddress;
 
         public string threads;
         public string buckets;
@@ -40,23 +42,12 @@ namespace madMaxGUI
         public Process process;
 
         public DateTime copyStarted = DateTime.Now;
-        public Timer updateCopyTime;
+        public System.Timers.Timer updateCopyTime = new System.Timers.Timer();
 
         #region METHODS
-        public void InitCopyTimer(System.EventHandler updateEvent)
-        {
-            copyStarted = DateTime.Now;
-            updateCopyTime = new System.Windows.Forms.Timer();
-            updateCopyTime.Tick += updateEvent;
-            updateCopyTime.Interval = 1000;
-            updateCopyTime.Enabled = true;
-            updateCopyTime.Start();
-        }
         public void StopCopyTimer()
         {
-            updateCopyTime.Enabled = false;
             updateCopyTime.Stop();
-            updateCopyTime.Dispose();
         }
         public void outputProcessor(string outputLine, System.Windows.Forms.DataGridView dgv)
         {
@@ -72,7 +63,6 @@ namespace madMaxGUI
                     {
                         if (dgv.InvokeRequired)
                         {
-
                             dgv.Invoke(new Action(() => { dgv.Rows.Add(tmp_plot_filename, "(none yet)", "--:--:--", "Running"); }));
                         }
                         plot_filename = tmp_plot_filename;

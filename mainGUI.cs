@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
-using System.Media;
+
 
 namespace madMaxGUI
 {
@@ -33,9 +33,9 @@ namespace madMaxGUI
         string finalPath_1;
 
 
-        private System.Windows.Forms.Timer TimerRAM;
-        private System.Windows.Forms.Timer TimerCPU;
-        private System.Windows.Forms.Timer TimerTask;
+        private System.Timers.Timer TimerRAM;
+        private System.Timers.Timer TimerCPU;
+        private System.Timers.Timer TimerTask;
 
         List<Task> plottingTasks = new List<Task>();
         List<PlotTask> plotTasks = new List<PlotTask>();
@@ -100,52 +100,70 @@ namespace madMaxGUI
         }
         #endregion
 
+        private string checkEndSlash(string path)
+        {
+            return path + (path.EndsWith(@"\") ? String.Empty : @"\");
+        }
 
         #region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e)
         {
             var ramAvail = getAvailableMemory();
-            lbFreeRAM.Text = (ramAvail / 1024 / 1024 / 1024).ToString() + " GB";
+            if (lbFreeRAM.InvokeRequired)
+            {
+                lbFreeRAM.Invoke(new MethodInvoker(delegate {
+                    lbFreeRAM.Text = (ramAvail / 1024 / 1024 / 1024).ToString() + " GB";
+                }));
+            }
         }
         private void TimerCPU_Tick(object sender, EventArgs e)
         {
             var cpuUsed = getCPUusage();
-            lbCPUusage.Text = cpuUsed + " %";
+            if (lbCPUusage.InvokeRequired)
+            {
+                lbCPUusage.Invoke(new MethodInvoker(delegate {
+                    lbCPUusage.Text = cpuUsed + " %";
+                }));
+            }
+           
         }
         private void TimerTask_Tick(object sender, EventArgs e)
         {
             if (dgvPlotTasks.Rows.Count > 0)
                 foreach (var item in plotTasks)
                 {
-                    var row = dgvPlotTasks.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(item.plot_filename)).FirstOrDefault();
-
-                    var child_process = item.process.GetChildProcesses();
-                    if (child_process.Count() > 0)
+                    var row = dgvPlotTasks.GetRowByColumnValue("Plot", item.plot_filename);
+                    if (item.process!=null)
+                    if ((!item.process.HasExited) && (row!=null))
                     {
-                        var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
-                        if (chia_process != null)
-                            row.Cells["TimeElapsed"].Value = (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss");
+                        var child_process = item.process.GetChildProcesses();
+                        if (child_process.Count() > 0)
+                        {
+                            var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
+                                if (chia_process != null)
+                                    dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss"));
+                        }
                     }
                 }
         }
         private void InitRAMTimer()
         {
-            TimerRAM = new System.Windows.Forms.Timer();
-            TimerRAM.Tick += new EventHandler(TimerRAM_Tick);
+            TimerRAM = new System.Timers.Timer();
+            TimerRAM.Elapsed += TimerRAM_Tick;
             TimerRAM.Interval = 1000;
             TimerRAM.Start();
         }
         private void InitCPUTimer()
         {
-            TimerCPU = new System.Windows.Forms.Timer();
-            TimerCPU.Tick += new EventHandler(TimerCPU_Tick);
+            TimerCPU = new System.Timers.Timer();
+            TimerCPU.Elapsed += TimerCPU_Tick;
             TimerCPU.Interval = 1000;
             TimerCPU.Start();
         }
         private void InitPlotTasksTimer()
         {
-            TimerTask = new System.Windows.Forms.Timer();
-            TimerTask.Tick += new EventHandler(TimerTask_Tick);
+            TimerTask = new System.Timers.Timer();
+            TimerTask.Elapsed +=TimerTask_Tick;
             TimerTask.Interval = 1000;
             TimerTask.Start();
         }
@@ -229,6 +247,7 @@ namespace madMaxGUI
                 KillChildProcesses(item.process);
                 try
                 {
+                    if (item.process!=null)
                     item.process.Kill(true);
                 }
                 catch (Exception ex) { };
@@ -362,9 +381,15 @@ namespace madMaxGUI
             {
                 var plotName = dgvPlotTasks.Rows[e.RowIndex].Cells["Plot"].Value.ToString();
                 var outputText = plotTasks.Where(p => p.plot_filename == plotName).First().output;
-                var outputForm = new OutputForm();
-                outputForm.txOutput.Text = outputText;
-                outputForm.Show();
+                if (!String.IsNullOrEmpty(outputText))
+                {
+                    var outputForm = new OutputForm();
+                    outputForm.Text = plotName;
+                    outputForm.txOutput.Text = outputText;
+                    outputForm.Show();
+                    outputForm.txOutput.DeselectAll();
+                    outputForm.txOutput.Refresh();
+                }
             }
         }
 
@@ -411,8 +436,8 @@ namespace madMaxGUI
 
                     copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
                     useInternalCopy = cbInternalCopy.Checked,
-                    validateAfterCopy = cbValidatePlot.Checked,
-
+                    //validateAfterCopy = cbValidatePlot.Checked,
+                    contractAddress = txContractAddress.Text,
                     farmerKey = txFarmerKey.Text,
                     poolKey = txPoolKey.Text,
 
@@ -459,7 +484,7 @@ namespace madMaxGUI
 
 
         #region UI manipulation
-        private void setIndicatorColor(TextBox textBox, Label label)
+        private void setIndicatorColor(TextBox textBox, Label label, int maxKeyLength = maxKeyLength)
         {
             if (textBox.Text.Length == maxKeyLength)
                 label.ForeColor = Color.Green;
@@ -498,10 +523,15 @@ namespace madMaxGUI
             setIndicatorColor(this.txPoolKey, this.lbPlKeyIndicator);
         }
 
+        private void lblContractAddressIndicator_Changed(object sender, EventArgs e)
+        {
+            setIndicatorColor(this.txContractAddress, this.lblContractAddressIndicator, 62);
+        }
+
         private void nudPlotCount_Changed(object sender, EventArgs e)
         {
             setWarningLabels(lbPlotCountSuggested, tmpPath_1, 220, (int)nudPlotCount.Value);
-            var suggestedThreads = (lbCores.Text.ToInt() * lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value);
+            var suggestedThreads = (lbThreads.Text.ToInt() * lbCPUCount.Text.ToInt() / (int)nudPlotCount.Value);
             suggestedThreads = (suggestedThreads < 1 ? 1 : suggestedThreads);
             lbThreadsSuggested.Text = String.Format("(Suggested:{0})", suggestedThreads.ToString());
         }
@@ -522,52 +552,77 @@ namespace madMaxGUI
         {
             var row = dgvPlotTasks.GetRowByColumnValue("Plot", item.plot_filename);
             if (row != null)
+            {
                 dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (item.copyStarted - DateTime.Now).ToString(@"hh\:mm\:ss"));
+            }
         }
         #endregion
 
-        private void RestartPlottingTask(PlotTask item)
+
+        private void handleFileCopy(PlotTask item)
         {
+
             if (item.copyOnSeparatedTask)
             {
+
                 dgvPlotTasks.DisableButtonByColumnValue("Plot", item.plot_filename, "Output");
-                
+
+                if ((!String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
+                {
+                    item.copyStarted = DateTime.Now;
+                    item.updateCopyTime.Elapsed += (o, s) => { updateCopyTimer(item); };
+                    item.updateCopyTime.Interval = 1000;
+                    item.updateCopyTime.Start();
+                }
+
                 var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    item.InitCopyTimer((o, s) => { updateCopyTimer(item); });
-
-                    if ((String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
+                    if ((!String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
                     {
+                        File.AppendAllLines(checkEndSlash(item.tmpDir1) + item.plot_filename+ "_log", new List<string>() { "STEP1\r\n" });
                         if (!item.useInternalCopy)
                         {
+                            
                             var copyHandler = new XCopy();
-                            copyHandler.RegularCopy(item.tmpDir1 + @"\" + item.plot_filename, item.finalDir + @"\" + item.plot_filename, 1024 * 1024 * 10, 
+                            copyHandler.RegularCopy(checkEndSlash(item.tmpDir1) + item.plot_filename, checkEndSlash(item.finalDir)+ item.plot_filename, 1024 * 1024 * 10,
                                 new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); }));
+                            if (copyHandler.IsCompleted)
+                            {
+                                File.AppendAllLines(checkEndSlash(item.tmpDir1) + "Log_" + item.plot_filename, new List<string>() { "STEP3 "});
+                                File.Delete(item.tmpDir1 + @"\" + item.plot_filename);
+                            } else
+                            {
+                                File.AppendAllLines(checkEndSlash(item.tmpDir1) + "Log_" + item.plot_filename, new List<string>() { "STEP4 - " + copyHandler });
+                            }
                         }
                         else
                         {
-                            XCopy.Copy(item.tmpDir1 + @"\" + item.plot_filename, item.finalDir + @"\" + item.plot_filename, true, true,
-                                 new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); })
+                            File.AppendAllLines(checkEndSlash(item.tmpDir1) + item.plot_filename + "_log", new List<string>() { "STEP2 - " + checkEndSlash(item.tmpDir1) + item.plot_filename + " -TO- " + checkEndSlash(item.finalDir) + item.plot_filename + "\r\n" });
+                            XCopy.Copy(checkEndSlash(item.tmpDir1) + item.plot_filename, checkEndSlash(item.finalDir) + item.plot_filename, true, true,
+                                 new EventHandler<ProgressChangedEventArgs>((o, s) =>
+                                 {
+                                     updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks);
+                                 }),
+                                 new EventHandler((o, s) =>
+                                 {
+                                     File.Delete(item.tmpDir1 + @"\" + item.plot_filename);
+                                 })
                                 );
                         }
+
                     }
-                }).ContinueWith(antecedent => 
+                }).ContinueWith(antecedent =>
                 {
                     item.StopCopyTimer();
                     dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
                 });
-                if ((item.status == TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
-                {
-                    item.error = String.Empty;
-                    item.output = String.Empty;
-                    item.plot_filename = String.Empty;
-                    StartPlottingTask(item);
-                }
             }
+        }
+
+        private void RestartPlottingTask(PlotTask item)
+        {
             if ((item.status == TaskStatus.AwaitingRestart) && (cbContinuosMode.Checked))
             {
-                dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
-
                 item.error = String.Empty;
                 item.output = String.Empty;
                 item.plot_filename = String.Empty;
@@ -575,8 +630,59 @@ namespace madMaxGUI
             }
         }
 
+        private void CompletePlottingTask(PlotTask item)
+        {
+
+        }
+
+
+        private void StartPlottingTask_FAKE(PlotTask item)
+        {
+            item.status = TaskStatus.NotStarted;
+
+            var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
+                string plotname = String.Format("plot-{0}.plot",Guid.NewGuid());
+                FileStream fs = new FileStream(@"C:\tmp chia\" + plotname, FileMode.Create);
+                item.outputProcessor("Plot name: " + plotname, dgvPlotTasks);
+                fs.SetLength(1024L * 1024 * 1024 * 25);
+                System.Threading.Thread.Sleep(1000 * 5);
+                fs.Close();
+                
+            }, TaskCreationOptions.None).ContinueWith(antecedent =>
+            {
+                if (antecedent.IsCompletedSuccessfully)
+                {
+                    var shadowCopyPlotTask = new PlotTask()
+                    {
+                        plot_filename = item.plot_filename,
+                        tmpDir1 = item.tmpDir1,
+                        finalDir = item.finalDir,
+                        useInternalCopy = item.useInternalCopy,
+                        copyOnSeparatedTask = item.copyOnSeparatedTask,
+                        
+                    };
+
+
+                    handleFileCopy(shadowCopyPlotTask);
+
+                    if (cbContinuosMode.Checked)
+                    {
+                        item.status = TaskStatus.AwaitingRestart;
+                        RestartPlottingTask(item);
+                    }
+                    else
+                    {
+                        item.status = TaskStatus.Completed;
+                        CompletePlottingTask(item);
+                    }
+                }
+            });
+        }
         private void StartPlottingTask(PlotTask item)
         {
+            item.status = TaskStatus.NotStarted;
+
             var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
 
@@ -587,7 +693,6 @@ namespace madMaxGUI
                     Arguments = "/C " + "chia_plot.exe " + item.cmdString,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    //RedirectStandardInput = true,
                     RedirectStandardError = true,
                     CreateNoWindow = true,
                 };
@@ -598,12 +703,9 @@ namespace madMaxGUI
 
                     item.process.EnableRaisingEvents = true;
 
-                    //item.process.Exited += new EventHandler((sender, e)=> { RestartPlottingTask(item); });
-
                     item.process.Start();
                     /*item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
                     item.process.StandardInput.AutoFlush = true;*/
-
 
                     item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => { item.outputProcessor(e.Data, dgvPlotTasks); });
 
@@ -635,23 +737,37 @@ namespace madMaxGUI
                             waitforchia_plotter_process = false;
                         }
                     }
+                    item.status = TaskStatus.Running;
 
+                if (!item.process.HasExited)
                     foreach (Process childProcess in item.process.GetChildProcesses())
                     {
-                        if (childProcess.ProcessName == "chia_plot")
+                        if ((childProcess.ProcessName == "chia_plot") && (!childProcess.HasExited))
                         {
                             childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
                             SetHighIOPriority(childProcess);
                         }
                     }
                     item.process.WaitForExit();
-
                 }
 
             }, TaskCreationOptions.None).ContinueWith(antecedent =>
             {
-                if (antecedent.Status == System.Threading.Tasks.TaskStatus.RanToCompletion)
+                if (antecedent.IsCompletedSuccessfully)
                 {
+
+                    var shadowCopyPlotTask = new PlotTask()
+                    {
+                        plot_filename = item.plot_filename,
+                        tmpDir1 = item.tmpDir1,
+                        finalDir = item.finalDir,
+                        useInternalCopy = item.useInternalCopy,
+                        copyOnSeparatedTask = item.copyOnSeparatedTask,
+                    };
+
+
+                    handleFileCopy(shadowCopyPlotTask);
+
                     if (cbContinuosMode.Checked)
                     {
                         item.status = TaskStatus.AwaitingRestart;
@@ -660,6 +776,7 @@ namespace madMaxGUI
                     else
                     {
                         item.status = TaskStatus.Completed;
+                        CompletePlottingTask(item);
                     }
                 }
             });
@@ -684,14 +801,10 @@ namespace madMaxGUI
                 " -t " + formatPath(pTask.tmpDir1) +
                 (String.IsNullOrEmpty(pTask.tmpDir2) ? String.Empty : " -2 " + formatPath(pTask.tmpDir2)) +
                 " -p " + pTask.poolKey + " -f " + pTask.farmerKey +
+                (String.IsNullOrEmpty(pTask.contractAddress)?String.Empty:" -c " + pTask.contractAddress)+
                 (!pTask.copyOnSeparatedTask ? " -d " + formatPath(pTask.finalDir) : String.Empty);
             return cmd;
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var t = new GenTest();
-            t.Show();
-        }
+        
     }
 }

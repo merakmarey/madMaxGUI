@@ -1,8 +1,8 @@
-\\pe-server\Users\Administrator\Desktop\madFury\madMaxGUI.exe
-\\pe-server\Users\Administrator\Desktop\madFury\madMaxGUI.dll
-\\pe-server\Users\Administrator\Desktop\madFury\madMaxGUI.deps.json
-\\pe-server\Users\Administrator\Desktop\madFury\madMaxGUI.runtimeconfig.json
-\\pe-server\Users\Administrator\Desktop\madFury\madMaxGUI.pdb
+\\pe-server\Users\Administrator\Desktop\madFury\madFurry.exe
+\\pe-server\Users\Administrator\Desktop\madFury\madFurry.dll
+\\pe-server\Users\Administrator\Desktop\madFury\madFurry.deps.json
+\\pe-server\Users\Administrator\Desktop\madFury\madFurry.runtimeconfig.json
+\\pe-server\Users\Administrator\Desktop\madFury\madFurry.pdb
 \\pe-server\Users\Administrator\Desktop\madFury\Microsoft.Win32.Registry.dll
 \\pe-server\Users\Administrator\Desktop\madFury\System.CodeDom.dll
 \\pe-server\Users\Administrator\Desktop\madFury\System.Management.dll

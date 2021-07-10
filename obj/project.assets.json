@@ -533,9 +533,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madMaxGUI.csproj",
-      "projectName": "madMaxGUI",
-      "projectPath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madMaxGUI.csproj",
+      "projectUniqueName": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madFurry.csproj",
+      "projectName": "madFurry",
+      "projectPath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madFurry.csproj",
       "packagesPath": "C:\\Users\\Root\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\obj\\",
       "projectStyle": "PackageReference",

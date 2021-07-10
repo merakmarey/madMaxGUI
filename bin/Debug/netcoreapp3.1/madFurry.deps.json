@@ -6,13 +6,13 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "madMaxGUI/1.0.0": {
+      "madFurry/1.0.0": {
         "dependencies": {
           "System.Management": "5.0.0",
           "System.Threading.Tasks": "4.3.0"
         },
         "runtime": {
-          "madMaxGUI.dll": {}
+          "madFurry.dll": {}
         }
       },
       "Microsoft.NETCore.Platforms/5.0.0": {},
@@ -124,7 +124,7 @@
     }
   },
   "libraries": {
-    "madMaxGUI/1.0.0": {
+    "madFurry/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
