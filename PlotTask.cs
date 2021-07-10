@@ -56,7 +56,7 @@ namespace madMaxGUI
                 output += outputLine + Environment.NewLine;
                 if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
                 {
-                    var tmp_plot_filename = outputLine.Substring(11);
+                    var tmp_plot_filename = outputLine.Substring(11) + ".plot";
                     DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(tmp_plot_filename)).FirstOrDefault();
 
                     if (row == null)

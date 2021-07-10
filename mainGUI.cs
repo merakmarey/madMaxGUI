@@ -185,7 +185,7 @@ namespace madMaxGUI
 
         private void SetHighIOPriority(Process process)
         {
-            int priority = -5;
+            int priority = 3;
             int PROCESS_INFORMATION_CLASS_ProcessIoPriority = 33;
 
             var result = NtSetInformationProcess(process.Handle, PROCESS_INFORMATION_CLASS_ProcessIoPriority, ref priority, sizeof(int));
@@ -635,7 +635,6 @@ namespace madMaxGUI
 
         }
 
-
         private void StartPlottingTask_FAKE(PlotTask item)
         {
             item.status = TaskStatus.NotStarted;
@@ -679,6 +678,7 @@ namespace madMaxGUI
                 }
             });
         }
+
         private void StartPlottingTask(PlotTask item)
         {
             item.status = TaskStatus.NotStarted;
@@ -744,7 +744,7 @@ namespace madMaxGUI
                     {
                         if ((childProcess.ProcessName == "chia_plot") && (!childProcess.HasExited))
                         {
-                            childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
+                            childProcess.PriorityClass = ProcessPriorityClass.High;
                             SetHighIOPriority(childProcess);
                         }
                     }
