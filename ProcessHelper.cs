@@ -11,22 +11,22 @@ namespace madMaxGUI
         public static IEnumerable<Process> GetChildProcesses(this Process process)
         {
             List<Process> children = new List<Process>();
-            if ((process!=null) && (!process.HasExited)) {
-                try
-                {
-                    ManagementObjectSearcher mos = new ManagementObjectSearcher(String.Format("Select * From Win32_Process where ParentProcessID={0}", process.Id));
+            
+            try
+            {
+                ManagementObjectSearcher mos = new ManagementObjectSearcher(String.Format("Select * From Win32_Process where ParentProcessID={0}", process.Id));
 
-                    foreach (ManagementObject mo in mos.Get())
-                    {
-
-                        children.Add(Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])));
-                    }
-                }
-                catch (Exception ex)
+                foreach (ManagementObject mo in mos.Get())
                 {
-                    // nothing to do 
+
+                    children.Add(Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])));
                 }
             }
+            catch (Exception ex)
+            {
+                // nothing to do 
+            }
+            
             return children;
         }
     }
