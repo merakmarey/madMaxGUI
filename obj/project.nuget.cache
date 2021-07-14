@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "7LWzSrZN6QoXCIBDKC61O4q7LeNTXfbTKA2FlRkwtbmaAIDSf4k15EEOdAvtUnJu3m8XlcTXtNkG5hMFeYHqWA==",
+  "dgSpecHash": "nBRUgp5Odumr2g21HTTUTpTyDGVW9b0v/s2jnlNDY7YUSahXjx6K3n7V6HsoFb+el22KbfVVmMD6+P1gixHFMQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Root\\Source\\Repos\\madMaxGUI\\madFurry.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Root\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "C:\\Users\\Root\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\system.codedom\\5.0.0\\system.codedom.5.0.0.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\system.management\\5.0.0\\system.management.5.0.0.nupkg.sha512",
     "C:\\Users\\Root\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",

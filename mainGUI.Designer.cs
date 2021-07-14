@@ -116,9 +116,7 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnSaveConfig = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -176,7 +174,7 @@
             // 
             // btnClearTmp2
             // 
-            this.btnClearTmp2.Location = new System.Drawing.Point(245, 65);
+            this.btnClearTmp2.Location = new System.Drawing.Point(245, 64);
             this.btnClearTmp2.Name = "btnClearTmp2";
             this.btnClearTmp2.Size = new System.Drawing.Size(75, 23);
             this.btnClearTmp2.TabIndex = 22;
@@ -186,7 +184,7 @@
             // 
             // btnRemoveDrives
             // 
-            this.btnRemoveDrives.Location = new System.Drawing.Point(303, 113);
+            this.btnRemoveDrives.Location = new System.Drawing.Point(303, 114);
             this.btnRemoveDrives.Name = "btnRemoveDrives";
             this.btnRemoveDrives.Size = new System.Drawing.Size(75, 23);
             this.btnRemoveDrives.TabIndex = 21;
@@ -1078,44 +1076,22 @@
             this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
             this.toolStripStatusLabel.Text = "Ready";
             // 
-            // button1
+            // btnSaveConfig
             // 
-            this.button1.Location = new System.Drawing.Point(676, 431);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "S";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(757, 431);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "R";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(656, 366);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(124, 31);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "Save settings";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnSaveConfig.Location = new System.Drawing.Point(656, 366);
+            this.btnSaveConfig.Name = "btnSaveConfig";
+            this.btnSaveConfig.Size = new System.Drawing.Size(124, 31);
+            this.btnSaveConfig.TabIndex = 9;
+            this.btnSaveConfig.Text = "Save settings";
+            this.btnSaveConfig.UseVisualStyleBackColor = true;
+            this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1048, 760);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnSaveConfig);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox2);
@@ -1239,9 +1215,7 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel lbDiscord;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnSaveConfig;
     }
 }
 

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace madFurry
 {
@@ -54,6 +55,48 @@ namespace madFurry
         }
 
         #region general tool functions 
+
+        public void loadConfig(object sender, EventArgs e)
+        {
+            var configFilename = checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + "madFurry.conf";
+            if (File.Exists(configFilename)) {
+                var loadConfig = File.ReadAllText(configFilename);
+                var config = JsonConvert.DeserializeObject<Dictionary<string, object>>(loadConfig);
+
+                txContractAddress.Text = config["contractaddress"].ToString();
+                txFarmerKey.Text = config["farmerkey"].ToString();
+                txPoolKey.Text = config["poolkey"].ToString();
+
+                tmpPath_1 = config["tmpDir1"]==null?String.Empty:config["tmpDir1"].ToString();
+                lbTmpPath1_currentPath.Text = String.IsNullOrEmpty(tmpPath_1)?"(none)":tmpPath_1;
+                tmpPath_2 = config["tmpDir2"] == null ? String.Empty : config["tmpDir2"].ToString();
+                lbTmpPath2_currentPath.Text = String.IsNullOrEmpty(tmpPath_2) ? "(none)" : tmpPath_2;
+
+                if (config["finalDirs"].ToString()!="-")
+                {
+                    var fdirsString = JsonConvert.DeserializeObject<List<string>>(config["finalDirs"].ToString());
+                    foreach (var item in fdirsString)
+                    {
+                        dgvFinalDrives.Rows.Add(item);
+                    }
+                }
+
+                int dummy;
+                if (Int32.TryParse(config["plotTasks"].ToString(), out dummy))
+                    nudPlotCount.Value = dummy;
+                if (Int32.TryParse(config["threads"].ToString(), out dummy))
+                    nudThreads.Value = dummy;
+                
+                cbBuckets.SelectedItem = config["buckets"] ;
+                cbBuckets34.SelectedItem = config["buckets34"] ;
+                cbContinuousMode.Checked = (bool)config["continuous"] ;
+                cbSeparatedTaskCopy.Checked= (bool)config["separatedTask"];
+                cbInternalCopy.Checked = (bool)config["internalCopy"];
+                cbAlternate.Checked = (bool)config["alternate"];
+
+                TimerDriveInfos_Tick(sender, e);
+            }
+        }
         public string getRegistryValue(string regPath, string keyName)
         {
             try
@@ -87,7 +130,7 @@ namespace madFurry
 
             DriveInfo[] driveInfos = DriveInfo.GetDrives();
 
-            if (sourceLabel.Text != "(none)")
+            if (sourceLabel.Text != "(none)") 
             {
                 var driveInfo = getDriveInfo(sourceLabel.Text);
 
@@ -281,6 +324,8 @@ namespace madFurry
         {
             InitRAMTimer();
             InitCPUTimer();
+
+            loadConfig(sender, e);
 
             long memKb;
             physicalCores = 0;
@@ -787,6 +832,8 @@ namespace madFurry
         {
             if ((item.status == TaskStatus.AwaitingRestart) && (cbContinuousMode.Checked))
             {
+                dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
+
                 item.error = String.Empty;
                 item.output = String.Empty;
                 item.plot_filename = String.Empty;
@@ -797,6 +844,7 @@ namespace madFurry
         private void CompletePlottingTask(PlotTask item)
         {
             item.status = TaskStatus.Completed;
+            dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
 
             if (dgvPlotTasks.Rows.Count==0)
             {
@@ -1012,33 +1060,43 @@ namespace madFurry
             return cmd;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Resume();
-        }
+        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
+        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Resume();
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btnSaveConfig_Click(object sender, EventArgs e)
         {
             var config = new Dictionary<string, object>();
 
             var finalDirList = new List<string>();
 
-            config.Add("tmpDir1",tmpPath_1);
+            config.Add("tmpDir1", tmpPath_1);
             config.Add("tmpDir2", tmpPath_2);
+            config.Add("alternate", cbAlternate.Checked);
 
             finalDirList = dgvFinalDrives.Rows.OfType<DataGridViewRow>().Where(x => x.Cells["Path"].Value != null).Select(x => x.Cells["Path"].Value.ToString()).ToList();
 
-            config.Add("finalDirs", (finalDirList.Count>0 ? finalDirList : new List<string>() { "-" }));
+            config.Add("finalDirs", (finalDirList.Count > 0 ? finalDirList : new List<string>() { "-" }));
 
-            config.Add("poolkey", txPoolKey);
-            config.Add("farmerkey", txFarmerKey);
-            config.Add("contractaddress", txContractAddress);
+            config.Add("poolkey", txPoolKey.Text);
+            config.Add("farmerkey", txFarmerKey.Text);
+            config.Add("contractaddress", txContractAddress.Text);
 
+
+            config.Add("plotTasks", nudPlotCount.Value);
+            config.Add("threads", nudThreads.Value);
+            config.Add("buckets", cbBuckets.SelectedItem);
+            config.Add("buckets34", cbBuckets34.SelectedItem);
+            config.Add("continuous", cbContinuousMode.Checked);
+            config.Add("separatedTask", cbSeparatedTaskCopy.Checked);
+            config.Add("internalCopy", cbInternalCopy.Checked);
+
+
+            var configJson = JsonConvert.SerializeObject(config);
+
+            File.WriteAllText(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + "madFurry.conf", configJson);
+
+            MessageBox.Show("Config saved", "Configuration was saved!", MessageBoxButtons.OK);
 
         }
     }
