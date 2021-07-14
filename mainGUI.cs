@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Security.Cryptography;
-using madFurry;
 using System.Text;
 
-namespace madMaxGUI
+namespace madFurry
 {
 
     public partial class mainGUI : Form
@@ -46,7 +45,7 @@ namespace madMaxGUI
         private System.Timers.Timer TimerDriveInfo;
 
 
-        List<Task> plottingTasks = new List<Task>();
+        
         List<PlotTask> plotTasks = new List<PlotTask>();
 
         public mainGUI()
@@ -57,19 +56,27 @@ namespace madMaxGUI
         #region general tool functions 
         public string getRegistryValue(string regPath, string keyName)
         {
-            object value = Registry.GetValue(regPath, keyName, String.Empty);
-            if (String.IsNullOrEmpty(value.ToString()))
+            try
+            {
+                object value = Registry.GetValue(regPath, keyName, String.Empty);
+                if (String.IsNullOrEmpty(value.ToString()))
+                    return String.Empty;
+                return value.ToString();
+            }
+            catch (Exception ex)
+            {
                 return String.Empty;
-            return value.ToString();
+            }
         }
         public float getAvailableMemory()
         {
             System.Diagnostics.PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available Bytes");
             return ramCounter.NextValue();
         }
-
-        
-
+        private string checkEndSlash(string path)
+        {
+            return path + (path.EndsWith(@"\") ? String.Empty : @"\");
+        }
         public DriveInfo getDriveInfo(string drivePath)
         {
             DriveInfo[] driveInfos = DriveInfo.GetDrives();
@@ -92,6 +99,9 @@ namespace madMaxGUI
                         targetLabel.Invoke(new MethodInvoker(delegate {
                             targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
                         }));
+                    } else
+                    {
+                        targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
                     }
                 }
             }
@@ -118,7 +128,6 @@ namespace madMaxGUI
             tmpString += "\"";
             return tmpString;
         }
-
         private bool checkChiaPlotter(string file)
         {
             StringBuilder sb = new StringBuilder();
@@ -140,10 +149,7 @@ namespace madMaxGUI
         }
         #endregion
 
-        private string checkEndSlash(string path)
-        {
-            return path + (path.EndsWith(@"\") ? String.Empty : @"\");
-        }
+        
 
         #region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e)
@@ -172,21 +178,28 @@ namespace madMaxGUI
             if (dgvPlotTasks.Rows.Count > 0)
                 foreach (var item in plotTasks)
                 {
-                    var row = dgvPlotTasks.GetRowByColumnValue("Plot", item.plot_filename);
-                    if (item.process!=null)
-                    if ((!item.process.HasExited) && (row!=null))
+                    try
                     {
-                        var child_process = item.process.GetChildProcesses();
-                        if (child_process.Count() > 0)
-                        {
-                            var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
-                                if (chia_process != null)
-                                    dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss"));
-                        }
+                        var row = dgvPlotTasks.GetRowByColumnValue("Plot", item.plot_filename);
+                        if (item.process != null)
+                            if ((!item.process.HasExited) && (row != null))
+                            {
+                                var child_process = item.process.GetChildProcesses();
+                                if (child_process.Count() > 0)
+                                {
+                                    var chia_process = child_process.Where(p => p.ProcessName == "chia_plot").FirstOrDefault();
+                                    if (chia_process != null)
+                                        dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (chia_process.StartTime - DateTime.Now).ToString(@"hh\:mm\:ss"));
+                                }
+                            }
+                    }
+                    catch (Exception ex)
+                    {
+                        // nothing to do.
                     }
                 }
         }
-        public void TimerDriveInfos_Tick(object sender, EventArgs e)
+        private void TimerDriveInfos_Tick(object sender, EventArgs e)
         {
             DriveInfo[] driveInfos = DriveInfo.GetDrives();
             //return driveInfos.Where(n => n.Name.ToLowerInvariant().StartsWith(drivePath.Substring(0, 3).ToLowerInvariant())).FirstOrDefault();
@@ -216,7 +229,6 @@ namespace madMaxGUI
             TimerCPU.Interval = 1000;
             TimerCPU.Start();
         }
-
         private void InitDriveInfoTimer()
         {
             TimerDriveInfo = new System.Timers.Timer();
@@ -262,6 +274,7 @@ namespace madMaxGUI
         #region click events
         private void mainGUI_Load(object sender, EventArgs e)
         {
+            this.Text = String.Format("madFurry (v{0}) - GUI/Plot Manager for madMax Chia Plotter", madFurry.Properties.Settings.Default.version);
         }
 
         private void mainGUI_Shown(object sender, EventArgs e)
@@ -411,6 +424,7 @@ namespace madMaxGUI
             }
             return String.Empty;
         }
+
         private void btnAutoGetKeys_Click(object sender, EventArgs e)
         {
             try
@@ -545,7 +559,7 @@ namespace madMaxGUI
 
                 if (dgvFinalDrives.Rows.Count > 0)
                 {
-                    currentFinalDir = dgvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString();
+                    currentFinalDir = dgvFinalDrives.Rows[finalDirIndex].Cells[0].Value.ToString().ToLowerInvariant();
 
                     if (finalDirIndex < dgvFinalDrives.Rows.Count - 1)
                         finalDirIndex++;
@@ -554,7 +568,7 @@ namespace madMaxGUI
                 }
                 else
                 {
-                    currentFinalDir = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                    currentFinalDir = tmpPath_1.ToLowerInvariant();
                 }
 
                 var newTask = new PlotTask()
@@ -575,26 +589,24 @@ namespace madMaxGUI
                 };
 
                 // dirs
-                if (cbAlternate.Checked && !String.IsNullOrEmpty(lbTmpPath2_currentPath.Text))
+                if (cbAlternate.Checked && !String.IsNullOrEmpty(tmpPath_2))
                 {
                     if (i % 2 == 0)
                     {
-                        newTask.tmpDir1 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
-                        newTask.tmpDir2 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir1 = tmpPath_1.ToLowerInvariant();
+                        newTask.tmpDir2 = tmpPath_2.ToLowerInvariant();
                     }
                     else
                     {
-                        newTask.tmpDir1 = lbTmpPath2_currentPath.Text.ToLowerInvariant();
-                        newTask.tmpDir2 = lbTmpPath1_currentPath.Text.ToLowerInvariant();
+                        newTask.tmpDir1 = tmpPath_2.ToLowerInvariant();
+                        newTask.tmpDir2 = tmpPath_1.ToLowerInvariant();
                     }
                 }
                 else
                 {
-                    newTask.tmpDir1 = lbTmpPath1_currentPath.Text;
-                    if (cbAlternate.Checked)
-                        newTask.tmpDir2 = (lbTmpPath2_currentPath.Text.ToLowerInvariant().StartsWith("(") ? String.Empty : lbTmpPath2_currentPath.Text.ToLowerInvariant());
-                    else
-                        newTask.tmpDir2 = String.Empty;
+                    newTask.tmpDir1 = tmpPath_1.ToLowerInvariant();
+                    if (!String.IsNullOrEmpty(tmpPath_2))
+                        newTask.tmpDir2 = tmpPath_2.ToLowerInvariant();
                 }
 
 
@@ -608,6 +620,7 @@ namespace madMaxGUI
         private void btnClearTmp2_Click(object sender, EventArgs e)
         {
             lbTmpPath2_currentPath.Text = "(none)";
+            tmpPath_2 = String.Empty;
         }
 
         private void cmbContractWallets_Changed(object sender, EventArgs e)
@@ -699,7 +712,7 @@ namespace madMaxGUI
         {
             if ((!String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
             {
-                //File.AppendAllLines(checkEndSlash(item.tmpDir1) + item.plot_filename+ "_log", new List<string>() { "STEP1\r\n" });
+                
                 if (!item.useInternalCopy)
                 {
 
@@ -708,7 +721,6 @@ namespace madMaxGUI
                         new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); }));
                     if (copyHandler.IsCompleted)
                     {
-                        //File.AppendAllLines(checkEndSlash(item.tmpDir1) + "Log_" + item.plot_filename, new List<string>() { "STEP3 "});
                         File.Delete(item.tmpDir1 + @"\" + item.plot_filename);
                     }
                     else
@@ -718,7 +730,7 @@ namespace madMaxGUI
                 }
                 else
                 {
-                    //File.AppendAllLines(checkEndSlash(item.tmpDir1) + item.plot_filename + "_log", new List<string>() { "STEP2 - " + checkEndSlash(item.tmpDir1) + item.plot_filename + " -TO- " + checkEndSlash(item.finalDir) + item.plot_filename + "\r\n" });
+
                     XCopy.Copy(checkEndSlash(item.tmpDir1) + item.plot_filename, checkEndSlash(item.finalDir) + item.plot_filename, true, true,
                          new EventHandler<ProgressChangedEventArgs>((o, s) =>
                          {
@@ -741,30 +753,33 @@ namespace madMaxGUI
 
             if ((!String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
             {
+
                 item.copyStarted = DateTime.Now;
                 item.updateCopyTime.Elapsed += (o, s) => { updateCopyTimer(item); };
                 item.updateCopyTime.Interval = 1000;
                 item.updateCopyTime.Start();
-            }
 
-            if (item.copyOnSeparatedTask)
-            {
 
-                var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                if (item.copyOnSeparatedTask)
                 {
 
+                    var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    {
+
+                        doCopy(item);
+
+                    }).ContinueWith(antecedent =>
+                    {
+                        item.StopCopyTimer();
+                        dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
+                    });
+
+                }
+                else
+                {
                     doCopy(item);
-
-                }).ContinueWith(antecedent =>
-                {
-                    item.StopCopyTimer();
                     dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
-                });
-
-            } else
-            {
-                doCopy(item);
-                dgvPlotTasks.RemoveRowByColumnValue("Plot", item.plot_filename);
+                }
             }
         }
 
@@ -786,7 +801,18 @@ namespace madMaxGUI
             if (dgvPlotTasks.Rows.Count==0)
             {
                 if (plotTasks.Select(i => i.process.GetChildProcesses().Count() > 0).Count() > 0)
-                    btnStart.Enabled = true;
+                {
+                    if (btnStart.InvokeRequired)
+                    {
+                        btnStart.Invoke(new MethodInvoker(delegate {
+                            btnStart.Enabled = true;
+                        }));
+                    }
+                    else
+                    {
+                        btnStart.Enabled = true;
+                    }
+                }
             }
         }
 
@@ -796,8 +822,8 @@ namespace madMaxGUI
 
             var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                string plotname = String.Format("plot-{0}.plot",Guid.NewGuid());
-                FileStream fs = new FileStream(@"C:\tmp chia\" + plotname, FileMode.Create);
+                string plotname = String.Format("plot-{0}",Guid.NewGuid());
+                FileStream fs = new FileStream(@"C:\tmp chia\" + plotname+".plot", FileMode.Create);
                 item.outputProcessor("Plot name: " + plotname, dgvPlotTasks);
                 fs.SetLength(1024L * 1024 * 1024 * 25);
                 System.Threading.Thread.Sleep(1000 * 5);
@@ -982,10 +1008,38 @@ namespace madMaxGUI
                     condCmd = " -c " + pTask.contractAddress;
                 }
                 cmd += condCmd;
-                cmd += (!pTask.copyOnSeparatedTask ? " -d " + formatPath(pTask.finalDir) : String.Empty);
+                // cmd += (!pTask.copyOnSeparatedTask && !pTask.useInternalCopy ? " -d " + formatPath(pTask.finalDir) : String.Empty);
             return cmd;
         }
 
-       
+        private void button1_Click(object sender, EventArgs e)
+        {
+            plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Resume();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var config = new Dictionary<string, object>();
+
+            var finalDirList = new List<string>();
+
+            config.Add("tmpDir1",tmpPath_1);
+            config.Add("tmpDir2", tmpPath_2);
+
+            finalDirList = dgvFinalDrives.Rows.OfType<DataGridViewRow>().Where(x => x.Cells["Path"].Value != null).Select(x => x.Cells["Path"].Value.ToString()).ToList();
+
+            config.Add("finalDirs", (finalDirList.Count>0 ? finalDirList : new List<string>() { "-" }));
+
+            config.Add("poolkey", txPoolKey);
+            config.Add("farmerkey", txFarmerKey);
+            config.Add("contractaddress", txContractAddress);
+
+
+        }
     }
 }

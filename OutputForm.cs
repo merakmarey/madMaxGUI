@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace madMaxGUI
+namespace madFurry
 {
     public partial class OutputForm : Form
     {

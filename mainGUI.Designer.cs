@@ -1,4 +1,4 @@
-﻿namespace madMaxGUI
+﻿namespace madFurry
 {
     partial class mainGUI
     {
@@ -105,17 +105,20 @@
             this.nudThreads = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lbDiscord = new System.Windows.Forms.LinkLabel();
             this.dgvPlotTasks = new System.Windows.Forms.DataGridView();
             this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.lbDiscord = new System.Windows.Forms.LinkLabel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -483,9 +486,9 @@
             this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label10.Location = new System.Drawing.Point(294, 131);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(191, 12);
+            this.label10.Size = new System.Drawing.Size(188, 12);
             this.label10.TabIndex = 16;
-            this.label10.Text = "(Only works  if Chia blockchain is installed)";
+            this.label10.Text = "(Only works if Chia blockchain is installed)";
             // 
             // txContractAddress
             // 
@@ -765,7 +768,7 @@
             this.gbOptions.Controls.Add(this.label14);
             this.gbOptions.Location = new System.Drawing.Point(656, 115);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 203);
+            this.gbOptions.Size = new System.Drawing.Size(387, 245);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
@@ -953,13 +956,26 @@
             // groupBox2
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.lbDiscord);
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
+            this.groupBox2.Controls.Add(this.linkLabel1);
             this.groupBox2.Location = new System.Drawing.Point(10, 457);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 268);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Running tasks";
+            // 
+            // lbDiscord
+            // 
+            this.lbDiscord.AutoSize = true;
+            this.lbDiscord.LinkColor = System.Drawing.Color.Gray;
+            this.lbDiscord.Location = new System.Drawing.Point(844, 250);
+            this.lbDiscord.Name = "lbDiscord";
+            this.lbDiscord.Size = new System.Drawing.Size(177, 15);
+            this.lbDiscord.TabIndex = 9;
+            this.lbDiscord.TabStop = true;
+            this.lbDiscord.Text = "https://discord.gg/V2x9MSpCFe";
             // 
             // dgvPlotTasks
             // 
@@ -982,7 +998,7 @@
             this.dgvPlotTasks.ReadOnly = true;
             this.dgvPlotTasks.RowTemplate.Height = 25;
             this.dgvPlotTasks.ShowEditingIcon = false;
-            this.dgvPlotTasks.Size = new System.Drawing.Size(1019, 245);
+            this.dgvPlotTasks.Size = new System.Drawing.Size(1019, 231);
             this.dgvPlotTasks.TabIndex = 0;
             this.dgvPlotTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlotTasks_CellContentClick);
             // 
@@ -1025,9 +1041,20 @@
             this.Output.ToolTipText = "Open full output transcript on separated window";
             this.Output.UseColumnTextForButtonValue = true;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
+            this.linkLabel1.Location = new System.Drawing.Point(602, 249);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(236, 15);
+            this.linkLabel1.TabIndex = 8;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "https://github.com/merakmarey/madFurry";
+            // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(894, 324);
+            this.btnStart.Location = new System.Drawing.Point(889, 366);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(149, 32);
             this.btnStart.TabIndex = 5;
@@ -1051,33 +1078,44 @@
             this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
             this.toolStripStatusLabel.Text = "Ready";
             // 
-            // linkLabel1
+            // button1
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(795, 426);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(236, 15);
-            this.linkLabel1.TabIndex = 8;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "https://github.com/merakmarey/madFurry";
+            this.button1.Location = new System.Drawing.Point(676, 431);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "S";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // lbDiscord
+            // button2
             // 
-            this.lbDiscord.AutoSize = true;
-            this.lbDiscord.Location = new System.Drawing.Point(795, 445);
-            this.lbDiscord.Name = "lbDiscord";
-            this.lbDiscord.Size = new System.Drawing.Size(177, 15);
-            this.lbDiscord.TabIndex = 9;
-            this.lbDiscord.TabStop = true;
-            this.lbDiscord.Text = "https://discord.gg/V2x9MSpCFe";
+            this.button2.Location = new System.Drawing.Point(757, 431);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "R";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(656, 366);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(124, 31);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "Save settings";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1048, 760);
-            this.Controls.Add(this.lbDiscord);
-            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.groupBox2);
@@ -1090,6 +1128,7 @@
             this.MaximizeBox = false;
             this.Name = "mainGUI";
             this.Padding = new System.Windows.Forms.Padding(10);
+            this.Text = "madFurry";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainGUI_FormClosing);
             this.Load += new System.EventHandler(this.mainGUI_Load);
             this.Shown += new System.EventHandler(this.mainGUI_Shown);
@@ -1105,6 +1144,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudPlotCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudThreads)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlotTasks)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
@@ -1199,6 +1239,9 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel lbDiscord;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

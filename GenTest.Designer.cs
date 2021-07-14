@@ -1,5 +1,5 @@
 ﻿
-namespace madMaxGUI
+namespace madFurry
 {
     partial class GenTest
     {

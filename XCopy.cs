@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace madMaxGUI
+namespace madFurry
 {
     /// <summary>
     /// PInvoke wrapper for CopyEx

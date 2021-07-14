@@ -14,9 +14,9 @@ C:\Users\Root\Source\Repos\madMaxGUI\bin\Debug\netcoreapp3.1\runtimes\win\lib\ne
 C:\Users\Root\Source\Repos\madMaxGUI\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
 C:\Users\Root\Source\Repos\madMaxGUI\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 C:\Users\Root\Source\Repos\madMaxGUI\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
-C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.GenTest.resources
-C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.mainGUI.resources
-C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madMaxGUI.OutputForm.resources
+C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.GenTest.resources
+C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.mainGUI.resources
+C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.OutputForm.resources
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.csproj.GenerateResource.cache
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.AssemblyInfoInputs.cache
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.AssemblyInfo.cs

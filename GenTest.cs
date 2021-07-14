@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace madMaxGUI
+namespace madFurry
 {
     public partial class GenTest : Form
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace madMaxGUI
+namespace madFurry
 {
     public static class StringHelpers
     {

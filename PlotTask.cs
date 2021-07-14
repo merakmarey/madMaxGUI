@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace madMaxGUI
+namespace madFurry
 {
     public enum TaskStatus
     {
