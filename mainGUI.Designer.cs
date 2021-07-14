@@ -117,6 +117,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnSaveConfig = new System.Windows.Forms.Button();
+            this.lbPlotterInfo = new System.Windows.Forms.Label();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -954,6 +955,7 @@
             // groupBox2
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox2.Controls.Add(this.lbPlotterInfo);
             this.groupBox2.Controls.Add(this.lbDiscord);
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
             this.groupBox2.Controls.Add(this.linkLabel1);
@@ -1086,6 +1088,15 @@
             this.btnSaveConfig.UseVisualStyleBackColor = true;
             this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
+            // lbPlotterInfo
+            // 
+            this.lbPlotterInfo.AutoSize = true;
+            this.lbPlotterInfo.Location = new System.Drawing.Point(4, 249);
+            this.lbPlotterInfo.Name = "lbPlotterInfo";
+            this.lbPlotterInfo.Size = new System.Drawing.Size(67, 15);
+            this.lbPlotterInfo.TabIndex = 10;
+            this.lbPlotterInfo.Text = "Initializing..";
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1216,6 +1227,7 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel lbDiscord;
         private System.Windows.Forms.Button btnSaveConfig;
+        private System.Windows.Forms.Label lbPlotterInfo;
     }
 }
 

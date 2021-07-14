@@ -26,3 +26,4 @@ C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madFurry.genrunti
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madFurry.GenTest.resources
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madFurry.mainGUI.resources
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Release\netcoreapp3.1\madFurry.OutputForm.resources
+C:\Users\Root\Source\Repos\madMaxGUI\bin\Release\netcoreapp3.1\Newtonsoft.Json.dll

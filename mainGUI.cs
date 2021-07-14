@@ -25,7 +25,7 @@ namespace madFurry
         const int maxKeyLength = 96;
         const int contractAddressMaxLength = 62;
 
-        private List<string> allowedCRCs = new List<string>() { "83bffa8c994899603479a5a8645f455d", "2f9f1fcd6a0fe9eedc6b3b7cd869adc7", "e393b8ed60a4bde6212e6111edab98bb" };
+        private Dictionary<string, string> plottersAllowed = new Dictionary<string, string>() { { "1.1.2a", "83bffa8c994899603479a5a8645f455d" }, { "0.0.7", "2f9f1fcd6a0fe9eedc6b3b7cd869adc7" }, { "0.0.6", "e393b8ed60a4bde6212e6111edab98bb"}} ;
 
         private const double GiBfactor = 0.931323;
         
@@ -182,8 +182,19 @@ namespace madFurry
                     sb.Append(bt.ToString("x2"));
                 }
             }
-            if (allowedCRCs.Contains(sb.ToString()))
+            var plotterDetected = plottersAllowed.Where(p => p.Value == sb.ToString()).FirstOrDefault();
+
+            if (!String.IsNullOrEmpty(plotterDetected.Key))
+            {
+                lbPlotterInfo.Text = "Detected madMax v" + plotterDetected.Key;
+                lbPlotterInfo.ForeColor = Color.DarkGray;
                 return true;
+            } else
+            {
+                lbPlotterInfo.Text = "Invalid/Not supported MadMax Plotter! MadFurry will not work";
+                lbPlotterInfo.ForeColor = Color.Red;
+            }
+            
             return false;
         }
         private void Log(List<string> logEvents)
@@ -322,6 +333,8 @@ namespace madFurry
 
         private void mainGUI_Shown(object sender, EventArgs e)
         {
+            checkChiaPlotter(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\chia_plot.exe");
+
             InitRAMTimer();
             InitCPUTimer();
 

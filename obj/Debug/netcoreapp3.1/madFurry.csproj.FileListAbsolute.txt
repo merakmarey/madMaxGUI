@@ -25,5 +25,4 @@ C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.csproj.Cop
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.dll
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.pdb
 C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.genruntimeconfig.cache
-C:\Users\Root\Source\Repos\madMaxGUI\obj\Debug\netcoreapp3.1\madFurry.csproj.AssemblyReference.cache
 C:\Users\Root\Source\Repos\madMaxGUI\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
