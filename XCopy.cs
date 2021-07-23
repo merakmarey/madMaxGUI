@@ -14,7 +14,7 @@ namespace madFurry
     {
         public void RegularCopy(string source, string destination, int bytesPerChunk, EventHandler<ProgressChangedEventArgs> handler)
         {
-            int bytesRead = 0;
+           
             
             if (handler != null)
                 ProgressChanged += handler;
@@ -28,14 +28,18 @@ namespace madFurry
                         BinaryWriter bw = new BinaryWriter(fsDest);
                         byte[] buffer;
 
-                        for (int i = 0; i < fs.Length; i += bytesPerChunk)
+                        double bytesRead = 0;
+                        while (bytesRead < fs.Length)
                         {
                             buffer = br.ReadBytes(bytesPerChunk);
                             bw.Write(buffer);
-                            bytesRead += bytesPerChunk;
-                            var percentageCopied = (bytesRead*fs.Length/100);
+                            bytesRead += buffer.Length;
+                            var percentageCopied = (bytesRead * 100 / fs.Length);
                             OnProgressChanged(percentageCopied);  //report the progress
                         }
+                       
+                        ProgressChanged -= handler;
+                        OnCompleted();
                     }
                 }
             }
@@ -99,7 +103,7 @@ namespace madFurry
                     ProgressChanged -= progressHandler;
                 if (completedHandler != null)
                     ProgressChanged -= progressHandler;
-                error = ex.Message + ex.StackTrace + ex.InnerException.Message;
+                error = ex.Message + ex.StackTrace;
                 File.AppendAllLines(Source+"_log", new List<string>() { error });
                 throw;
             }

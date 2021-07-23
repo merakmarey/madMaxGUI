@@ -8,11 +8,27 @@ namespace madFurry
 {
     public static class DataGridViewHelper
     {
-
+        public static List<string> GetColumnsAsList(this DataGridView dgv, string columnName)
+        {
+            var result = new List<string>();
+            if (dgv.InvokeRequired)
+            {
+                dgv.Invoke(new Action(() =>
+                {
+                    result = dgv.Rows.Cast<DataGridViewRow>().Where(r => !String.IsNullOrEmpty(r.Cells[columnName].Value.ToString())).Select(r=>r.Cells[columnName].Value.ToString()).ToList();
+                }));
+            }
+            else
+            {
+                result = dgv.Rows.Cast<DataGridViewRow>().Where(r => !String.IsNullOrEmpty(r.Cells[columnName].Value.ToString())).Select(r => r.Cells[columnName].Value.ToString()).ToList();
+            }
+            return result;
+        }
         public static DataGridViewRow GetRowByColumnValue(this DataGridView dgv, string ColumnName, object ColumnValue)
         {
             return dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[ColumnName].Value.Equals(ColumnValue)).FirstOrDefault();
         }
+
         public static void SetRowCellByColumnValue(this DataGridView dgv, DataGridViewRow row, string ColumnName, object ColumnValue)
         {
             if (row != null)
@@ -31,6 +47,7 @@ namespace madFurry
                 }
             }
         }
+
         public static void RemoveRowByColumnValue(this DataGridView dgv, string ColumnName, object ColumnValue)
         {
             var row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells[ColumnName].Value.Equals(ColumnValue)).FirstOrDefault();

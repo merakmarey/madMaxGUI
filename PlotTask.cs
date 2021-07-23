@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -31,6 +31,11 @@ namespace madFurry
         public bool copyOnSeparatedTask;
         public bool useInternalCopy;
         public bool validateAfterCopy;
+
+        public bool createLog;
+
+        public int phase = 1;
+
         public TaskStatus status;
 
         public string cmdString;
@@ -40,6 +45,8 @@ namespace madFurry
         public string plot_filename;
 
         public Process process;
+
+        public int currentPhase = 1;
 
         public DateTime copyStarted = DateTime.Now;
         public System.Timers.Timer updateCopyTime = new System.Timers.Timer();
@@ -54,6 +61,7 @@ namespace madFurry
             if (!String.IsNullOrEmpty(outputLine))
             {
                 output += outputLine + Environment.NewLine;
+
                 if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
                 {
                     var tmp_plot_filename = outputLine.Substring(11) + ".plot";
@@ -75,6 +83,19 @@ namespace madFurry
                     {
                         DataGridViewRow row = dgv.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Plot"].Value.ToString().Equals(plot_filename)).FirstOrDefault();
                         row.Cells["LastMessage"].Value = outputLine;
+                    }
+                }
+
+                if ((createLog) && (!String.IsNullOrEmpty(plot_filename)))
+                {
+                    string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Logs";
+                    System.IO.Directory.CreateDirectory(logPath);
+                    if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
+                    {
+                        File.AppendAllLines(logPath + @"\" +plot_filename+ ".log", new List<string>() { output });
+                    } else
+                    {
+                        File.AppendAllLines(logPath + @"\" + plot_filename + ".log", new List<string>() { outputLine });
                     }
                 }
             }

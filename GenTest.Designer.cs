@@ -35,6 +35,7 @@ namespace madFurry
             this.lbpercentage = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.lbtime = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,11 +92,22 @@ namespace madFurry
             this.lbtime.TabIndex = 4;
             this.lbtime.Text = "lbTime";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(541, 180);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 5;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // GenTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.lbtime);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.lbpercentage);
@@ -117,5 +129,6 @@ namespace madFurry
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label lbtime;
+        private System.Windows.Forms.Button button4;
     }
 }

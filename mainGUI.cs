@@ -28,8 +28,8 @@ namespace madFurry
         private Dictionary<string, string> plottersAllowed = new Dictionary<string, string>() { { "1.1.2a", "83bffa8c994899603479a5a8645f455d" }, { "0.0.7", "2f9f1fcd6a0fe9eedc6b3b7cd869adc7" }, { "0.0.6", "e393b8ed60a4bde6212e6111edab98bb"}} ;
 
         private const double GiBfactor = 0.931323;
-        
 
+        private string lastDriveUsed;
 
         string userProfile;
         string chiaVersion;
@@ -94,6 +94,17 @@ namespace madFurry
                 cbInternalCopy.Checked = (bool)config["internalCopy"];
                 cbAlternate.Checked = (bool)config["alternate"];
 
+                if ((config.ContainsKey("distribute")) && (config.ContainsKey("distributemethod")))
+                {
+                    cbDistributeSmart.Checked = (bool)config["distribute"];
+                    if (config["distributemethod"].ToString()=="even")
+                        rbDistributeEvenly.Checked = true;
+                    else
+                        rbFirstAvailable.Checked = true;
+                }
+                
+
+
                 TimerDriveInfos_Tick(sender, e);
             }
         }
@@ -118,7 +129,7 @@ namespace madFurry
         }
         private string checkEndSlash(string path)
         {
-            return path + (path.EndsWith(@"\") ? String.Empty : @"\");
+            return path + (String.IsNullOrEmpty(path) || path.EndsWith(@"\") ? String.Empty : @"\");
         }
         public DriveInfo getDriveInfo(string drivePath)
         {
@@ -137,15 +148,8 @@ namespace madFurry
                 if (driveInfo != null)
                 {
                     var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
-                    if (targetLabel.InvokeRequired)
-                    {
-                        targetLabel.Invoke(new MethodInvoker(delegate {
-                            targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
-                        }));
-                    } else
-                    {
-                        targetLabel.Text = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
-                    }
+
+                    targetLabel.SafeSetText(String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor));
                 }
             }
         }
@@ -203,29 +207,16 @@ namespace madFurry
         }
         #endregion
 
-        
-
         #region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e)
         {
             var ramAvail = getAvailableMemory();
-            if (lbFreeRAM.InvokeRequired)
-            {
-                lbFreeRAM.Invoke(new MethodInvoker(delegate {
-                    lbFreeRAM.Text = (ramAvail / 1024 / 1024 / 1024).ToString() + " GB";
-                }));
-            }
+            lbFreeRAM.SafeSetText((ramAvail / 1024 / 1024 / 1024).ToString() + " GB");
         }
         private void TimerCPU_Tick(object sender, EventArgs e)
         {
             var cpuUsed = getCPUusage();
-            if (lbCPUusage.InvokeRequired)
-            {
-                lbCPUusage.Invoke(new MethodInvoker(delegate {
-                    lbCPUusage.Text = cpuUsed + " %";
-                }));
-            }
-           
+            lbCPUusage.SafeSetText(cpuUsed + " %");
         }
         private void TimerTask_Tick(object sender, EventArgs e)
         {
@@ -637,6 +628,7 @@ namespace madFurry
 
                     copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
                     useInternalCopy = cbInternalCopy.Checked,
+                    createLog = cbLogs.Checked,
                     //validateAfterCopy = cbValidatePlot.Checked,
                     contractAddress = txContractAddress.Text,
                     farmerKey = txFarmerKey.Text,
@@ -765,21 +757,105 @@ namespace madFurry
         }
         #endregion
 
+        public string getFinalDestination(string originFile,string defaultDestinationFile, string plot_filename, bool useFirstAvailable, List<string> drives)
+        {
+            var destinationFile = defaultDestinationFile;
+            var fileInfo = new FileInfo(originFile);
+
+            if (drives.Count > 0)
+                if (useFirstAvailable)
+                {
+                    foreach (var drive in drives)
+                    {
+                        var drInfo = getDriveInfo(drive);
+                        if (drInfo.AvailableFreeSpace > fileInfo.Length)
+                        {
+                            destinationFile = checkEndSlash(drive) + plot_filename;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    int loopCount = 0;
+                    int indxDrive = 0;
+
+                    bool isNext = false;
+
+                    while (loopCount <= 3)
+                    {
+                        var drive = drives[indxDrive];
+                        if (String.IsNullOrEmpty(lastDriveUsed)) {
+                            if (drives.Count > 0)
+                                lastDriveUsed = drives.First();
+                            else
+                                lastDriveUsed = System.IO.Path.GetDirectoryName(defaultDestinationFile);
+                        }
+
+                        if (isNext)
+                        {
+                            var drInfo = getDriveInfo(drive);
+
+                            if (drInfo.AvailableFreeSpace > fileInfo.Length)
+                            {
+                                destinationFile = checkEndSlash(drive) + plot_filename;
+                                lastDriveUsed = drive;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if ((checkEndSlash(drive) + plot_filename).ToLowerInvariant() == (checkEndSlash(lastDriveUsed) + plot_filename).ToLowerInvariant())
+                            {
+                                isNext = true;
+                            }
+                        }
+                        indxDrive++;
+                        if (indxDrive == drives.Count)
+                            indxDrive = 0;
+                        
+                        loopCount++;
+                    }
+                }
+            return destinationFile;
+        }
 
         private void doCopy(PlotTask item)
         {
             if ((!String.IsNullOrEmpty(item.finalDir)) && (item.finalDir.ToLowerInvariant() != item.tmpDir1.ToLowerInvariant()))
             {
+                var originFile = checkEndSlash(item.tmpDir1) + item.plot_filename;
+                var destinationFile = checkEndSlash(item.finalDir) + item.plot_filename; // added the extra to avoid farmer mark file as invalid while copying
+
+
+                if (cbDistributeSmart.Checked)
+                {
+                   if (rbFirstAvailable.Checked)
+                    {
+                        destinationFile = getFinalDestination(originFile, destinationFile, item.plot_filename, true, dgvFinalDrives.GetColumnsAsList("Path"));
+                    }
+                   if (rbDistributeEvenly.Checked)
+                    {
+                        var drives = dgvFinalDrives.GetColumnsAsList("Path");
+                        if (String.IsNullOrEmpty(lastDriveUsed))
+                        {
+                            destinationFile = getFinalDestination(originFile, destinationFile, item.plot_filename, true,dgvFinalDrives.GetColumnsAsList("Path"));
+                        } else
+                        {
+                            destinationFile = getFinalDestination(originFile, destinationFile, item.plot_filename, false, dgvFinalDrives.GetColumnsAsList("Path"));
+                        }
+                    }
+                }
                 
                 if (!item.useInternalCopy)
                 {
 
                     var copyHandler = new XCopy();
-                    copyHandler.RegularCopy(checkEndSlash(item.tmpDir1) + item.plot_filename, checkEndSlash(item.finalDir) + item.plot_filename, 1024 * 1024 * 10,
+                    copyHandler.RegularCopy(originFile, destinationFile, 1024 * 1024 ,
                         new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); }));
                     if (copyHandler.IsCompleted)
                     {
-                        File.Delete(item.tmpDir1 + @"\" + item.plot_filename);
+                        File.Delete(originFile);
                     }
                     else
                     {
@@ -789,14 +865,14 @@ namespace madFurry
                 else
                 {
 
-                    XCopy.Copy(checkEndSlash(item.tmpDir1) + item.plot_filename, checkEndSlash(item.finalDir) + item.plot_filename, true, true,
+                    XCopy.Copy(originFile, destinationFile, true, true,
                          new EventHandler<ProgressChangedEventArgs>((o, s) =>
                          {
                              updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks);
                          }),
                          new EventHandler((o, s) =>
                          {
-                             File.Delete(item.tmpDir1 + @"\" + item.plot_filename);
+                             File.Delete(originFile);
                          })
                         );
                 }
@@ -993,7 +1069,7 @@ namespace madFurry
                                 {
                                     if ((childProcess.ProcessName == "chia_plot") && (!childProcess.HasExited))
                                     {
-                                        childProcess.PriorityClass = ProcessPriorityClass.High;
+                                        childProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
                                         SetHighIOPriority(childProcess);
                                     }
                                 }
@@ -1073,10 +1149,6 @@ namespace madFurry
             return cmd;
         }
 
-
-        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
-        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Resume();
-
         private void btnSaveConfig_Click(object sender, EventArgs e)
         {
             var config = new Dictionary<string, object>();
@@ -1103,6 +1175,8 @@ namespace madFurry
             config.Add("continuous", cbContinuousMode.Checked);
             config.Add("separatedTask", cbSeparatedTaskCopy.Checked);
             config.Add("internalCopy", cbInternalCopy.Checked);
+            config.Add("distribute", cbDistributeSmart.Checked);
+            config.Add("distributemethod", rbDistributeEvenly.Checked ? "even" : "first");
 
 
             var configJson = JsonConvert.SerializeObject(config);
@@ -1112,5 +1186,29 @@ namespace madFurry
             MessageBox.Show("Config saved", "Configuration was saved!", MessageBoxButtons.OK);
 
         }
+
+        private void llGit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo(llGit.Text) { UseShellExecute = true });
+        }
+
+        private void llDiscord_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo(llDiscord.Text) { UseShellExecute = true});
+        }
+
+
+        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
+        //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Resume();
+        /*
+        var t = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", true, new List<string>() { @"c:\", @"y:\", @"z:\" });
+
+            var t1 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });
+            var t2 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });
+            var t3 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });
+            var t4 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });
+            var t5 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });
+            var t6 = getFinalDestination(@"c:\tmp chia\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot", @"d:\plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", "plot-9790e263-7418-4fb9-b932-84951dced5b9.plot1", false, new List<string>() { @"c:\", @"y:\", @"z:\" });         
+         */
     }
 }

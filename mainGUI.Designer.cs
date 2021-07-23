@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -89,9 +90,13 @@
             this.lbProcessor = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.cbInternalCopy = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.rbDistributeEvenly = new System.Windows.Forms.RadioButton();
+            this.rbFirstAvailable = new System.Windows.Forms.RadioButton();
+            this.cbDistributeSmart = new System.Windows.Forms.CheckBox();
+            this.cbInternalCopy = new System.Windows.Forms.CheckBox();
             this.cbSeparatedTaskCopy = new System.Windows.Forms.CheckBox();
             this.lbPlotCountSuggested = new System.Windows.Forms.Label();
             this.cbBuckets34 = new System.Windows.Forms.ComboBox();
@@ -105,19 +110,21 @@
             this.nudThreads = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lbDiscord = new System.Windows.Forms.LinkLabel();
+            this.lbPlotterInfo = new System.Windows.Forms.Label();
+            this.llDiscord = new System.Windows.Forms.LinkLabel();
             this.dgvPlotTasks = new System.Windows.Forms.DataGridView();
             this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.llGit = new System.Windows.Forms.LinkLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnSaveConfig = new System.Windows.Forms.Button();
-            this.lbPlotterInfo = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cbLogs = new System.Windows.Forms.CheckBox();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -750,9 +757,14 @@
             // 
             // gbOptions
             // 
-            this.gbOptions.Controls.Add(this.label5);
-            this.gbOptions.Controls.Add(this.cbInternalCopy);
+            this.gbOptions.Controls.Add(this.cbLogs);
             this.gbOptions.Controls.Add(this.label3);
+            this.gbOptions.Controls.Add(this.label25);
+            this.gbOptions.Controls.Add(this.label24);
+            this.gbOptions.Controls.Add(this.rbDistributeEvenly);
+            this.gbOptions.Controls.Add(this.rbFirstAvailable);
+            this.gbOptions.Controls.Add(this.cbDistributeSmart);
+            this.gbOptions.Controls.Add(this.cbInternalCopy);
             this.gbOptions.Controls.Add(this.cbSeparatedTaskCopy);
             this.gbOptions.Controls.Add(this.lbPlotCountSuggested);
             this.gbOptions.Controls.Add(this.cbBuckets34);
@@ -767,43 +779,87 @@
             this.gbOptions.Controls.Add(this.label14);
             this.gbOptions.Location = new System.Drawing.Point(656, 115);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 245);
+            this.gbOptions.Size = new System.Drawing.Size(387, 298);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
             // 
-            // label5
+            // label3
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label5.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label5.Location = new System.Drawing.Point(20, 184);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(213, 12);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "(If unchecked, a regular copy will move the file)";
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label3.Location = new System.Drawing.Point(224, 144);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(12, 15);
+            this.label3.TabIndex = 21;
+            this.label3.Text = "?";
+            this.toolTip1.SetToolTip(this.label3, "(If unchecked, a regular copy will move the file)");
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label25.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label25.Location = new System.Drawing.Point(242, 119);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(12, 15);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "?";
+            this.toolTip1.SetToolTip(this.label25, "(Beware If Continuos mode on, task will restart without waiting for copy to be ");
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label24.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label24.Location = new System.Drawing.Point(29, 184);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(185, 12);
+            this.label24.TabIndex = 19;
+            this.label24.Text = "(It will skip to next dir if destination is full)";
+            // 
+            // rbDistributeEvenly
+            // 
+            this.rbDistributeEvenly.AutoSize = true;
+            this.rbDistributeEvenly.Location = new System.Drawing.Point(145, 199);
+            this.rbDistributeEvenly.Name = "rbDistributeEvenly";
+            this.rbDistributeEvenly.Size = new System.Drawing.Size(113, 19);
+            this.rbDistributeEvenly.TabIndex = 18;
+            this.rbDistributeEvenly.Text = "Distribute evenly";
+            this.rbDistributeEvenly.UseVisualStyleBackColor = true;
+            // 
+            // rbFirstAvailable
+            // 
+            this.rbFirstAvailable.AutoSize = true;
+            this.rbFirstAvailable.Checked = true;
+            this.rbFirstAvailable.Location = new System.Drawing.Point(41, 199);
+            this.rbFirstAvailable.Name = "rbFirstAvailable";
+            this.rbFirstAvailable.Size = new System.Drawing.Size(96, 19);
+            this.rbFirstAvailable.TabIndex = 17;
+            this.rbFirstAvailable.TabStop = true;
+            this.rbFirstAvailable.Text = "First available";
+            this.rbFirstAvailable.UseVisualStyleBackColor = true;
+            // 
+            // cbDistributeSmart
+            // 
+            this.cbDistributeSmart.AutoSize = true;
+            this.cbDistributeSmart.Location = new System.Drawing.Point(7, 168);
+            this.cbDistributeSmart.Name = "cbDistributeSmart";
+            this.cbDistributeSmart.Size = new System.Drawing.Size(229, 19);
+            this.cbDistributeSmart.TabIndex = 16;
+            this.cbDistributeSmart.Text = "Distribute plots among all destinations";
+            this.cbDistributeSmart.UseVisualStyleBackColor = true;
             // 
             // cbInternalCopy
             // 
             this.cbInternalCopy.AutoSize = true;
-            this.cbInternalCopy.Location = new System.Drawing.Point(6, 167);
+            this.cbInternalCopy.Location = new System.Drawing.Point(7, 143);
             this.cbInternalCopy.Name = "cbInternalCopy";
             this.cbInternalCopy.Size = new System.Drawing.Size(219, 19);
             this.cbInternalCopy.TabIndex = 13;
             this.cbInternalCopy.Text = "Use internal Ultra Fast Copy function";
             this.cbInternalCopy.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label3.Location = new System.Drawing.Point(20, 135);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(346, 24);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "(Beware If Continuos mode on, task will restart without waiting for copy to be \r\n" +
-    "completed but plot file will remain on TmpDir1 until moved)";
             // 
             // cbSeparatedTaskCopy
             // 
@@ -956,9 +1012,9 @@
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.lbPlotterInfo);
-            this.groupBox2.Controls.Add(this.lbDiscord);
+            this.groupBox2.Controls.Add(this.llDiscord);
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
-            this.groupBox2.Controls.Add(this.linkLabel1);
+            this.groupBox2.Controls.Add(this.llGit);
             this.groupBox2.Location = new System.Drawing.Point(10, 457);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 268);
@@ -966,16 +1022,26 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Running tasks";
             // 
-            // lbDiscord
+            // lbPlotterInfo
             // 
-            this.lbDiscord.AutoSize = true;
-            this.lbDiscord.LinkColor = System.Drawing.Color.Gray;
-            this.lbDiscord.Location = new System.Drawing.Point(844, 250);
-            this.lbDiscord.Name = "lbDiscord";
-            this.lbDiscord.Size = new System.Drawing.Size(177, 15);
-            this.lbDiscord.TabIndex = 9;
-            this.lbDiscord.TabStop = true;
-            this.lbDiscord.Text = "https://discord.gg/V2x9MSpCFe";
+            this.lbPlotterInfo.AutoSize = true;
+            this.lbPlotterInfo.Location = new System.Drawing.Point(4, 249);
+            this.lbPlotterInfo.Name = "lbPlotterInfo";
+            this.lbPlotterInfo.Size = new System.Drawing.Size(67, 15);
+            this.lbPlotterInfo.TabIndex = 10;
+            this.lbPlotterInfo.Text = "Initializing..";
+            // 
+            // llDiscord
+            // 
+            this.llDiscord.AutoSize = true;
+            this.llDiscord.LinkColor = System.Drawing.Color.Gray;
+            this.llDiscord.Location = new System.Drawing.Point(844, 250);
+            this.llDiscord.Name = "llDiscord";
+            this.llDiscord.Size = new System.Drawing.Size(177, 15);
+            this.llDiscord.TabIndex = 9;
+            this.llDiscord.TabStop = true;
+            this.llDiscord.Text = "https://discord.gg/V2x9MSpCFe";
+            this.llDiscord.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llDiscord_LinkClicked);
             // 
             // dgvPlotTasks
             // 
@@ -1041,20 +1107,21 @@
             this.Output.ToolTipText = "Open full output transcript on separated window";
             this.Output.UseColumnTextForButtonValue = true;
             // 
-            // linkLabel1
+            // llGit
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.LinkColor = System.Drawing.Color.Gray;
-            this.linkLabel1.Location = new System.Drawing.Point(602, 249);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(236, 15);
-            this.linkLabel1.TabIndex = 8;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "https://github.com/merakmarey/madFurry";
+            this.llGit.AutoSize = true;
+            this.llGit.LinkColor = System.Drawing.Color.Gray;
+            this.llGit.Location = new System.Drawing.Point(602, 249);
+            this.llGit.Name = "llGit";
+            this.llGit.Size = new System.Drawing.Size(236, 15);
+            this.llGit.TabIndex = 8;
+            this.llGit.TabStop = true;
+            this.llGit.Text = "https://github.com/merakmarey/madFurry";
+            this.llGit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llGit_LinkClicked);
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(889, 366);
+            this.btnStart.Location = new System.Drawing.Point(886, 419);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(149, 32);
             this.btnStart.TabIndex = 5;
@@ -1080,7 +1147,7 @@
             // 
             // btnSaveConfig
             // 
-            this.btnSaveConfig.Location = new System.Drawing.Point(656, 366);
+            this.btnSaveConfig.Location = new System.Drawing.Point(653, 420);
             this.btnSaveConfig.Name = "btnSaveConfig";
             this.btnSaveConfig.Size = new System.Drawing.Size(124, 31);
             this.btnSaveConfig.TabIndex = 9;
@@ -1088,14 +1155,15 @@
             this.btnSaveConfig.UseVisualStyleBackColor = true;
             this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
-            // lbPlotterInfo
+            // cbLogs
             // 
-            this.lbPlotterInfo.AutoSize = true;
-            this.lbPlotterInfo.Location = new System.Drawing.Point(4, 249);
-            this.lbPlotterInfo.Name = "lbPlotterInfo";
-            this.lbPlotterInfo.Size = new System.Drawing.Size(67, 15);
-            this.lbPlotterInfo.TabIndex = 10;
-            this.lbPlotterInfo.Text = "Initializing..";
+            this.cbLogs.AutoSize = true;
+            this.cbLogs.Location = new System.Drawing.Point(7, 228);
+            this.cbLogs.Name = "cbLogs";
+            this.cbLogs.Size = new System.Drawing.Size(104, 19);
+            this.cbLogs.TabIndex = 22;
+            this.cbLogs.Text = "Create log files";
+            this.cbLogs.UseVisualStyleBackColor = true;
             // 
             // mainGUI
             // 
@@ -1199,7 +1267,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn Space;
         private System.Windows.Forms.Button btnRemoveDrives;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox cbSeparatedTaskCopy;
         private System.Windows.Forms.CheckBox cbInternalCopy;
         private System.Windows.Forms.Button btnClearTmp2;
@@ -1216,7 +1283,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RadioButton rbContract;
         private System.Windows.Forms.RadioButton rbSolo;
         private System.Windows.Forms.Label label16;
@@ -1224,10 +1290,18 @@
         private System.Windows.Forms.ComboBox cmbContractWallets;
         private System.Windows.Forms.TextBox txContractAddress;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.LinkLabel lbDiscord;
+        private System.Windows.Forms.LinkLabel llGit;
+        private System.Windows.Forms.LinkLabel llDiscord;
         private System.Windows.Forms.Button btnSaveConfig;
         private System.Windows.Forms.Label lbPlotterInfo;
+        private System.Windows.Forms.CheckBox cbDistributeSmart;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.RadioButton rbDistributeEvenly;
+        private System.Windows.Forms.RadioButton rbFirstAvailable;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbLogs;
     }
 }
 

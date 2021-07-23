@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace madFurry
@@ -45,12 +41,17 @@ namespace madFurry
                 var filename = Path.GetFileName(sourcefile);
                 XCopy.Copy(sourcefile, destinationfolder + @"\" + filename, true, true, new EventHandler<ProgressChangedEventArgs>((o, s) =>
                 {
-                    lbpercentage.Text = s.ProgressPercentage.ToString() + "%";
-                    lbpercentage.Refresh();
+                    lbpercentage.SafeSetText(s.ProgressPercentage.ToString() + "%");
+                    var elapsed = DateTime.Now - now;
+                    lbtime.SafeSetText(elapsed.ToString(@"hh\:mm\:ss"));
                 }));
             });
-            var elapsed = DateTime.Now - now;
-            lbtime.Text = elapsed.ToString(@"hh\:mm\:ss");
+           
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
