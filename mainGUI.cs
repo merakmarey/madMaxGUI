@@ -13,10 +13,12 @@ using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
+using System.Management;
+using madFurry.Modules;
+using madFurry.Models;
 
 namespace madFurry
 {
-
     public partial class mainGUI : Form
     {
 
@@ -25,15 +27,16 @@ namespace madFurry
         const int maxKeyLength = 96;
         const int contractAddressMaxLength = 62;
 
-        private Dictionary<string, string> plottersAllowed = new Dictionary<string, string>() { { "1.1.2a", "83bffa8c994899603479a5a8645f455d" }, { "0.0.7", "2f9f1fcd6a0fe9eedc6b3b7cd869adc7" }, { "0.0.6", "e393b8ed60a4bde6212e6111edab98bb"}} ;
-
+        private Dictionary<string, string> plottersAllowed = new Dictionary<string, string>() { { "1.1.2a", "83bffa8c994899603479a5a8645f455d" }, { "0.0.7", "2f9f1fcd6a0fe9eedc6b3b7cd869adc7" }, { "0.0.6", "e393b8ed60a4bde6212e6111edab98bb"}, {"0.1.5", "e9721dc02636149d1443fde3e11012a1" } } ;
         private const double GiBfactor = 0.931323;
 
         private string lastDriveUsed;
 
         string userProfile;
         string chiaVersion;
+
         int physicalCores;
+        string UniqueClientID;
 
         string tmpPath_1;
         string tmpPath_2;
@@ -45,8 +48,11 @@ namespace madFurry
         private System.Timers.Timer TimerTask;
         private System.Timers.Timer TimerDriveInfo;
 
+        private System.Timers.Timer TimerClientScreen;
 
-        
+        IntPtr mainIntPtr;
+
+
         List<PlotTask> plotTasks = new List<PlotTask>();
 
         public mainGUI()
@@ -74,6 +80,7 @@ namespace madFurry
 
                 if (config["finalDirs"].ToString()!="-")
                 {
+                    dgvFinalDrives.Rows.Clear();
                     var fdirsString = JsonConvert.DeserializeObject<List<string>>(config["finalDirs"].ToString());
                     foreach (var item in fdirsString)
                     {
@@ -102,8 +109,11 @@ namespace madFurry
                     else
                         rbFirstAvailable.Checked = true;
                 }
-                
 
+                if (config.ContainsKey("log"))
+                {
+                   cbLogs.Checked = (bool)config["log"];
+                }
 
                 TimerDriveInfos_Tick(sender, e);
             }
@@ -192,11 +202,13 @@ namespace madFurry
             {
                 lbPlotterInfo.Text = "Detected madMax v" + plotterDetected.Key;
                 lbPlotterInfo.ForeColor = Color.DarkGray;
+                btnStart.Enabled = true;
                 return true;
             } else
             {
                 lbPlotterInfo.Text = "Invalid/Not supported MadMax Plotter! MadFurry will not work";
                 lbPlotterInfo.ForeColor = Color.Red;
+                btnStart.Enabled = false;
             }
             
             return false;
@@ -206,6 +218,7 @@ namespace madFurry
             File.AppendAllLines(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + String.Format("log_{0}.log", DateTime.Now.ToString("MM-dd-yyyy")), logEvents);
         }
         #endregion
+
 
         #region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e)
@@ -254,11 +267,26 @@ namespace madFurry
 
             foreach (DataGridViewRow item in dgvFinalDrives.Rows)
             {
-                var driveInfo = driveInfos.Where(n => n.Name.ToLowerInvariant().StartsWith(item.Cells["Path"].Value.ToString().Substring(0, 3).ToLowerInvariant())).FirstOrDefault();
-                var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
-                var newInfo = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
-                dgvFinalDrives.SetRowCellByColumnValue(item, "Space", newInfo);
+                try
+                {
+                    var driveInfo = driveInfos.Where(n => n.Name.ToLowerInvariant().StartsWith(item.Cells["Path"].Value.ToString().Substring(0, 3).ToLowerInvariant())).FirstOrDefault();
+                    var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
+                    var newInfo = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
+                    dgvFinalDrives.SetRowCellByColumnValue(item, "Space", newInfo);
+                }
+                catch { }
             }
+        }
+
+        private void TimerClient_Tick(object sender, EventArgs e) {
+            CrossThreadHelper.InvokeAction(lbScreenApi, lb => { lb.ForeColor = Color.Green; lb.Refresh(); });
+            
+            var screen = mainGUI.ActiveForm.PrintToImage(mainIntPtr);
+            if (screen != null)
+            {
+                RemoteAPI.UpdateScreens(UniqueClientID, System.Diagnostics.Process.GetCurrentProcess().Id.ToString(), screen);
+            }
+            CrossThreadHelper.InvokeAction(lbScreenApi, lb => { lb.ForeColor = Color.Black; lb.Refresh(); });
         }
         private void InitRAMTimer()
         {
@@ -288,6 +316,14 @@ namespace madFurry
             TimerTask.Interval = 1000;
             TimerTask.Start();
         }
+        private void InitClientScreenTimer()
+        {
+            TimerClientScreen = new System.Timers.Timer();
+            TimerClientScreen.Elapsed += TimerClient_Tick;
+            TimerClientScreen.Interval = 10000;
+            TimerClientScreen.Start();
+        }
+
         #endregion
 
 
@@ -320,16 +356,22 @@ namespace madFurry
         private void mainGUI_Load(object sender, EventArgs e)
         {
             this.Text = String.Format("madFurry (v{0}) - GUI/Plot Manager for madMax Chia Plotter", madFurry.Properties.Settings.Default.version);
+
+            loadConfig(sender, e);
         }
 
         private void mainGUI_Shown(object sender, EventArgs e)
         {
+            mainIntPtr = mainGUI.ActiveForm.Handle;
+
+            UniqueClientID = Security.FingerPrint.Value();
+
             checkChiaPlotter(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\chia_plot.exe");
 
             InitRAMTimer();
             InitCPUTimer();
 
-            loadConfig(sender, e);
+            
 
             long memKb;
             physicalCores = 0;
@@ -503,11 +545,13 @@ namespace madFurry
                 }
                 else
                 {
+                    var poolNeedle = "pool contract address (";
+
                     var output2 = getRegularProcessOutput(userProfile + @"\AppData\Local\chia-blockchain\app-" + chiaVersion + @"\resources\app.asar.unpacked\daemon\", "chia.exe plotnft show");
                     var outputLines2 = output2.ToLowerInvariant().Split("\r\n");
-                    if (output2.ToLowerInvariant().Contains("p2 singleton address"))
+                    if (output2.ToLowerInvariant().Contains(poolNeedle))
                     {
-                        var contractAddress = outputLines2.Where(s => s.StartsWith("p2 singleton address")).Select(k => k.ToString().Substring(k.ToString().Length - contractAddressMaxLength)).FirstOrDefault();
+                        var contractAddress = outputLines2.Where(s => s.StartsWith(poolNeedle)).Select(k => k.ToString().Substring(k.ToString().Length - contractAddressMaxLength)).FirstOrDefault();
                         txContractAddress.Text = contractAddress;
                         txPoolKey.Text = String.Empty;
                         cmbContractWallets.Items.Clear();
@@ -519,7 +563,7 @@ namespace madFurry
                                 cmbContractWallets.Items.Add(String.Format("{0} - {1}", item.Substring(17), initialPair));
                                 initialPair = String.Empty;
                             }
-                            if (item.StartsWith("p2 singleton address")) 
+                            if (item.StartsWith(poolNeedle)) 
                             {
                                 initialPair = item.Substring(item.Length - contractAddressMaxLength);
                             }
@@ -629,7 +673,7 @@ namespace madFurry
                     copyOnSeparatedTask = cbSeparatedTaskCopy.Checked,
                     useInternalCopy = cbInternalCopy.Checked,
                     createLog = cbLogs.Checked,
-                    //validateAfterCopy = cbValidatePlot.Checked,
+                    threadMultiplier = cbPhase2Multiplier.Checked,
                     contractAddress = txContractAddress.Text,
                     farmerKey = txFarmerKey.Text,
                     poolKey = txPoolKey.Text,
@@ -771,6 +815,7 @@ namespace madFurry
                         if (drInfo.AvailableFreeSpace > fileInfo.Length)
                         {
                             destinationFile = checkEndSlash(drive) + plot_filename;
+                            lastDriveUsed = drive;
                             break;
                         }
                     }
@@ -846,12 +891,20 @@ namespace madFurry
                         }
                     }
                 }
+
+                var drive = getDriveInfo(destinationFile.Substring(0, 3));
+
+                if (drive.AvailableFreeSpace < new FileInfo(originFile).Length)
+                {
+                    destinationFile = getFinalDestination(originFile, destinationFile, item.plot_filename, true, dgvFinalDrives.GetColumnsAsList("Path"));
+                }
+                
                 
                 if (!item.useInternalCopy)
                 {
 
                     var copyHandler = new XCopy();
-                    copyHandler.RegularCopy(originFile, destinationFile, 1024 * 1024 ,
+                    copyHandler.RegularCopy(originFile, destinationFile, 1024 * 1024,
                         new EventHandler<ProgressChangedEventArgs>((o, s) => { updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks); }));
                     if (copyHandler.IsCompleted)
                     {
@@ -866,17 +919,17 @@ namespace madFurry
                 {
 
                     XCopy.Copy(originFile, destinationFile, true, true,
-                         new EventHandler<ProgressChangedEventArgs>((o, s) =>
-                         {
-                             updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks);
-                         }),
-                         new EventHandler((o, s) =>
-                         {
-                             File.Delete(originFile);
-                         })
+                            new EventHandler<ProgressChangedEventArgs>((o, s) =>
+                            {
+                                updateCopyProgress(item.plot_filename, s.ProgressPercentage, dgvPlotTasks);
+                            }),
+                            new EventHandler((o, s) =>
+                            {
+                                File.Delete(originFile);
+                            })
                         );
                 }
-
+                
             }
         }
 
@@ -962,7 +1015,7 @@ namespace madFurry
                 string plotname = String.Format("plot-{0}",Guid.NewGuid());
                 FileStream fs = new FileStream(@"C:\tmp chia\" + plotname+".plot", FileMode.Create);
                 item.outputProcessor("Plot name: " + plotname, dgvPlotTasks);
-                fs.SetLength(1024L * 1024 * 1024 * 25);
+                fs.SetLength(1024L * 1024 * 1024);
                 System.Threading.Thread.Sleep(1000 * 5);
                 fs.Close();
                 
@@ -997,18 +1050,57 @@ namespace madFurry
             });
         }
 
+        private void SaveStats(PlotTask item)
+        {
+            var filename = DateTime.Now.ToString("yyyy-MM-dd") + ".stat";
+            string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Stats";
+            System.IO.Directory.CreateDirectory(logPath);
+
+            item.logModel.plotname = item.plot_filename;
+            item.logModel.threads = item.threads.ToInt();
+            item.logModel.threadMultiplier = item.threadMultiplier;
+            item.logModel.buckets = item.buckets.ToInt();
+            item.logModel.buckets34 = item.buckets34.ToInt();
+
+            var s = JsonConvert.SerializeObject(item.logModel);
+            s = (File.Exists(checkEndSlash(logPath) + filename) ? "," + s : s);
+
+            var success = false;
+            int attempts = 0;
+
+            while (!success)
+            {
+                try
+                {
+                    File.AppendAllText(checkEndSlash(logPath) + filename, s);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    attempts++;
+                    if (attempts > 10)
+                        success = true;
+                }
+            }
+
+        }
+
         private void StartPlottingTask(PlotTask item)
         {
+            var chiaPlotterDir = checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\";
+
             item.status = TaskStatus.NotStarted;
 
-            var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
+            if (checkChiaPlotter(chiaPlotterDir + "chia_plot.exe"))
+            {
+                var task = System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 try
                 {
                     var pStartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        WorkingDirectory = checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\",
+                        WorkingDirectory = chiaPlotterDir,
                         Arguments = "/C " + "chia_plot.exe " + item.cmdString,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -1016,8 +1108,7 @@ namespace madFurry
                         CreateNoWindow = true,
                     };
 
-                    if (checkChiaPlotter(pStartInfo.WorkingDirectory + "chia_plot.exe"))
-                    {
+                    
                         using (item.process = new Process())
                         {
                             item.process.StartInfo = pStartInfo;
@@ -1025,8 +1116,6 @@ namespace madFurry
                             item.process.EnableRaisingEvents = true;
 
                             item.process.Start();
-                            /*item.process.StandardInput.WriteLine("chia_plot.exe " + item.cmdString);
-                            item.process.StandardInput.AutoFlush = true;*/
 
                             item.process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => { item.outputProcessor(e.Data, dgvPlotTasks); });
 
@@ -1075,22 +1164,20 @@ namespace madFurry
                                 }
                             item.process.WaitForExit();
                         }
-                    } else
-                    {
-                        
-                        toolStripStatusLabel.Text = "Invalid chia plotter";
-                        Log(new List<string>() { toolStripStatusLabel.Text });
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
-                    Log(new List<string>() { ex.Message, ex.InnerException.Message, ex.StackTrace + "\r\n" });
+                    Log(new List<string>() { ex.Message, ex.StackTrace + "\r\n" });
                 }
 
             }, TaskCreationOptions.None).ContinueWith(antecedent =>
             {
                 if (antecedent.IsCompletedSuccessfully)
                 {
+
+                    SaveStats(item);
+                    
 
                     var shadowCopyPlotTask = new PlotTask()
                     {
@@ -1116,6 +1203,13 @@ namespace madFurry
                     }
                 }
             });
+            }
+            else
+            {
+
+                toolStripStatusLabel.Text = "Invalid chia plotter";
+                Log(new List<string>() { toolStripStatusLabel.Text });
+            }
         }
 
         private void StartPlottingAllTasks(List<PlotTask> tasks)
@@ -1134,6 +1228,7 @@ namespace madFurry
 
             cmd = " -n 1" + (!String.IsNullOrEmpty(pTask.threads) ? " -r " + pTask.threads : String.Empty) +
                 (!String.IsNullOrEmpty(pTask.buckets) ? " -u " + pTask.buckets : String.Empty) +
+                (cbPhase2Multiplier.Checked?" -K 2 ":String.Empty) +
                 (!String.IsNullOrEmpty(pTask.buckets34) ? " -v " + pTask.buckets34 : String.Empty) +
                 " -t " + formatPath(pTask.tmpDir1) +
                 (String.IsNullOrEmpty(pTask.tmpDir2) ? String.Empty : " -2 " + formatPath(pTask.tmpDir2)) + " -f " + pTask.farmerKey;
@@ -1177,6 +1272,7 @@ namespace madFurry
             config.Add("internalCopy", cbInternalCopy.Checked);
             config.Add("distribute", cbDistributeSmart.Checked);
             config.Add("distributemethod", rbDistributeEvenly.Checked ? "even" : "first");
+            config.Add("log", cbLogs.Checked);
 
 
             var configJson = JsonConvert.SerializeObject(config);
@@ -1196,6 +1292,49 @@ namespace madFurry
         {
             System.Diagnostics.Process.Start(new ProcessStartInfo(llDiscord.Text) { UseShellExecute = true});
         }
+
+        private void lbClientId_MouseOver(object sender, EventArgs e)
+        {
+            lbClientId.Text = UniqueClientID;
+            lbClientId.Refresh();
+        }
+
+
+        private void lbClientId_MouseOut(object sender, EventArgs e)
+        {
+            lbClientId.SafeSetText("(Mouse over to reveal)");
+
+        }
+
+        private void cbScreenSharing_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbScreenSharing.Checked)
+            {
+                if (TimerClientScreen==null)
+                {
+                    InitClientScreenTimer();
+                } else
+                {
+                    TimerClientScreen.Start();
+                }
+
+            } else
+            {
+                TimerClientScreen.Stop();
+            }
+        }
+
+        private void btnReloadConfig_Click(object sender, EventArgs e)
+        {
+            loadConfig(sender, e);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo("https://twitch.tv/lucone1973") { UseShellExecute = true });
+        }
+
+ 
 
 
         //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();

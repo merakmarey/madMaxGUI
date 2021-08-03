@@ -10,7 +10,7 @@
     <Compile Update="mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="OutputForm.cs">
+    <Compile Update="Modules\OutputForm.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

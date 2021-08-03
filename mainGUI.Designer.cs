@@ -75,6 +75,8 @@
             this.txFarmerKey = new System.Windows.Forms.TextBox();
             this.lbFarmerKey = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lbClientId = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.lbCPUusage = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.lbFreeRAM = new System.Windows.Forms.Label();
@@ -90,6 +92,12 @@
             this.lbProcessor = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.gbOptions = new System.Windows.Forms.GroupBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.lbScreenApi = new System.Windows.Forms.Label();
+            this.cbPhase2Multiplier = new System.Windows.Forms.CheckBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.cbScreenSharing = new System.Windows.Forms.CheckBox();
+            this.cbLogs = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
@@ -113,18 +121,26 @@
             this.lbPlotterInfo = new System.Windows.Forms.Label();
             this.llDiscord = new System.Windows.Forms.LinkLabel();
             this.dgvPlotTasks = new System.Windows.Forms.DataGridView();
-            this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
             this.llGit = new System.Windows.Forms.LinkLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnSaveConfig = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cbLogs = new System.Windows.Forms.CheckBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnReloadConfig = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.lbCompletedToday = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label31 = new System.Windows.Forms.Label();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -135,6 +151,8 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlotTasks)).BeginInit();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbPaths
@@ -158,7 +176,7 @@
             this.gbPaths.Controls.Add(this.btnTmpPath1Pick);
             this.gbPaths.Controls.Add(this.lbTmpPath1);
             this.gbPaths.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.gbPaths.Location = new System.Drawing.Point(10, 169);
+            this.gbPaths.Location = new System.Drawing.Point(10, 253);
             this.gbPaths.Margin = new System.Windows.Forms.Padding(0);
             this.gbPaths.MinimumSize = new System.Drawing.Size(640, 80);
             this.gbPaths.Name = "gbPaths";
@@ -407,7 +425,8 @@
             this.gbKeys.Controls.Add(this.lbPoolKey);
             this.gbKeys.Controls.Add(this.txFarmerKey);
             this.gbKeys.Controls.Add(this.lbFarmerKey);
-            this.gbKeys.Location = new System.Drawing.Point(10, 5);
+            this.gbKeys.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.gbKeys.Location = new System.Drawing.Point(10, 89);
             this.gbKeys.Name = "gbKeys";
             this.gbKeys.Size = new System.Drawing.Size(640, 156);
             this.gbKeys.TabIndex = 1;
@@ -490,7 +509,7 @@
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label10.Location = new System.Drawing.Point(294, 131);
+            this.label10.Location = new System.Drawing.Point(257, 132);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(188, 12);
             this.label10.TabIndex = 16;
@@ -527,7 +546,7 @@
             // 
             this.lbAutoWorking.AutoSize = true;
             this.lbAutoWorking.ForeColor = System.Drawing.Color.Green;
-            this.lbAutoWorking.Location = new System.Drawing.Point(491, 129);
+            this.lbAutoWorking.Location = new System.Drawing.Point(451, 131);
             this.lbAutoWorking.Name = "lbAutoWorking";
             this.lbAutoWorking.Size = new System.Drawing.Size(39, 15);
             this.lbAutoWorking.TabIndex = 7;
@@ -535,7 +554,7 @@
             // 
             // btnAutoGetKeys
             // 
-            this.btnAutoGetKeys.Location = new System.Drawing.Point(554, 125);
+            this.btnAutoGetKeys.Location = new System.Drawing.Point(534, 125);
             this.btnAutoGetKeys.Name = "btnAutoGetKeys";
             this.btnAutoGetKeys.Size = new System.Drawing.Size(75, 23);
             this.btnAutoGetKeys.TabIndex = 6;
@@ -600,6 +619,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbClientId);
+            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lbCPUusage);
             this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.lbFreeRAM);
@@ -620,6 +641,27 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resources";
+            // 
+            // lbClientId
+            // 
+            this.lbClientId.AutoSize = true;
+            this.lbClientId.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lbClientId.Location = new System.Drawing.Point(121, 84);
+            this.lbClientId.Name = "lbClientId";
+            this.lbClientId.Size = new System.Drawing.Size(125, 15);
+            this.lbClientId.TabIndex = 15;
+            this.lbClientId.Text = "(Mouse over to reveal)";
+            this.lbClientId.MouseEnter += new System.EventHandler(this.lbClientId_MouseOver);
+            this.lbClientId.MouseLeave += new System.EventHandler(this.lbClientId_MouseOut);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 84);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Client ID";
             // 
             // lbCPUusage
             // 
@@ -757,6 +799,11 @@
             // 
             // gbOptions
             // 
+            this.gbOptions.Controls.Add(this.label27);
+            this.gbOptions.Controls.Add(this.lbScreenApi);
+            this.gbOptions.Controls.Add(this.cbPhase2Multiplier);
+            this.gbOptions.Controls.Add(this.label26);
+            this.gbOptions.Controls.Add(this.cbScreenSharing);
             this.gbOptions.Controls.Add(this.cbLogs);
             this.gbOptions.Controls.Add(this.label3);
             this.gbOptions.Controls.Add(this.label25);
@@ -779,17 +826,82 @@
             this.gbOptions.Controls.Add(this.label14);
             this.gbOptions.Location = new System.Drawing.Point(656, 115);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(387, 298);
+            this.gbOptions.Size = new System.Drawing.Size(387, 339);
             this.gbOptions.TabIndex = 3;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "3.- Options";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label27.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label27.Location = new System.Drawing.Point(208, 123);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(12, 15);
+            this.label27.TabIndex = 28;
+            this.label27.Text = "?";
+            this.toolTip1.SetToolTip(this.label27, "(-K Option)");
+            // 
+            // lbScreenApi
+            // 
+            this.lbScreenApi.AutoSize = true;
+            this.lbScreenApi.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbScreenApi.Location = new System.Drawing.Point(203, 273);
+            this.lbScreenApi.Name = "lbScreenApi";
+            this.lbScreenApi.Size = new System.Drawing.Size(26, 30);
+            this.lbScreenApi.TabIndex = 27;
+            this.lbScreenApi.Text = "●";
+            // 
+            // cbPhase2Multiplier
+            // 
+            this.cbPhase2Multiplier.AutoSize = true;
+            this.cbPhase2Multiplier.Location = new System.Drawing.Point(7, 122);
+            this.cbPhase2Multiplier.Name = "cbPhase2Multiplier";
+            this.cbPhase2Multiplier.Size = new System.Drawing.Size(195, 19);
+            this.cbPhase2Multiplier.TabIndex = 26;
+            this.cbPhase2Multiplier.Text = "Enable Phase 2 thread multiplier";
+            this.cbPhase2Multiplier.UseVisualStyleBackColor = true;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label26.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label26.Location = new System.Drawing.Point(24, 306);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(302, 24);
+            this.label26.TabIndex = 25;
+            this.label26.Text = "(Screen will be sent every 10 secs. Go to chiaheaven.com to see \r\nthe captures. C" +
+    "lient ID is required. Minimized windows will not work)\r\n";
+            // 
+            // cbScreenSharing
+            // 
+            this.cbScreenSharing.AutoSize = true;
+            this.cbScreenSharing.Location = new System.Drawing.Point(7, 284);
+            this.cbScreenSharing.Name = "cbScreenSharing";
+            this.cbScreenSharing.Size = new System.Drawing.Size(202, 19);
+            this.cbScreenSharing.TabIndex = 23;
+            this.cbScreenSharing.Text = "Send Screen to remote web client";
+            this.cbScreenSharing.UseVisualStyleBackColor = true;
+            this.cbScreenSharing.CheckedChanged += new System.EventHandler(this.cbScreenSharing_CheckedChanged);
+            // 
+            // cbLogs
+            // 
+            this.cbLogs.AutoSize = true;
+            this.cbLogs.Location = new System.Drawing.Point(7, 259);
+            this.cbLogs.Name = "cbLogs";
+            this.cbLogs.Size = new System.Drawing.Size(104, 19);
+            this.cbLogs.TabIndex = 22;
+            this.cbLogs.Text = "Create log files";
+            this.cbLogs.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label3.Location = new System.Drawing.Point(224, 144);
+            this.label3.Location = new System.Drawing.Point(224, 175);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(12, 15);
             this.label3.TabIndex = 21;
@@ -801,7 +913,7 @@
             this.label25.AutoSize = true;
             this.label25.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.label25.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label25.Location = new System.Drawing.Point(242, 119);
+            this.label25.Location = new System.Drawing.Point(242, 150);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(12, 15);
             this.label25.TabIndex = 20;
@@ -813,7 +925,7 @@
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label24.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label24.Location = new System.Drawing.Point(29, 184);
+            this.label24.Location = new System.Drawing.Point(29, 215);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(185, 12);
             this.label24.TabIndex = 19;
@@ -822,7 +934,7 @@
             // rbDistributeEvenly
             // 
             this.rbDistributeEvenly.AutoSize = true;
-            this.rbDistributeEvenly.Location = new System.Drawing.Point(145, 199);
+            this.rbDistributeEvenly.Location = new System.Drawing.Point(145, 230);
             this.rbDistributeEvenly.Name = "rbDistributeEvenly";
             this.rbDistributeEvenly.Size = new System.Drawing.Size(113, 19);
             this.rbDistributeEvenly.TabIndex = 18;
@@ -833,7 +945,7 @@
             // 
             this.rbFirstAvailable.AutoSize = true;
             this.rbFirstAvailable.Checked = true;
-            this.rbFirstAvailable.Location = new System.Drawing.Point(41, 199);
+            this.rbFirstAvailable.Location = new System.Drawing.Point(41, 230);
             this.rbFirstAvailable.Name = "rbFirstAvailable";
             this.rbFirstAvailable.Size = new System.Drawing.Size(96, 19);
             this.rbFirstAvailable.TabIndex = 17;
@@ -844,7 +956,7 @@
             // cbDistributeSmart
             // 
             this.cbDistributeSmart.AutoSize = true;
-            this.cbDistributeSmart.Location = new System.Drawing.Point(7, 168);
+            this.cbDistributeSmart.Location = new System.Drawing.Point(7, 199);
             this.cbDistributeSmart.Name = "cbDistributeSmart";
             this.cbDistributeSmart.Size = new System.Drawing.Size(229, 19);
             this.cbDistributeSmart.TabIndex = 16;
@@ -854,7 +966,7 @@
             // cbInternalCopy
             // 
             this.cbInternalCopy.AutoSize = true;
-            this.cbInternalCopy.Location = new System.Drawing.Point(7, 143);
+            this.cbInternalCopy.Location = new System.Drawing.Point(7, 174);
             this.cbInternalCopy.Name = "cbInternalCopy";
             this.cbInternalCopy.Size = new System.Drawing.Size(219, 19);
             this.cbInternalCopy.TabIndex = 13;
@@ -864,7 +976,7 @@
             // cbSeparatedTaskCopy
             // 
             this.cbSeparatedTaskCopy.AutoSize = true;
-            this.cbSeparatedTaskCopy.Location = new System.Drawing.Point(7, 118);
+            this.cbSeparatedTaskCopy.Location = new System.Drawing.Point(7, 149);
             this.cbSeparatedTaskCopy.Name = "cbSeparatedTaskCopy";
             this.cbSeparatedTaskCopy.Size = new System.Drawing.Size(234, 19);
             this.cbSeparatedTaskCopy.TabIndex = 11;
@@ -893,7 +1005,7 @@
             "128",
             "256",
             "512"});
-            this.cbBuckets34.Location = new System.Drawing.Point(254, 89);
+            this.cbBuckets34.Location = new System.Drawing.Point(254, 82);
             this.cbBuckets34.Name = "cbBuckets34";
             this.cbBuckets34.Size = new System.Drawing.Size(121, 23);
             this.cbBuckets34.TabIndex = 9;
@@ -902,7 +1014,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(155, 92);
+            this.label19.Location = new System.Drawing.Point(155, 85);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(99, 15);
             this.label19.TabIndex = 8;
@@ -920,7 +1032,7 @@
             "128",
             "256",
             "512"});
-            this.cbBuckets.Location = new System.Drawing.Point(58, 89);
+            this.cbBuckets.Location = new System.Drawing.Point(58, 82);
             this.cbBuckets.Name = "cbBuckets";
             this.cbBuckets.Size = new System.Drawing.Size(91, 23);
             this.cbBuckets.TabIndex = 7;
@@ -929,7 +1041,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(7, 93);
+            this.label18.Location = new System.Drawing.Point(7, 86);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(48, 15);
             this.label18.TabIndex = 6;
@@ -1015,7 +1127,7 @@
             this.groupBox2.Controls.Add(this.llDiscord);
             this.groupBox2.Controls.Add(this.dgvPlotTasks);
             this.groupBox2.Controls.Add(this.llGit);
-            this.groupBox2.Location = new System.Drawing.Point(10, 457);
+            this.groupBox2.Location = new System.Drawing.Point(10, 530);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(1033, 268);
             this.groupBox2.TabIndex = 4;
@@ -1064,48 +1176,9 @@
             this.dgvPlotTasks.ReadOnly = true;
             this.dgvPlotTasks.RowTemplate.Height = 25;
             this.dgvPlotTasks.ShowEditingIcon = false;
-            this.dgvPlotTasks.Size = new System.Drawing.Size(1019, 231);
+            this.dgvPlotTasks.Size = new System.Drawing.Size(1015, 231);
             this.dgvPlotTasks.TabIndex = 0;
             this.dgvPlotTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlotTasks_CellContentClick);
-            // 
-            // Plot
-            // 
-            this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Plot.HeaderText = "Plot";
-            this.Plot.Name = "Plot";
-            this.Plot.ReadOnly = true;
-            // 
-            // LastMessage
-            // 
-            this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LastMessage.HeaderText = "Last Message";
-            this.LastMessage.Name = "LastMessage";
-            this.LastMessage.ReadOnly = true;
-            // 
-            // TimeElapsed
-            // 
-            this.TimeElapsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.TimeElapsed.HeaderText = "Time Elapsed";
-            this.TimeElapsed.Name = "TimeElapsed";
-            this.TimeElapsed.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            // 
-            // Output
-            // 
-            this.Output.HeaderText = "Output";
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Output.Text = "Open";
-            this.Output.ToolTipText = "Open full output transcript on separated window";
-            this.Output.UseColumnTextForButtonValue = true;
             // 
             // llGit
             // 
@@ -1121,9 +1194,10 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(886, 419);
+            this.btnStart.Enabled = false;
+            this.btnStart.Location = new System.Drawing.Point(882, 494);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(149, 32);
+            this.btnStart.Size = new System.Drawing.Size(149, 30);
             this.btnStart.TabIndex = 5;
             this.btnStart.Text = "Start Tasks";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -1133,9 +1207,9 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(10, 728);
+            this.statusStrip.Location = new System.Drawing.Point(10, 802);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1028, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1037, 22);
             this.statusStrip.TabIndex = 6;
             this.statusStrip.Text = "Ready";
             // 
@@ -1147,29 +1221,158 @@
             // 
             // btnSaveConfig
             // 
-            this.btnSaveConfig.Location = new System.Drawing.Point(653, 420);
+            this.btnSaveConfig.Location = new System.Drawing.Point(656, 494);
             this.btnSaveConfig.Name = "btnSaveConfig";
-            this.btnSaveConfig.Size = new System.Drawing.Size(124, 31);
+            this.btnSaveConfig.Size = new System.Drawing.Size(94, 30);
             this.btnSaveConfig.TabIndex = 9;
             this.btnSaveConfig.Text = "Save settings";
             this.btnSaveConfig.UseVisualStyleBackColor = true;
             this.btnSaveConfig.Click += new System.EventHandler(this.btnSaveConfig_Click);
             // 
-            // cbLogs
+            // pictureBox1
             // 
-            this.cbLogs.AutoSize = true;
-            this.cbLogs.Location = new System.Drawing.Point(7, 228);
-            this.cbLogs.Name = "cbLogs";
-            this.cbLogs.Size = new System.Drawing.Size(104, 19);
-            this.cbLogs.TabIndex = 22;
-            this.cbLogs.Text = "Create log files";
-            this.cbLogs.UseVisualStyleBackColor = true;
+            this.pictureBox1.Image = global::madFurry.Properties.Resources.madfurry_banner;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 5);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(257, 68);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
+            // 
+            // btnReloadConfig
+            // 
+            this.btnReloadConfig.Location = new System.Drawing.Point(755, 494);
+            this.btnReloadConfig.Name = "btnReloadConfig";
+            this.btnReloadConfig.Size = new System.Drawing.Size(103, 30);
+            this.btnReloadConfig.TabIndex = 11;
+            this.btnReloadConfig.Text = "Reload settings";
+            this.btnReloadConfig.UseVisualStyleBackColor = true;
+            this.btnReloadConfig.Click += new System.EventHandler(this.btnReloadConfig_Click);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(10, 76);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(267, 15);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Banner courtesy of lucone (twitch.tv/lucone1973)";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label31);
+            this.groupBox3.Controls.Add(this.label30);
+            this.groupBox3.Controls.Add(this.label29);
+            this.groupBox3.Controls.Add(this.lbCompletedToday);
+            this.groupBox3.Controls.Add(this.label28);
+            this.groupBox3.Location = new System.Drawing.Point(289, 7);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(360, 83);
+            this.groupBox3.TabIndex = 13;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Performance";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(6, 40);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(100, 15);
+            this.label29.TabIndex = 2;
+            this.label29.Text = "Failed plots today";
+            // 
+            // lbCompletedToday
+            // 
+            this.lbCompletedToday.AutoSize = true;
+            this.lbCompletedToday.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lbCompletedToday.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.lbCompletedToday.Location = new System.Drawing.Point(140, 11);
+            this.lbCompletedToday.Name = "lbCompletedToday";
+            this.lbCompletedToday.Size = new System.Drawing.Size(23, 25);
+            this.lbCompletedToday.TabIndex = 1;
+            this.lbCompletedToday.Text = "0";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(6, 17);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(128, 15);
+            this.label28.TabIndex = 0;
+            this.label28.Text = "Completed plots today";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.BackColor = System.Drawing.Color.Transparent;
+            this.label30.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label30.ForeColor = System.Drawing.Color.Red;
+            this.label30.Location = new System.Drawing.Point(140, 33);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(23, 25);
+            this.label30.TabIndex = 3;
+            this.label30.Text = "0";
+            // 
+            // Output
+            // 
+            this.Output.HeaderText = "Output";
+            this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
+            this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Output.Text = "Open";
+            this.Output.ToolTipText = "Open full output transcript on separated window";
+            this.Output.UseColumnTextForButtonValue = true;
+            // 
+            // Status
+            // 
+            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            // 
+            // TimeElapsed
+            // 
+            this.TimeElapsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TimeElapsed.HeaderText = "Time Elapsed";
+            this.TimeElapsed.Name = "TimeElapsed";
+            this.TimeElapsed.ReadOnly = true;
+            // 
+            // LastMessage
+            // 
+            this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LastMessage.HeaderText = "Last Message";
+            this.LastMessage.Name = "LastMessage";
+            this.LastMessage.ReadOnly = true;
+            // 
+            // Plot
+            // 
+            this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Plot.HeaderText = "Plot";
+            this.Plot.Name = "Plot";
+            this.Plot.ReadOnly = true;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(8, 57);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(44, 15);
+            this.label31.TabIndex = 4;
+            this.label31.Text = "label31";
+
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 760);
+            this.ClientSize = new System.Drawing.Size(1057, 834);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.btnReloadConfig);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnSaveConfig);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.btnStart);
@@ -1203,6 +1406,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlotTasks)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1270,11 +1476,6 @@
         private System.Windows.Forms.CheckBox cbSeparatedTaskCopy;
         private System.Windows.Forms.CheckBox cbInternalCopy;
         private System.Windows.Forms.Button btnClearTmp2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Plot;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LastMessage;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewButtonColumn Output;
         private System.Windows.Forms.Label lbAutoWorking;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblContractAddressIndicator;
@@ -1302,6 +1503,27 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox cbLogs;
+        private System.Windows.Forms.Label lbClientId;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox cbScreenSharing;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.CheckBox cbPhase2Multiplier;
+        private System.Windows.Forms.Label lbScreenApi;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btnReloadConfig;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label lbCompletedToday;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Plot;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LastMessage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewButtonColumn Output;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
     }
 }
 

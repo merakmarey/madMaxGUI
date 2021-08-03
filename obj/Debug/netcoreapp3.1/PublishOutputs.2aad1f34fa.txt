@@ -1,0 +1,16 @@
+\\pe-server\Users\Administrator\Desktop\madFurry\madFurry.exe
+\\pe-server\Users\Administrator\Desktop\madFurry\madFurry.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\madFurry.deps.json
+\\pe-server\Users\Administrator\Desktop\madFurry\madFurry.runtimeconfig.json
+\\pe-server\Users\Administrator\Desktop\madFurry\madFurry.pdb
+\\pe-server\Users\Administrator\Desktop\madFurry\Microsoft.Win32.Registry.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\Newtonsoft.Json.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\System.CodeDom.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\System.Management.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\System.Security.AccessControl.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\System.Security.Principal.Windows.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\runtimes\win\lib\netcoreapp2.0\System.Management.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+\\pe-server\Users\Administrator\Desktop\madFurry\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
