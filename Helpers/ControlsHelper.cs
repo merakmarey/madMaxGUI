@@ -231,8 +231,14 @@ namespace madFurry
     
     public static class ControlExtensions
     {
-
-        
+       
+        public static void ForAllControls(this Control parent)
+        {
+           foreach (Control c in parent.Controls)
+            {
+               // var cEvent += c.Click;
+            }
+        }
         public static Image DrawToImage(this Control control)
         {
             IntPtr ptr = new IntPtr();

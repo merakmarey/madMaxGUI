@@ -9,7 +9,6 @@ namespace madFurry
     {
         string sourcefile;
         string destinationfolder;
-
         public GenTest()
         {
             InitializeComponent();
@@ -49,9 +48,8 @@ namespace madFurry
            
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void GenTest_Load(object sender, EventArgs e)
         {
-            
         }
     }
 }

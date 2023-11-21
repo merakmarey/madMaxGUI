@@ -4,11 +4,11 @@ using System.Text;
 
 namespace madFurry.Models
 {
-    class LogModel
+    public class LogModel
     {
         public string plotname { get; set; }
         public bool completed { get; set; }
-        public Dictionary<int, int> phaseTimes { get; set; }
+        public Dictionary<int, double> phaseTimes { get; set; }
 
         public int threads { get; set; }
 
@@ -18,10 +18,14 @@ namespace madFurry.Models
 
         public bool threadMultiplier { get; set; }
 
+        public DateTime dateInit;
+
+        public DateTime dateEnd;
+
         public LogModel()
         {
             completed = false;
-            phaseTimes = new Dictionary<int, int>();
+            phaseTimes = new Dictionary<int, double>();
         }
 
     }

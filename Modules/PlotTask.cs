@@ -68,6 +68,8 @@ namespace madFurry
             {
                 output += outputLine + Environment.NewLine;
 
+                logModel.dateInit = DateTime.Now;
+
                 if (outputLine.ToLowerInvariant().StartsWith("plot name:"))
                 {
                     var tmp_plot_filename = outputLine.Substring(11) + ".plot";
@@ -103,6 +105,7 @@ namespace madFurry
                     if (outputLine.StartsWith("total plot creation time"))
                     {
                         logModel.completed = true;
+                        logModel.dateEnd = DateTime.Now;
                     }
 
                 }

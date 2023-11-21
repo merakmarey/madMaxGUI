@@ -34,12 +34,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainGUI));
             this.gbPaths = new System.Windows.Forms.GroupBox();
-            this.label23 = new System.Windows.Forms.Label();
             this.btnClearTmp2 = new System.Windows.Forms.Button();
             this.btnRemoveDrives = new System.Windows.Forms.Button();
             this.dgvFinalDrives = new System.Windows.Forms.DataGridView();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Space = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Volume = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbTmp2AvailSpace = new System.Windows.Forms.Label();
             this.lbTmp1AvailSpace = new System.Windows.Forms.Label();
             this.btnFinalDest1Pick = new System.Windows.Forms.Button();
@@ -121,6 +121,11 @@
             this.lbPlotterInfo = new System.Windows.Forms.Label();
             this.llDiscord = new System.Windows.Forms.LinkLabel();
             this.dgvPlotTasks = new System.Windows.Forms.DataGridView();
+            this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
             this.llGit = new System.Windows.Forms.LinkLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
@@ -131,16 +136,15 @@
             this.btnReloadConfig = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnWebStats = new System.Windows.Forms.Button();
+            this.label33 = new System.Windows.Forms.Label();
+            this.lbBestTimeToday = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.lbFailedToday = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.lbCompletedToday = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.Output = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeElapsed = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LastMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Plot = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label31 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.gbPaths.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFinalDrives)).BeginInit();
             this.gbKeys.SuspendLayout();
@@ -158,7 +162,6 @@
             // gbPaths
             // 
             this.gbPaths.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbPaths.Controls.Add(this.label23);
             this.gbPaths.Controls.Add(this.btnClearTmp2);
             this.gbPaths.Controls.Add(this.btnRemoveDrives);
             this.gbPaths.Controls.Add(this.dgvFinalDrives);
@@ -185,18 +188,6 @@
             this.gbPaths.TabIndex = 0;
             this.gbPaths.TabStop = false;
             this.gbPaths.Text = "2.- Paths";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Segoe UI", 7.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label23.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label23.Location = new System.Drawing.Point(384, 113);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(189, 24);
-            this.label23.TabIndex = 23;
-            this.label23.Text = "(Multiple final destinations only work with \r\nparallel plotting. Options -> PlotT" +
-    "asks > 1)";
             // 
             // btnClearTmp2
             // 
@@ -235,7 +226,8 @@
             this.dgvFinalDrives.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFinalDrives.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
-            this.Space});
+            this.Space,
+            this.Volume});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -270,6 +262,12 @@
             this.Space.HeaderText = "Space Available";
             this.Space.Name = "Space";
             this.Space.ReadOnly = true;
+            // 
+            // Volume
+            // 
+            this.Volume.HeaderText = "Volume";
+            this.Volume.Name = "Volume";
+            this.Volume.ReadOnly = true;
             // 
             // lbTmp2AvailSpace
             // 
@@ -1180,6 +1178,45 @@
             this.dgvPlotTasks.TabIndex = 0;
             this.dgvPlotTasks.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlotTasks_CellContentClick);
             // 
+            // Plot
+            // 
+            this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Plot.HeaderText = "Plot";
+            this.Plot.Name = "Plot";
+            this.Plot.ReadOnly = true;
+            // 
+            // LastMessage
+            // 
+            this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.LastMessage.HeaderText = "Last Message";
+            this.LastMessage.Name = "LastMessage";
+            this.LastMessage.ReadOnly = true;
+            // 
+            // TimeElapsed
+            // 
+            this.TimeElapsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TimeElapsed.HeaderText = "Time Elapsed";
+            this.TimeElapsed.Name = "TimeElapsed";
+            this.TimeElapsed.ReadOnly = true;
+            // 
+            // Status
+            // 
+            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            // 
+            // Output
+            // 
+            this.Output.HeaderText = "Output";
+            this.Output.Name = "Output";
+            this.Output.ReadOnly = true;
+            this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Output.Text = "Open";
+            this.Output.ToolTipText = "Open full output transcript on separated window";
+            this.Output.UseColumnTextForButtonValue = true;
+            // 
             // llGit
             // 
             this.llGit.AutoSize = true;
@@ -1232,9 +1269,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::madFurry.Properties.Resources.madfurry_banner;
-            this.pictureBox1.Location = new System.Drawing.Point(10, 5);
+            this.pictureBox1.Location = new System.Drawing.Point(10, 13);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(257, 68);
+            this.pictureBox1.Size = new System.Drawing.Size(213, 57);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
@@ -1252,7 +1289,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(10, 76);
+            this.linkLabel1.Location = new System.Drawing.Point(10, 70);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(267, 15);
             this.linkLabel1.TabIndex = 12;
@@ -1262,8 +1299,11 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.label31);
+            this.groupBox3.Controls.Add(this.btnWebStats);
+            this.groupBox3.Controls.Add(this.label33);
+            this.groupBox3.Controls.Add(this.lbBestTimeToday);
             this.groupBox3.Controls.Add(this.label30);
+            this.groupBox3.Controls.Add(this.lbFailedToday);
             this.groupBox3.Controls.Add(this.label29);
             this.groupBox3.Controls.Add(this.lbCompletedToday);
             this.groupBox3.Controls.Add(this.label28);
@@ -1274,10 +1314,61 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Performance";
             // 
+            // btnWebStats
+            // 
+            this.btnWebStats.Location = new System.Drawing.Point(255, 16);
+            this.btnWebStats.Name = "btnWebStats";
+            this.btnWebStats.Size = new System.Drawing.Size(95, 23);
+            this.btnWebStats.TabIndex = 7;
+            this.btnWebStats.Text = "More";
+            this.btnWebStats.UseVisualStyleBackColor = true;
+            this.btnWebStats.Click += new System.EventHandler(this.btnWebStats_Click);
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(265, 59);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(28, 15);
+            this.label33.TabIndex = 6;
+            this.label33.Text = "min";
+            // 
+            // lbBestTimeToday
+            // 
+            this.lbBestTimeToday.AutoSize = true;
+            this.lbBestTimeToday.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbBestTimeToday.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.lbBestTimeToday.Location = new System.Drawing.Point(140, 53);
+            this.lbBestTimeToday.Name = "lbBestTimeToday";
+            this.lbBestTimeToday.Size = new System.Drawing.Size(140, 23);
+            this.lbBestTimeToday.TabIndex = 5;
+            this.lbBestTimeToday.Text = "00h:00m:00s";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(6, 59);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(89, 15);
+            this.label30.TabIndex = 4;
+            this.label30.Text = "Best time today";
+            // 
+            // lbFailedToday
+            // 
+            this.lbFailedToday.AutoSize = true;
+            this.lbFailedToday.BackColor = System.Drawing.Color.Transparent;
+            this.lbFailedToday.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbFailedToday.ForeColor = System.Drawing.Color.Red;
+            this.lbFailedToday.Location = new System.Drawing.Point(140, 32);
+            this.lbFailedToday.Name = "lbFailedToday";
+            this.lbFailedToday.Size = new System.Drawing.Size(22, 23);
+            this.lbFailedToday.TabIndex = 3;
+            this.lbFailedToday.Text = "0";
+            // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(6, 40);
+            this.label29.Location = new System.Drawing.Point(6, 38);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(100, 15);
             this.label29.TabIndex = 2;
@@ -1286,11 +1377,11 @@
             // lbCompletedToday
             // 
             this.lbCompletedToday.AutoSize = true;
-            this.lbCompletedToday.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lbCompletedToday.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.lbCompletedToday.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbCompletedToday.ForeColor = System.Drawing.Color.Lime;
             this.lbCompletedToday.Location = new System.Drawing.Point(140, 11);
             this.lbCompletedToday.Name = "lbCompletedToday";
-            this.lbCompletedToday.Size = new System.Drawing.Size(23, 25);
+            this.lbCompletedToday.Size = new System.Drawing.Size(22, 23);
             this.lbCompletedToday.TabIndex = 1;
             this.lbCompletedToday.Text = "0";
             // 
@@ -1303,72 +1394,22 @@
             this.label28.TabIndex = 0;
             this.label28.Text = "Completed plots today";
             // 
-            // label30
+            // button1
             // 
-            this.label30.AutoSize = true;
-            this.label30.BackColor = System.Drawing.Color.Transparent;
-            this.label30.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label30.ForeColor = System.Drawing.Color.Red;
-            this.label30.Location = new System.Drawing.Point(140, 33);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(23, 25);
-            this.label30.TabIndex = 3;
-            this.label30.Text = "0";
-            // 
-            // Output
-            // 
-            this.Output.HeaderText = "Output";
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Output.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Output.Text = "Open";
-            this.Output.ToolTipText = "Open full output transcript on separated window";
-            this.Output.UseColumnTextForButtonValue = true;
-            // 
-            // Status
-            // 
-            this.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            // 
-            // TimeElapsed
-            // 
-            this.TimeElapsed.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.TimeElapsed.HeaderText = "Time Elapsed";
-            this.TimeElapsed.Name = "TimeElapsed";
-            this.TimeElapsed.ReadOnly = true;
-            // 
-            // LastMessage
-            // 
-            this.LastMessage.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.LastMessage.HeaderText = "Last Message";
-            this.LastMessage.Name = "LastMessage";
-            this.LastMessage.ReadOnly = true;
-            // 
-            // Plot
-            // 
-            this.Plot.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Plot.HeaderText = "Plot";
-            this.Plot.Name = "Plot";
-            this.Plot.ReadOnly = true;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(8, 57);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(44, 15);
-            this.label31.TabIndex = 4;
-            this.label31.Text = "label31";
-
+            this.button1.Location = new System.Drawing.Point(834, 465);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1057, 834);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.btnReloadConfig);
@@ -1470,8 +1511,6 @@
         private System.Windows.Forms.Label lbTmp1AvailSpace;
         private System.Windows.Forms.Label lbPlotCountSuggested;
         private System.Windows.Forms.DataGridView dgvFinalDrives;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Path;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Space;
         private System.Windows.Forms.Button btnRemoveDrives;
         private System.Windows.Forms.CheckBox cbSeparatedTaskCopy;
         private System.Windows.Forms.CheckBox cbInternalCopy;
@@ -1490,7 +1529,6 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.ComboBox cmbContractWallets;
         private System.Windows.Forms.TextBox txContractAddress;
-        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.LinkLabel llGit;
         private System.Windows.Forms.LinkLabel llDiscord;
         private System.Windows.Forms.Button btnSaveConfig;
@@ -1522,8 +1560,15 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeElapsed;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewButtonColumn Output;
+        private System.Windows.Forms.Label lbFailedToday;
         private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label lbBestTimeToday;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Button btnWebStats;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Path;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Space;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Volume;
+        private System.Windows.Forms.Button button1;
     }
 }
 

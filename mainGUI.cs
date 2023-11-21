@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,9 +12,8 @@ using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
-using System.Management;
 using madFurry.Modules;
-using madFurry.Models;
+
 
 namespace madFurry
 {
@@ -23,6 +21,13 @@ namespace madFurry
     {
 
         //Computer\HKEY_USERS\S-1-5-21-4000077218-945148693-2747979120-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\chia-blockchain\DisplayVersion
+
+#if DEBUG
+        public static string baseURL = "http://localhost:59125/";
+#else
+        public static static string baseURL = "http://chiaheaven.com/";
+#endif
+
 
         const int maxKeyLength = 96;
         const int contractAddressMaxLength = 62;
@@ -55,13 +60,65 @@ namespace madFurry
 
         List<PlotTask> plotTasks = new List<PlotTask>();
 
+
         public mainGUI()
         {
             InitializeComponent();
         }
 
-        #region general tool functions 
+#region general tool functions 
 
+        
+        private void updateTodayStats()
+        {
+            var stats = Stats.loadTodayStats();
+
+            if (stats.Count > 0)
+            {
+                var completedCount = stats.Where(x => x.completed).Count();
+                var failedCount = stats.Where(x => !x.completed).Count();
+                var bestTime = stats.Min(x => x.phaseTimes.Sum(v => v.Value));
+                var t = new TimeSpan(Convert.ToInt64(Math.Truncate(bestTime)*TimeSpan.TicksPerSecond));
+
+                lbBestTimeToday.SafeSetText(String.Format("{0:D2}h:{1:D2}m:{2:D2}s", t.Hours,t.Minutes,t.Seconds));
+                lbCompletedToday.SafeSetText(completedCount.ToString());
+                lbFailedToday.SafeSetText(failedCount.ToString());
+            }
+        }
+        private void saveStats(PlotTask item)
+        {
+            var filename = DateTime.Now.ToString("yyyy-MM-dd") + ".stats";
+            string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Stats";
+            System.IO.Directory.CreateDirectory(logPath);
+
+            item.logModel.plotname = item.plot_filename;
+            item.logModel.threads = item.threads.ToInt();
+            item.logModel.threadMultiplier = item.threadMultiplier;
+            item.logModel.buckets = item.buckets.ToInt();
+            item.logModel.buckets34 = item.buckets34.ToInt();
+
+            var s = JsonConvert.SerializeObject(item.logModel) + ",";
+
+            var success = false;
+            int attempts = 0;
+
+            while (!success)
+            {
+                try
+                {
+                    File.AppendAllText(checkEndSlash(logPath) + filename, s);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    attempts++;
+                    if (attempts > 10)
+                        success = true;
+                }
+            }
+
+            updateTodayStats();
+        }
         public void loadConfig(object sender, EventArgs e)
         {
             var configFilename = checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + "madFurry.conf";
@@ -217,10 +274,18 @@ namespace madFurry
         {
             File.AppendAllLines(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + String.Format("log_{0}.log", DateTime.Now.ToString("MM-dd-yyyy")), logEvents);
         }
-        #endregion
+        private void btnReloadConfig_Click(object sender, EventArgs e)
+        {
+            loadConfig(sender, e);
+        }
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo("https://twitch.tv/lucone1973") { UseShellExecute = true });
+        }
+#endregion
 
 
-        #region timer controls
+#region timer controls
         private void TimerRAM_Tick(object sender, EventArgs e)
         {
             var ramAvail = getAvailableMemory();
@@ -273,6 +338,7 @@ namespace madFurry
                     var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
                     var newInfo = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
                     dgvFinalDrives.SetRowCellByColumnValue(item, "Space", newInfo);
+                    dgvFinalDrives.SetRowCellByColumnValue(item, "Volume", String.IsNullOrEmpty(driveInfo.VolumeLabel) ? driveInfo.DriveType.ToString() : driveInfo.VolumeLabel);
                 }
                 catch { }
             }
@@ -284,7 +350,7 @@ namespace madFurry
             var screen = mainGUI.ActiveForm.PrintToImage(mainIntPtr);
             if (screen != null)
             {
-                RemoteAPI.UpdateScreens(UniqueClientID, System.Diagnostics.Process.GetCurrentProcess().Id.ToString(), screen);
+                RemoteAPI.UpdateScreens(UniqueClientID, System.Diagnostics.Process.GetCurrentProcess().Id.ToString(), screen, baseURL);
             }
             CrossThreadHelper.InvokeAction(lbScreenApi, lb => { lb.ForeColor = Color.Black; lb.Refresh(); });
         }
@@ -324,10 +390,10 @@ namespace madFurry
             TimerClientScreen.Start();
         }
 
-        #endregion
+#endregion
 
 
-        #region processes manipulation
+#region processes manipulation
         private void KillChildProcesses(Process process)
         {
             foreach (Process childProcess in process.GetChildProcesses())
@@ -349,15 +415,22 @@ namespace madFurry
         }
 
 
-        #endregion
+#endregion
 
 
-        #region click events
+#region click events
         private void mainGUI_Load(object sender, EventArgs e)
         {
             this.Text = String.Format("madFurry (v{0}) - GUI/Plot Manager for madMax Chia Plotter", madFurry.Properties.Settings.Default.version);
 
             loadConfig(sender, e);
+
+            updateTodayStats();
+
+            checkChiaPlotter(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\chia_plot.exe");
+
+            InitRAMTimer();
+            InitCPUTimer();
         }
 
         private void mainGUI_Shown(object sender, EventArgs e)
@@ -365,11 +438,6 @@ namespace madFurry
             mainIntPtr = mainGUI.ActiveForm.Handle;
 
             UniqueClientID = Security.FingerPrint.Value();
-
-            checkChiaPlotter(checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\chia_plot.exe");
-
-            InitRAMTimer();
-            InitCPUTimer();
 
             
 
@@ -471,6 +539,7 @@ namespace madFurry
                     {
                         var gb = driveInfo.AvailableFreeSpace / 1024 / 1024 / 1024;
                         dgvFinalDrives.Rows[index].Cells["Space"].Value = String.Format("(Space Available {0:0.00}GB / {1:0.00}GiB)", gb, gb * GiBfactor);
+                        dgvFinalDrives.Rows[index].Cells["Volume"].Value = String.IsNullOrEmpty(driveInfo.VolumeLabel)?driveInfo.DriveType.ToString(): driveInfo.VolumeLabel;
                     }
                 }
             }
@@ -616,6 +685,16 @@ namespace madFurry
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            /*var t = new LogModel();
+            t.phaseTimes.Add(1, 1);
+            t.phaseTimes.Add(2, 1);
+            t.phaseTimes.Add(3, 1);
+            t.phaseTimes.Add(4, 1);
+
+            var r = JsonConvert.SerializeObject(t);*/
+
+           
+
             if (TimerDriveInfo==null)
                 InitDriveInfoTimer();
 
@@ -723,10 +802,10 @@ namespace madFurry
             txContractAddress.Text = selectedOption.Substring(selectedOption.Length - contractAddressMaxLength);
             txContractAddress.Refresh();
         }
-        #endregion
+#endregion
 
 
-        #region UI manipulation
+#region UI manipulation
         private void setIndicatorColor(TextBox textBox, Label label, int maxKeyLength = maxKeyLength)
         {
             if (textBox.Text.Length == maxKeyLength)
@@ -799,7 +878,7 @@ namespace madFurry
                 dgvPlotTasks.SetRowCellByColumnValue(row, "TimeElapsed", (item.copyStarted - DateTime.Now).ToString(@"hh\:mm\:ss"));
             }
         }
-        #endregion
+#endregion
 
         public string getFinalDestination(string originFile,string defaultDestinationFile, string plot_filename, bool useFirstAvailable, List<string> drives)
         {
@@ -1050,41 +1129,6 @@ namespace madFurry
             });
         }
 
-        private void SaveStats(PlotTask item)
-        {
-            var filename = DateTime.Now.ToString("yyyy-MM-dd") + ".stat";
-            string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Stats";
-            System.IO.Directory.CreateDirectory(logPath);
-
-            item.logModel.plotname = item.plot_filename;
-            item.logModel.threads = item.threads.ToInt();
-            item.logModel.threadMultiplier = item.threadMultiplier;
-            item.logModel.buckets = item.buckets.ToInt();
-            item.logModel.buckets34 = item.buckets34.ToInt();
-
-            var s = JsonConvert.SerializeObject(item.logModel);
-            s = (File.Exists(checkEndSlash(logPath) + filename) ? "," + s : s);
-
-            var success = false;
-            int attempts = 0;
-
-            while (!success)
-            {
-                try
-                {
-                    File.AppendAllText(checkEndSlash(logPath) + filename, s);
-                    success = true;
-                }
-                catch (Exception ex)
-                {
-                    attempts++;
-                    if (attempts > 10)
-                        success = true;
-                }
-            }
-
-        }
-
         private void StartPlottingTask(PlotTask item)
         {
             var chiaPlotterDir = checkEndSlash(AppDomain.CurrentDomain.BaseDirectory) + @"madMax\";
@@ -1176,7 +1220,7 @@ namespace madFurry
                 if (antecedent.IsCompletedSuccessfully)
                 {
 
-                    SaveStats(item);
+                    saveStats(item);
                     
 
                     var shadowCopyPlotTask = new PlotTask()
@@ -1299,7 +1343,6 @@ namespace madFurry
             lbClientId.Refresh();
         }
 
-
         private void lbClientId_MouseOut(object sender, EventArgs e)
         {
             lbClientId.SafeSetText("(Mouse over to reveal)");
@@ -1324,17 +1367,29 @@ namespace madFurry
             }
         }
 
-        private void btnReloadConfig_Click(object sender, EventArgs e)
+        private void btnWebStats_Click(object sender, EventArgs e)
         {
-            loadConfig(sender, e);
+            string logPath = AppDomain.CurrentDomain.BaseDirectory + @"\Stats";
+            var statFiles = Directory.GetFiles(logPath, "*.stats");
+            string jsonPayload = String.Empty;
+            foreach (var item in statFiles)
+            {
+                jsonPayload += File.ReadAllText(item);
+            }
+            RemoteAPI.UpdateStats(UniqueClientID,  System.Diagnostics.Process.GetCurrentProcess().Id.ToString(), jsonPayload, baseURL) ;
+            System.Diagnostics.Process.Start(new ProcessStartInfo(checkEndSlash(baseURL) + "client/stats/"+UniqueClientID) { UseShellExecute = true });
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(new ProcessStartInfo("https://twitch.tv/lucone1973") { UseShellExecute = true });
-        }
+            var t = new PlotTask();
 
- 
+            t.logModel.buckets = 1;
+            t.logModel.buckets34 = 1;
+            t.logModel.completed = true;
+            t.plot_filename = "a.plot";
+            saveStats(t);
+        }
 
 
         //plotTasks.First().process.GetChildProcesses().Where(p => p.ProcessName.ToLowerInvariant().StartsWith("chia_plot")).FirstOrDefault().Suspend();
